@@ -1,6 +1,6 @@
 /* set background color to steam color can adjust later on */
-html {
-    background-color: #171d25;
+html, body {
+    background-color: #23262E;
     color: white;
     font-family: Arial, sans-serif;
     margin: 0;
@@ -8,7 +8,7 @@ html {
 }
 .tab-contents {
     display: none;
-    background-color: #171d25;
+    background-color: #1b2838;
     color: white;
     padding: 1rem;
     border-radius: 8px;
@@ -25,4 +25,5 @@ html {
     list-style-type: none;
     margin: 0;
     padding: 0;
+    background-color: #171d25;
 }
