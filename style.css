@@ -1,1 +1,16 @@
+.tab-contents {
+    display: none;
+}
 
+.tab-contents.active {
+    display: block;
+}
+
+.header-tabs {
+    display: flex;
+    justify-content: space-around;
+    cursor: pointer;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
