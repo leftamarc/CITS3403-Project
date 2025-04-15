@@ -20,10 +20,20 @@ html, body {
 
 .header-tabs {
     display: flex;
+    flex-direction: row;
+    font-size: 1.2rem;
     justify-content: space-around;
-    cursor: pointer;
     list-style-type: none;
     margin: 0;
-    padding: 0;
+    padding: 2rem 0;
     background-color: #171d25;
+}
+
+.header-tabs li {
+    color: #dcdedf;
+    cursor: pointer;
+}
+
+.header-tabs li:hover {
+    color: white;
 }
