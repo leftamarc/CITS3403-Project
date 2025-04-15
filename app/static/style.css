@@ -29,16 +29,16 @@ html, body {
     background-color: #171d25;
 }
 
-.header-tabs a {
+.clickable-text {
     color: #dcdedf;
     cursor: pointer;
 }
 
-.header-tabs a:hover {
+.clickable-text:hover {
     color: white;
 }
 
-.header-tabs a.active {
+.clickable-text.active {
     color: #66c0f4;
     text-decoration: underline;
 }
