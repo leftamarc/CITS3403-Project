@@ -30,10 +30,10 @@ Use the appropriate command for your machine to set up the STEAM_API_KEY local e
 
 Note that the environment variable will only be set while the terminal remains open.
 
-# cmd (Windows)
+### cmd (Windows)
 set STEAM_API_KEY=your_api_key_here
 
-# bash (Linux/Mac)
+### bash (Linux/Mac)
 export STEAM_API_KEY="your_api_key_here"
 
 
