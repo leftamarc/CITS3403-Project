@@ -9,48 +9,29 @@
 </head>
 
 <body>
-    <ul class = "header-tabs"> 
+    <ul class="header-tabs"> 
         <li> 
-            <a class="clickable-text" onclick="window.location.href='{{ url_for('home') }}'"> Home </a> 
+            <span class="clickable-text {% if request.endpoint == 'home' %}active-tab{% endif %}" 
+                  onclick="window.location.href='{{ url_for('home') }}'"> HOME </span> 
         </li>
         <li> 
-            <a class="clickable-text" onclick="window.location.href='{{ url_for('get') }}'"> Get </a> 
+            <span class="clickable-text {% if request.endpoint == 'get' %}active-tab{% endif %}" 
+                  onclick="window.location.href='{{ url_for('get') }}'"> GET </span> 
         </li>
         <li> 
-            <a class="clickable-text" onclick="window.location.href='{{ url_for('view') }}'"> View </a> 
+            <span class="clickable-text {% if request.endpoint == 'view' %}active-tab{% endif %}" 
+                  onclick="window.location.href='{{ url_for('view') }}'"> VIEW </span> 
         </li>
         <li> 
-            <a class="clickable-text" onclick="window.location.href='{{ url_for('share') }}'"> Share </a> 
+            <span class="clickable-text {% if request.endpoint == 'share' %}active-tab{% endif %}" 
+                  onclick="window.location.href='{{ url_for('share') }}'"> SHARE </span> 
         </li>
 
     </ul>
 
-    {%block content%}{%endblock%}
+    {% block content %}{% endblock %}
 
     <script src="{{ url_for('static', filename='script.js') }}" defer></script>
 </body>
 
 </html>
-
-<!--
-    <div class="tabs">
-        <div id="home">
-            <h1> Home </h1>
-            <p> An "introductory" view, describing the context and purpose of the application, and allowing the user to create an account or log in. </p>
-        </div>
-
-        <div id="get">
-            <h1> Get Your Steam Wrapped! </h1>
-            <p> An "upload data" view, allowing the user to add new data. </p>
-        </div>
-
-        <div id="view" class="tab-contents">
-            <h1> View Your Own and Shared Steam Wrappeds! </h1>
-            <p> A "visualise data" view, allowing user's to view analysis of either their data or other people's data which has been shared with them. </p>
-        </div>
-
-        <div id="share" class="tab-contents">
-            <h1> Share Your Steam Wrapped with Others! </h1>
-            <p> A "share data" view, allowing the users to selectively share their data with other specific users. </p>
-        </div>
-    </div>-->

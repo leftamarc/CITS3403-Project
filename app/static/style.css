@@ -6,40 +6,21 @@ html, body {
     margin: 0;
     padding: 0;
 }
-.tab-contents {
-    display: none;
-    background-color: #1b2838;
-    color: white;
-    padding: 1rem;
-    border-radius: 8px;
-}
-
-.tab-contents.active {
-    display: block;
-}
 
 .header-tabs {
-    display: flex;
-    flex-direction: row;
-    font-size: 1.2rem;
-    justify-content: space-around;
-    list-style-type: none;
-    margin: 0;
-    padding: 2rem 0;
-    background-color: #171d25;
+display: flex;
+justify-content: space-around;
+align-items: center; 
+cursor: pointer;
+list-style-type: none;
+margin: 0;
+padding: 2.5rem 0; 
+background-color: #171d25;
+font-size: 1.2rem; 
 }
 
-
-.clickable-text {
-    color: #dcdedf;
-    cursor: pointer;
-}
-
-.clickable-text:hover {
-    color: white;
-}
-
-.clickable-text.active {
-    color: #66c0f4;
-    text-decoration: underline;
+.active-tab {
+color: #1a9fff;
+font-weight: bold;
+text-decoration: underline;
 }
