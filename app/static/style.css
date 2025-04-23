@@ -7,6 +7,8 @@ html, body {
     padding: 0;
 }
 
+/* Inherited Header Bar */
+
 .header-tabs {
     display: flex; /* Uses flexible box for the layout, i.e. horizontal list*/
     height: 78px;  /* Height of the header, mimics Steam header height(ish) */
@@ -58,4 +60,23 @@ html, body {
 color: #1a9fff;
 font-weight: bold;
 /* text-decoration: underline; */
+}
+
+/* Log In Button */
+.page-wrapper {
+    display: flex; /* Allows for log in button to be in a box */
+    justify-content: center; /* Centers the login button horizontally */
+    align-items: center;
+    height: calc(100vh - 78px); /* Full height minus header height */
+}
+
+.login-button {
+    padding: 0.75rem 2rem; /* Padding around the button */
+    font-size: 16px;
+    background: linear-gradient(to right, #06BFFF 0%, #2D73FF 100%); /* Colours from steam log in button*/
+    color: white;
+    border: none;
+    border-radius: 2px; /* Rounded corners */
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
