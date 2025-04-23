@@ -1,6 +1,6 @@
 /* set background color to steam color will finalise it later on */
 html, body {
-    background-color: #23262E;
+    background-color: #1B2838;
     color: white;
     font-family: Arial, sans-serif;
     margin: 0;
@@ -8,19 +8,54 @@ html, body {
 }
 
 .header-tabs {
-display: flex;
-justify-content: space-around;
-align-items: center; 
-cursor: pointer;
-list-style-type: none;
-margin: 0;
-padding: 2.5rem 0; 
-background-color: #171d25;
-font-size: 1.2rem; 
+    display: flex; /* Uses flexible box for the layout, i.e. horizontal list*/
+    height: 78px;  /* Height of the header, mimics Steam header height(ish) */
+    justify-content: center; /* Centers the header text horizontally */
+    align-items: center; /* Centers the header text vertically */
+    list-style-type: none; /* Removes the list style (bullet points) */
+    margin: 0; /* Removes default margin, otherwise would have a #1B2838 coloured bar at the top of header*/
+    padding: 0.75rem 1.5rem; /* Adds padding around the header */
+    background-color: #171a21; /* Steam header  color */
+    font-size: 16px; /* Steam header font size */   
+    color: #c7d5e0; /* Steam header font color */
+    text-transform: uppercase; /* Makes the text uppercase */
+    font-family: "Motiva Sans", "Twemoji", "Noto Sans", Helvetica, sans-serif; /* Steam header font, taken from "Inspect" */
+    font-weight: 700; /* Boldness */
+    gap: 1.5rem; /* Gap between the tabs */
 }
+  
+.header-tabs li { /* Applies to the text in the header tab, not the header itself */
+    cursor: pointer; /* Changes the cursor to a pointer when hovering over the text */
+    transition: color 0.2s ease;
+    position: relative;
 
-.active-tab {
+}
+  
+.header-tabs li:hover {
+    color: #ffffff; /* Change text color on hover */
+}
+  
+.header-tabs li::after { /* Creates a line under the text, optional not in the the steam header */
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    width: 100%;
+    background-color: #1a9fff;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s ease;
+}
+  
+.header-tabs li:hover::after { /* Creates a line under the text, optional not in the the steam header */
+    transform: scaleX(1);
+    transform-origin: left;
+}
+  
+
+.active-tab { /* Changes text colour to blue and adds underline for current tab */
 color: #1a9fff;
 font-weight: bold;
-text-decoration: underline;
+/* text-decoration: underline; */
 }
