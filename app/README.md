@@ -20,6 +20,8 @@ Steam API keys cannot be shared and must be kept private as per the Steam Web AP
 
 It is recommended that you use a python virtual environment to manage your api key.
 
+Instructions for setting up a python virtual environment can be found here: https://docs.python.org/3/library/venv.html
+
 After creating your virtual environment navigate to its 'Scripts' subfolder.
 
 You will need to edit the file associated with your console of choice and add the appropriate line.
