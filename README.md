@@ -32,7 +32,7 @@ set STEAM_API_KEY=your_api_key_here
 ### Activate.ps1 (Windows PowerShell)
 $env:$env:STEAM_API_KEY = "your_api_key_here"
 
-### bash (Linux/Mac)
+### activate (Linux/Mac)
 export STEAM_API_KEY="your_api_key_here"
 
 Now when you run the application from the python virtual environment your api key will always be initialised.
