@@ -10,22 +10,25 @@
 
 <body>
     <ul class="header-tabs"> 
-        <li> 
+        <div class="header-title" class="clickable-text {% if request.endpoint == 'home' %}active-tab{% endif %}" 
+        onclick="window.location.href='{{ url_for('home') }}'">Steam Wrapped</div>
+       <!-- <li> 
             <span class="clickable-text {% if request.endpoint == 'home' %}active-tab{% endif %}" 
-                  onclick="window.location.href='{{ url_for('home') }}'"> HOME </span> 
-        </li>
+                  onclick="window.location.href='{{ url_for('home') }}'"> Home </span> 
+        </li>-->
         <li> 
             <span class="clickable-text {% if request.endpoint == 'get' %}active-tab{% endif %}" 
-                  onclick="window.location.href='{{ url_for('get') }}'"> GET </span> 
-        </li>
-        <li> 
-            <span class="clickable-text {% if request.endpoint == 'view' %}active-tab{% endif %}" 
-                  onclick="window.location.href='{{ url_for('view') }}'"> VIEW </span> 
+                  onclick="window.location.href='{{ url_for('get') }}'"> Get </span> 
         </li>
         <li> 
             <span class="clickable-text {% if request.endpoint == 'share' %}active-tab{% endif %}" 
-                  onclick="window.location.href='{{ url_for('share') }}'"> SHARE </span> 
+                  onclick="window.location.href='{{ url_for('share') }}'"> Share </span> 
         </li>
+        <li> 
+            <span class="clickable-text {% if request.endpoint == 'view' %}active-tab{% endif %}" 
+                  onclick="window.location.href='{{ url_for('view') }}'"> View </span> 
+        </li>
+
 
     </ul>
 

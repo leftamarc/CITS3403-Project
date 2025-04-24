@@ -7,8 +7,8 @@ html, body {
     padding: 0;
 }
 
-/* Inherited Header Bar */
 
+/* Inherited Header Bar */
 .header-tabs {
     display: flex; /* Uses flexible box for the layout, i.e. horizontal list*/
     height: 78px;  /* Height of the header, mimics Steam header height(ish) */
@@ -20,17 +20,37 @@ html, body {
     background-color: #171a21; /* Steam header  color */
     font-size: 16px; /* Steam header font size */   
     color: #c7d5e0; /* Steam header font color */
-    text-transform: uppercase; /* Makes the text uppercase */
     font-family: "Motiva Sans", "Twemoji", "Noto Sans", Helvetica, sans-serif; /* Steam header font, taken from "Inspect" */
     font-weight: 700; /* Boldness */
     gap: 1.5rem; /* Gap between the tabs */
+}
+
+.header-title {
+    background: linear-gradient(to right, #06BFFF 0%, #2D73FF 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-family: "Motiva Sans", "Twemoji", "Noto Sans", Helvetica, sans-serif;
+    font-weight: 700;
+    font-size: 25px;
+    letter-spacing: 1px;
+    margin-right: 2rem;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.header-title:hover {
+    color: transparent; /* Make text transparent to show gradient */
+    background: linear-gradient(90deg, #c7d5e0, #06BFFF, #2D73FF, #06BFFF);
+    background-size: 300% 300%; /* The gradient will move across the title */
+    -webkit-background-clip: text; /* This ensures the gradient is clipped to the text */
+    animation: gradientMove 4s linear infinite; /* Animation for the moving gradient */
 }
   
 .header-tabs li { /* Applies to the text in the header tab, not the header itself */
     cursor: pointer; /* Changes the cursor to a pointer when hovering over the text */
     transition: color 0.2s ease;
     position: relative;
-
+    text-transform: uppercase; /* Makes the text uppercase */
 }
   
 .header-tabs li:hover {
@@ -62,12 +82,88 @@ font-weight: bold;
 /* text-decoration: underline; */
 }
 
-/* Log In Button */
+
+/* Add this CSS to support the moving gradient effect */
+.intro-container {
+    padding: 0.5rem 1.5rem;
+    text-align: center;
+}
+
+/* Home: Intro Text */
+.welcome-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: transparent; /* Make text transparent to show gradient */
+    background: linear-gradient(90deg, #c7d5e0, #06BFFF, #2D73FF, #06BFFF);
+    background-size: 300% 300%; /* The gradient will move across the title */
+    -webkit-background-clip: text; /* This ensures the gradient is clipped to the text */
+    animation: gradientMove 5s linear infinite; /* Animation for the moving gradient */
+    margin-bottom: 2rem;
+
+}
+
+@keyframes gradientMove {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.intro-section {
+    margin-bottom: 1.5rem;
+}
+
+.intro-section h2 {
+    font-size: 1.5rem;
+    color: #c7d5e0;
+    font-weight: 700;
+    text-align: justify;
+    padding-left: 27%;
+}
+
+.intro-section p {
+    font-size: 1rem;
+    color: #c7d5e0;
+    margin-top: 0.5rem;
+    text-align: justify;
+    padding-left: 27%;
+}
+
+
+/* Home: Log In Button */
 .page-wrapper {
-    display: flex; /* Allows for log in button to be in a box */
-    justify-content: center; /* Centers the login button horizontally */
-    align-items: center;
-    height: calc(100vh - 78px); /* Full height minus header height */
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+
+.login-box {
+    max-width: 800px;
+    width: 90%;
+    padding:1.5rem;
+    background-color: #171a21;
+    border-radius: 4px;
+    /*box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);*/
+    text-align: center;
+}
+
+.login-title {
+    margin-bottom: 1rem;
+    font-size: 2rem;
+    background: linear-gradient(to right, #06BFFF 0%, #2D73FF 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.login-text {
+    font-size: 1rem;
+    color: #c7d5e0;
 }
 
 .login-button {
@@ -79,4 +175,40 @@ font-weight: bold;
     border-radius: 2px; /* Rounded corners */
     cursor: pointer;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.login-button:hover {
+    filter: brightness(1.1);
+    transition: filter 0.2s ease;
+}
+
+.register-link {
+    color: #c7d5e0;
+    text-decoration: none;
+    position: relative;
+    display: inline-block;
+    font-weight: bold;
+}
+
+.register-link::after {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    height: 2px;
+    width: 100%;
+    background-color: #1a9fff;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s ease;
+}
+
+.register-link:hover {
+    color: #ffffff;
+    cursor: pointer;
+}
+
+.register-link:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
 }

@@ -1,11 +1,37 @@
 {% extends "header.html" %}
 {% block content %}
 
-    <h1> Home </h1>
-    <p> An "introductory" view, describing the context and purpose of the application, and allowing the user to create an account or log in. </p>
+    <!--An "introductory" view, describing the context and purpose of the application, and allowing the user to create an account or log in.-->
+
+    <div class="intro-container">
+        <h1 class="welcome-title">Welcome to Steam Wrapped!</h1>
+        
+        <section class="intro-section">
+            <h2>What kind of player are you?</h2>
+            <p>Generate your own Wrappeds and discover what your recent player data says about you</p>
+        </section>
+        
+        <section class="intro-section">
+            <h2>Sharing is caring</h2>
+            <p>See how you compare to your friends, as well as other users, by sharing your Wrappeds</p>
+        </section>
+        
+        <section class="intro-section">
+            <h2>All in one place</h2>
+            <p>Keep and save your own Wrappeds as well as the ones shared with you by others</p>
+        </section>
+    </div>
 
     <div class="page-wrapper">
-        <button class="login-button">Log In</button>
+        <div class="login-box">
+            <h1 class="login-title">Steam Wrapped</h1>
+            <p class="login-text">To get, view and share your Steam Wrappeds, please log in</p>
+            <button class="login-button">Log In</button>
+            <p class="login-text">
+                Or <strong class="register-link">create an account</strong> to get started
+            </p>
+
+        </div>
     </div>
 
 {% endblock %}
