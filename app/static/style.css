@@ -40,7 +40,7 @@ html, body {
 
 .header-title:hover {
     color: transparent; /* Make text transparent to show gradient */
-    background: linear-gradient(90deg, #c7d5e0, #06BFFF, #2D73FF, #06BFFF);
+    background: linear-gradient(90deg, #06BFFF, #2D73FF, #06BFFF, #c7d5e0);
     background-size: 300% 300%; /* The gradient will move across the title */
     -webkit-background-clip: text; /* This ensures the gradient is clipped to the text */
     animation: gradientMove 4s linear infinite; /* Animation for the moving gradient */
@@ -94,7 +94,7 @@ font-weight: bold;
     font-size: 2.5rem;
     font-weight: 700;
     color: transparent; /* Make text transparent to show gradient */
-    background: linear-gradient(90deg, #c7d5e0, #06BFFF, #2D73FF, #06BFFF);
+    background: linear-gradient(90deg, #06BFFF , #2D73FF, #06BFFF, #c7d5e0);
     background-size: 300% 300%; /* The gradient will move across the title */
     -webkit-background-clip: text; /* This ensures the gradient is clipped to the text */
     animation: gradientMove 5s linear infinite; /* Animation for the moving gradient */
