@@ -90,7 +90,7 @@ font-weight: bold;
 }
 
 /* Home: Intro Text */
-.welcome-title {
+.tab-title {
     font-size: 2.5rem;
     font-weight: 700;
     color: transparent; /* Make text transparent to show gradient */
