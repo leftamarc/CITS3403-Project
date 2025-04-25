@@ -6,13 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CITS3403 Project</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 
 </head>
 
 <body>
     <ul class="header-tabs"> 
-        <div class="header-title" class="clickable-text {% if request.endpoint == 'home' %}active-tab{% endif %}" 
+        <div class="header-title clickable-text {% if request.endpoint == 'home' %}active-tab{% endif %}" 
         onclick="window.location.href='{{ url_for('home') }}'">SteamWrapped</div>
        <!-- <li> 
             <span class="clickable-text {% if request.endpoint == 'home' %}active-tab{% endif %}" 
@@ -30,6 +31,7 @@
             <span class="clickable-text {% if request.endpoint == 'view' %}active-tab{% endif %}" 
                   onclick="window.location.href='{{ url_for('view') }}'"> View </span> 
         </li>
+        <button class="button header mb-3">Log In</button>
 
 
     </ul>
