@@ -1,7 +1,61 @@
 {% extends "header.html" %}
 {% block content %}
 
-    <h1> View Your Own and Shared Steam Wrappeds! </h1>
-    <p> A "visualise data" view, allowing user's to view analysis of either their data or other people's data which has been shared with them. </p>
+    <!--<h1> View Your Own and Shared Steam Wrappeds! </h1>
+    <p> A "visualise data" view, allowing user's to view analysis of either their data or other people's data which has been shared with them. </p> -->
+
+    <div class="container">
+        <div class="row mt-5">
+            <div class="col-md-6 d-flex flex-column align-items-start">
+                <h1 class="tab-title display-4 mb-5">View SteamWrappeds</h1>  
+                <div>
+                    <p> See your previously generated SteamWrappeds below </p>
+            
+                </div>
+            </div>
+    
+            <div class="col-md-6">
+                <div class="half-col-box p-4 ">
+                    <h2 class="half-col-head m-4"> SteamWrappeds shared with you </h2>
+                    <ol class="half-col-text">
+                        <li class="mb-2"> Friend's SteamWrapped 1 </li>
+                        <li class="mb-2"> Friend's SteamWrapped 2 </li>
+                        <li class="mb-2"> Friend's SteamWrapped 3 </li>
+                        <li class="mb-2"> Friend's SteamWrapped 4 </li>
+                        <li class="mb-2"> Friend's SteamWrapped 5 </li>
+                        <li class="mb-5"> Friend's SteamWrapped 6 </li>
+                    </ol>
+
+
+                </div>
+            </div>
+            
+        </div>
+        <div class="row">
+            <div class="col-md-12 ">
+                <div class="bottom-box p-4 mt-3 mb-3">
+                    <h1 class="bottom-box-title generate">Generate</h1>
+                    <p class="bottom-box-text">Want more Wrappeds to share with your friends? Click the generate tab below!</p>
+                    <button class="button generate mb-3">Generate</button>
+                    </p>
+                </div>
+
+
+                <!-- Content Here -->
+
+
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="footer-text text-center mt-4 mb-4">
+                    <p> University of Western Australia CITS3403 Agile Web Development Project Submission. <br>
+                        SteamWrapped is not associated with Steam.</p>
+                </div>
+            </div>
+    </div>
+    
+
 
 {% endblock %}
