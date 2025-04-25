@@ -1,26 +1,22 @@
-/* set background color to steam color will finalise it later on */
-html, body {
-    background-color: #1B2838;
-    color: white;
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
+/* Universal Style */
+body {
+    background-color: #1B2838; /* Page background color */
+    font-family: "Motiva Sans", "Twemoji", "Noto Sans", Helvetica, sans-serif; /* Font family */
 }
-
 
 /* Inherited Header Bar */
 .header-tabs {
-    display: flex; /* Uses flexible box for the layout, i.e. horizontal list*/
-    height: 78px;  /* Height of the header, mimics Steam header height(ish) */
+    display: flex; /* Uses flexible box for the layout, i.e. horizontal list */
+    height: 78px;  /* Mimics Steam header height */
     justify-content: center; /* Centers the header text horizontally */
     align-items: center; /* Centers the header text vertically */
-    list-style-type: none; /* Removes the list style (bullet points) */
-    margin: 0; /* Removes default margin, otherwise would have a #1B2838 coloured bar at the top of header*/
+    list-style-type: none; /* Removes the list style */
+    margin: 0; /* Removes default margin */
     padding: 0.75rem 1.5rem; /* Adds padding around the header */
-    background-color: #171a21; /* Steam header  color */
-    font-size: 16px; /* Steam header font size */   
+    background-color: #171a21; /* Steam header color */
+    font-size: 16px; /* Steam header font size */
     color: #c7d5e0; /* Steam header font color */
-    font-family: "Motiva Sans", "Twemoji", "Noto Sans", Helvetica, sans-serif; /* Steam header font, taken from "Inspect" */
+    font-family: "Motiva Sans", "Twemoji", "Noto Sans", Helvetica, sans-serif; /* Steam header font */
     font-weight: 700; /* Boldness */
     gap: 1.5rem; /* Gap between the tabs */
 }
@@ -39,25 +35,25 @@ html, body {
 }
 
 .header-title:hover {
-    color: transparent; /* Make text transparent to show gradient */
+    color: transparent;
     background: linear-gradient(90deg, #06BFFF, #2D73FF, #06BFFF, #c7d5e0);
-    background-size: 300% 300%; /* The gradient will move across the title */
-    -webkit-background-clip: text; /* This ensures the gradient is clipped to the text */
-    animation: gradientMove 4s linear infinite; /* Animation for the moving gradient */
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    animation: gradientMove 4s linear infinite;
 }
-  
-.header-tabs li { /* Applies to the text in the header tab, not the header itself */
-    cursor: pointer; /* Changes the cursor to a pointer when hovering over the text */
+
+.header-tabs li {
+    cursor: pointer;
     transition: color 0.2s ease;
     position: relative;
-    text-transform: uppercase; /* Makes the text uppercase */
+    text-transform: uppercase;
 }
-  
+
 .header-tabs li:hover {
-    color: #ffffff; /* Change text color on hover */
+    color: #ffffff;
 }
-  
-.header-tabs li::after { /* Creates a line under the text, optional not in the the steam header */
+
+.header-tabs li::after {
     content: "";
     position: absolute;
     bottom: 0;
@@ -69,37 +65,27 @@ html, body {
     transform-origin: right;
     transition: transform 0.3s ease;
 }
-  
-.header-tabs li:hover::after { /* Creates a line under the text, optional not in the the steam header */
+
+.header-tabs li:hover::after {
     transform: scaleX(1);
     transform-origin: left;
 }
-  
 
-.active-tab { /* Changes text colour to blue and adds underline for current tab */
-color: #1a9fff;
-font-weight: bold;
-/* text-decoration: underline; */
-}
-
-
-/* Add this CSS to support the moving gradient effect */
-.intro-container {
-    padding: 0.5rem 1.5rem;
-    text-align: center;
+.active-tab {
+    color: #1a9fff;
+    font-weight: bold;
 }
 
 /* Home: Intro Text */
 .tab-title {
     font-size: 2.5rem;
     font-weight: 700;
-    color: transparent; /* Make text transparent to show gradient */
-    background: linear-gradient(90deg, #06BFFF , #2D73FF, #06BFFF, #c7d5e0);
-    background-size: 300% 300%; /* The gradient will move across the title */
-    -webkit-background-clip: text; /* This ensures the gradient is clipped to the text */
-    animation: gradientMove 5s linear infinite; /* Animation for the moving gradient */
-    margin-bottom: 2rem;
-
+    /* Gradient Settings */
+    color: transparent;
+    background: linear-gradient(90deg, #06BFFF, #2D73FF, #06BFFF, #c7d5e0);
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    animation: gradientMove 5s linear infinite;
 }
 
 @keyframes gradientMove {
@@ -114,47 +100,27 @@ font-weight: bold;
     }
 }
 
-.intro-section {
-    margin-bottom: 1.5rem;
-}
-
-.intro-section h2 {
+.h4 {
     font-size: 1.5rem;
     color: #c7d5e0;
     font-weight: 700;
-    text-align: justify;
-    padding-left: 27%;
 }
 
-.intro-section p {
+p {
     font-size: 1rem;
     color: #c7d5e0;
-    margin-top: 0.5rem;
-    text-align: justify;
-    padding-left: 27%;
 }
-
 
 /* Home: Log In Button */
-.page-wrapper {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 1rem;
-}
-
-
 .login-box {
-    max-width: 800px;
-    width: 90%;
-    padding:1.5rem;
     background-color: #171a21;
     border-radius: 4px;
-    /*box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);*/
     text-align: center;
+    height: 220px;
 }
 
 .login-title {
-    margin-bottom: 1rem;
+    font-weight: 700;
     font-size: 2rem;
     background: linear-gradient(to right, #06BFFF 0%, #2D73FF 100%);
     -webkit-background-clip: text;
@@ -167,12 +133,12 @@ font-weight: bold;
 }
 
 .login-button {
-    padding: 0.75rem 2rem; /* Padding around the button */
+    padding: 0.75rem 2rem;
     font-size: 16px;
-    background: linear-gradient(to right, #06BFFF 0%, #2D73FF 100%); /* Colours from steam log in button*/
+    background: linear-gradient(to right, #06BFFF 0%, #2D73FF 100%);
     color: white;
     border: none;
-    border-radius: 2px; /* Rounded corners */
+    border-radius: 2px;
     cursor: pointer;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }

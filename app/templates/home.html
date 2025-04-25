@@ -1,37 +1,49 @@
 {% extends "header.html" %}
 {% block content %}
 
-    <!--An "introductory" view, describing the context and purpose of the application, and allowing the user to create an account or log in.-->
+<div class="container">
+    <div class="row mt-4">
+        <div class="col-md-6 d-flex flex-column align-items-start">
+            <h1 class="tab-title display-4 mb-5">Welcome to SteamWrapped!</h1>  
+            <div>
+                <section>
+                    <h2 class="h4">What kind of player are you?</h2>
+                    <p>Generate your own Wrappeds and discover what your recent player data says about you</p>
+                </section>
+                <section>
+                    <h2 class="h4">Sharing is caring</h2>
+                    <p>See how you compare to your friends, as well as other users, by sharing your Wrappeds</p>
+                </section>
+                <section>
+                    <h2 class="h4">All in one place</h2>
+                    <p>Keep and save your own Wrappeds as well as the ones shared with you by others</p>
+                </section>
+            </div>
+        </div>
 
-    <div class="intro-container">
-        <h1 class="tab-title">Welcome to SteamWrapped!</h1>
+        <div class="col-md-6 d-flex justify-content-center align-items-center">
+            <div class="position-relative bg-dark text-white rounded shadow" style="width: 100%; height: 100%;">
         
-        <section class="intro-section">
-            <h2>What kind of player are you?</h2>
-            <p>Generate your own Wrappeds and discover what your recent player data says about you</p>
-        </section>
+                <div class="d-flex justify-content-center align-items-center h-100">
+                    <h3 class="text-center">Something Here</h3>
+                </div>
         
-        <section class="intro-section">
-            <h2>Sharing is caring</h2>
-            <p>See how you compare to your friends, as well as other users, by sharing your Wrappeds</p>
-        </section>
+            </div>
+        </div>
         
-        <section class="intro-section">
-            <h2>All in one place</h2>
-            <p>Keep and save your own Wrappeds as well as the ones shared with you by others</p>
-        </section>
     </div>
-
-    <div class="page-wrapper">
-        <div class="login-box">
-            <h1 class="login-title">SteamWrapped</h1>
-            <p class="login-text">To get, view and share your Steam Wrappeds, please log in</p>
-            <button class="login-button">Log In</button>
-            <p class="login-text">
-                Or <strong class="register-link">create an account</strong> to get started
-            </p>
-
+    <div class="row">
+        <div class="col-md-12 ">
+            <div class="login-box p-4 rounded shadow mt-3 mb-3">
+                <h1 class="login-title ">SteamWrapped</h1>
+                <p class="login-text">To get, view and share your Steam Wrappeds, please log in</p>
+                <button class="login-button mb-3">Log In</button>
+                <p class="login-text">
+                    Or <strong class="register-link">create an account</strong> to get started
+                </p>
+            </div>
         </div>
     </div>
+</div>
 
 {% endblock %}
