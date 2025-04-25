@@ -1,4 +1,4 @@
-/* Universal Style */
+/* Base */
 body {
     background-color: #1B2838; /* Page background color */
     font-family: "Motiva Sans", "Twemoji", "Noto Sans", Helvetica, sans-serif; /* Font family */
@@ -6,74 +6,100 @@ body {
 
 /* Inherited Header Bar */
 .header-tabs {
-    display: flex; /* Uses flexible box for the layout, i.e. horizontal list */
-    height: 78px;  /* Mimics Steam header height */
-    justify-content: center; /* Centers the header text horizontally */
-    align-items: center; /* Centers the header text vertically */
-    list-style-type: none; /* Removes the list style */
     margin: 0; /* Removes default margin */
+    gap: 1.5rem; /* Gap between the tabs */
+    height: 78px;  /* Mimics Steam header height */
+    display: flex; /* Uses flexible box for the layout, i.e. horizontal list */
     padding: 0.75rem 1.5rem; /* Adds padding around the header */
     background-color: #171a21; /* Steam header color */
+    
     font-size: 16px; /* Steam header font size */
-    color: #c7d5e0; /* Steam header font color */
-    font-family: "Motiva Sans", "Twemoji", "Noto Sans", Helvetica, sans-serif; /* Steam header font */
     font-weight: 700; /* Boldness */
-    gap: 1.5rem; /* Gap between the tabs */
+    color: #c7d5e0; /* Steam header font color */
+    align-items: center; /* Centers the header text vertically */
+    list-style-type: none; /* Removes the list style */
+    justify-content: center; /* Centers the header text horizontally */
 }
 
 .header-title {
-    background: linear-gradient(to right, #06BFFF 0%, #2D73FF 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    font-family: "Motiva Sans", "Twemoji", "Noto Sans", Helvetica, sans-serif;
-    font-weight: 700;
+    cursor: pointer; /* Pointer cursor on hover */
+    margin-right: 2rem; /* Space between the title and tabs */
+
     font-size: 25px;
+    font-weight: 700;
     letter-spacing: 1px;
-    margin-right: 2rem;
-    white-space: nowrap;
-    cursor: pointer;
 }
 
-.header-title:hover {
+.header-title:hover { /* Changes color on hover to moving gradient */
     color: transparent;
     background: linear-gradient(90deg, #06BFFF, #2D73FF, #06BFFF, #c7d5e0);
     background-size: 300% 300%;
     -webkit-background-clip: text;
-    animation: gradientMove 4s linear infinite;
-}
+    animation: gradientMove 4s linear infinite;}
 
-.header-tabs li {
-    cursor: pointer;
-    transition: color 0.2s ease;
-    position: relative;
-    text-transform: uppercase;
+.header-tabs li { 
+    cursor: pointer; /* Pointer cursor on hover */
+    position: relative; /* For the underline effect */
+    text-transform: uppercase; /* Uppercase text */
 }
 
 .header-tabs li:hover {
-    color: #ffffff;
+    color: #ffffff; /* Changes color on hover */
+    transition: color 0.2s ease; /* Smooth color transition */
+
 }
 
-.header-tabs li::after {
-    content: "";
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    height: 2px;
-    width: 100%;
-    background-color: #1a9fff;
-    transform: scaleX(0);
-    transform-origin: right;
-    transition: transform 0.3s ease;
+.header-tabs li::after { /* Underline effect */
+    left: 0; /* Aligns the underline to the left */
+    bottom: 0; /* Aligns the underline to the bottom */
+    height: 2px; /* Height of the underline */
+    width: 100%; /* Full width underline */
+    content: ""; /* Empty content for the pseudo-element */
+    position: absolute; /* Absolute positioning */ 
+    transform: scaleX(0); /* Initial scale for the underline */
+    transform-origin: right; /* Origin for the scaling effect */
+    background-color: #1a9fff; /* Underline color */
+    transition: transform 0.3s ease; /* Smooth transition for the scaling effect */
 }
 
 .header-tabs li:hover::after {
-    transform: scaleX(1);
-    transform-origin: left;
+    transform: scaleX(1); /* Scales the underline to full width */
+    transform-origin: left; /* Origin for the scaling effect */
 }
 
 .active-tab {
-    color: #1a9fff;
-    font-weight: bold;
+    color: #1a9fff; /* Active tab color */
+}
+
+button.header {
+    margin-left: 2rem;
+    margin-top: 0.9rem;
+    padding: 0.75rem 2rem;
+    font-size: 16px;
+    background: linear-gradient(to right, #06BFFF 0%, #2D73FF 100%);
+    color: white;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.button.login.header:hover {
+    filter: brightness(1.1);
+    transition: filter 0.2s ease;
+}
+
+/* Animation */
+@keyframes gradientMove {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
 }
 
 /* Home: Intro Text */
@@ -88,17 +114,7 @@ body {
     animation: gradientMove 5s linear infinite;
 }
 
-@keyframes gradientMove {
-    0% {
-        background-position: 0% 50%;
-    }
-    50% {
-        background-position: 100% 50%;
-    }
-    100% {
-        background-position: 0% 50%;
-    }
-}
+
 
 .h4 {
     font-size: 1.5rem;
@@ -111,15 +127,62 @@ p {
     color: #c7d5e0;
 }
 
-/* Home: Log In Button */
-.login-box {
+/* Right Half Column Box */
+.half-col-box {
+    background: linear-gradient(45deg, #B3DFFF 0%, #c7d5e0 100%);
+    border-radius: 4px;
+    width: 100%;
+}
+
+.half-col-head {
+    font-size: 1.5rem;
+    color: #1B2838;
+    font-weight: 700;
+    text-align: center;
+}
+
+.half-col-text {
+    font-size: 1rem;
+    color: #1B2838;
+    text-align: left;
+}
+
+/* Links */
+a.no-style-link {
+    text-decoration: none;
+    color: inherit;
+    font-weight: 700;
+    transition: color 0.2s ease;
+    position: relative;
+}
+
+a.no-style-link::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    width: 100%;
+    background-color: #1a9fff;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s ease;
+}
+
+a.no-style-link:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+}
+
+/* Bottom Box */
+.bottom-box {
     background-color: #171a21;
     border-radius: 4px;
     text-align: center;
     height: 220px;
 }
 
-.login-title {
+.bottom-box-title.login {
     font-weight: 700;
     font-size: 2rem;
     background: linear-gradient(to right, #06BFFF 0%, #2D73FF 100%);
@@ -127,12 +190,12 @@ p {
     -webkit-text-fill-color: transparent;
 }
 
-.login-text {
+.bottom-box-text {
     font-size: 1rem;
     color: #c7d5e0;
 }
 
-.login-button {
+.button {
     padding: 0.75rem 2rem;
     font-size: 16px;
     background: linear-gradient(to right, #06BFFF 0%, #2D73FF 100%);
@@ -143,12 +206,14 @@ p {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
 
-.login-button:hover {
+.button:hover {
     filter: brightness(1.1);
     transition: filter 0.2s ease;
 }
 
-.register-link {
+
+
+/*.register-link {
     color: #c7d5e0;
     text-decoration: none;
     position: relative;
@@ -177,4 +242,35 @@ p {
 .register-link:hover::after {
     transform: scaleX(1);
     transform-origin: left;
+} */
+
+.button.generate {
+    padding: 0.75rem 2rem;
+    font-size: 16px;
+    background: linear-gradient(to right, #799905 0%, #536904 100%);
+    color: white;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
+
+.tab-title.generate {
+    font-size: 2.5rem;
+    font-weight: 700;
+    /* Gradient Settings */
+    color: transparent;
+    background: linear-gradient(90deg, #799905, #536904, #799905, #ffffff);
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    animation: gradientMove 5s linear infinite;
+}
+
+.bottom-box-title.generate {
+    font-weight: 700;
+    font-size: 2rem;
+    background: linear-gradient(to right, #799905 10%, #536904 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
