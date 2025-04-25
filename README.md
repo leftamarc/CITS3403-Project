@@ -16,27 +16,26 @@ To run this project on your own machine you will need your own Steam API key ava
 
 Steam API keys cannot be shared and must be kept private as per the Steam Web API Terms of Use (https://steamcommunity.com/dev/apiterms).
 
-You will need a Steam account that is both non-limited and has 2FA set up through the Steam mobile app.
-
-Instructions for setting up the Steam Guard Mobile Authenticator (2FA) are here: https://help.steampowered.com/en/faqs/view/6891-E071-C9D9-0134
-
-New Steam accounts are limited until funds have added and atleast 1 purchase is made, the minimum amount of funds that can be added at one time is $5.
-
 ## Setting up your Steam API Key
 
-The application will automatically parse your Steam API key through the STEAM_API_KEY local environment variable after it has been set on your machine.
+It is recommended that you use a python virtual environment to manage your api key.
 
-Use the appropriate command for your machine to set up the STEAM_API_KEY local environment variable.
+Instructions for setting up a python virtual environment can be found here: https://docs.python.org/3/library/venv.html
 
-Note that the environment variable will only be set while the terminal remains open.
+After creating your virtual environment navigate to its 'Scripts' subfolder.
 
-### cmd (Windows)
+You will need to edit the file associated with your console of choice and add the appropriate line.
+
+### activate.bat (Windows CMD)
 set STEAM_API_KEY=your_api_key_here
 
-### bash (Linux/Mac)
+### Activate.ps1 (Windows PowerShell)
+$env:$env:STEAM_API_KEY = "your_api_key_here"
+
+### activate (Linux/Mac)
 export STEAM_API_KEY="your_api_key_here"
 
-
+Now when you run the application from the python virtual environment your api key will always be initialised.
 
 
 instructions for how to run the tests for the application.
