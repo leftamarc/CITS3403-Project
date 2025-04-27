@@ -1,4 +1,4 @@
-{% extends "main/header.html" %}
+{% extends "header.html" %}
 {% block content %}
 
 <div class="container mt-5">
@@ -30,19 +30,6 @@
                         Already have an account? <a href="{{ url_for('login') }}" class="link light-style"> <strong>Log in</strong></a>
                     </p>
                 </form>
-            </div>
-        </div>
-
-        <!-- Right Column: Steam ID Instructions -->
-        <div class="col-md-6 d-flex align-items-end">
-            <div class="half-col-box p-4 mb-5" >
-                <h2 class="half-col-head m-4">You will need your Steam ID to generate your SteamWrappeds</h2>
-                <ol class="half-col-text">
-                    <li class="mb-2">Log in to <a href="https://store.steampowered.com/" class="no-style-link">Steam</a></li>
-                    <li class="mb-2">In the top right-hand corner, click on the dropdown menu of your profile name</li>
-                    <li class="mb-2">Click on "Account details"</li>
-                    <li class="mb-5">In the top left is your username, underneath is your Steam ID</li>
-                </ol>
             </div>
         </div>
     </div>
