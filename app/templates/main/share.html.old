@@ -1,0 +1,34 @@
+{% extends "header.html" %}
+{% block content %}
+
+    <!-- <h1> Share Your Steam Wrapped with Others! </h1>
+    <p> A "share data" view, allowing the users to selectively share their data with other specific users. </p> -->
+
+    <div class="container">
+        <div class="row mt-5">
+            <div class="col-md-6 d-flex flex-column align-items-start">
+                <h1 class="tab-title display-4 mb-5">Share your SteamWrappeds</h1>  
+                <div>
+                    <p> Select from your saved Wrappeds below to share with you friends </p>
+                    
+                </div>
+            </div>
+    
+            <div class="col-md-6">
+                <div class="half-col-box p-4">
+                    <h2 class="half-col-head">Find Other Users</h2>
+                        <div class="form-group">
+                            <label class= "half-col-text" for="userSearch">Search Users:</label>
+                            <input type="text" class="form-control" id="userSearch" name="search" placeholder="Enter username">
+                        </div>
+                        <button type="submit" class="button mt-3">Search</button>
+                    </form>
+                </div>
+            </div>
+            
+        </div>
+{% endblock %}
+
+{% block bottom_content %}
+    {% include "elements/gen_footer.html" %}
+{% endblock %}

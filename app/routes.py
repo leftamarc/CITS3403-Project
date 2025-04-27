@@ -28,5 +28,5 @@ def register():
 
 @app.route('/generate')
 def generate():
-    return render_template('main/register.html')
+    return render_template('main/home.html')
     
