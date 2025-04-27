@@ -25,3 +25,8 @@ def login():
 @app.route('/register')
 def register():
     return render_template('main/register.html')
+
+@app.route('/generate')
+def generate():
+    return render_template('main/register.html')
+    
