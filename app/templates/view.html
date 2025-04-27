@@ -31,22 +31,9 @@
             </div>
             
         </div>
-        <div class="row">
-            <div class="col-md-12 ">
-                <div class="bottom-box p-4 mt-3 mb-3">
-                    <h1 class="bottom-box-title generate">Generate</h1>
-                    <p class="bottom-box-text">Want more Wrappeds to share with your friends? Click the generate tab below!</p>
-                    <button class="button generate mb-3">Generate</button>
-                    </p>
-                </div>
-
-
-                <!-- Content Here -->
-
-
-
-            </div>
-        </div>
-
-
 {% endblock %}
+
+{% block bottom_content %}
+    {% include "gen_footer.html" %}
+{% endblock %}
+

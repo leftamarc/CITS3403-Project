@@ -20,35 +20,11 @@
                 </section>
             </div>
         </div>
-
-        <div class="col-md-6">
-            <div class="half-col-box p-4 ">
-                <h2 class="half-col-head m-4"> You will need your Steam ID to generate your SteamWrappeds </h2>
-                <ol class="half-col-text">
-                    <li class="mb-2"> Log in to <a href="https://store.steampowered.com/" class="link no-style"> Steam </a> </li>
-                    <li class="mb-2"> In the top right-hand corner, click on the drop down menu of your profile name</li>
-                    <li class="mb-2"> Click on "Account details"</li>
-                    <li class="mb-5"> In the top left is your username, underneath is your Steam ID </li>
-                </ol>
-            </div>
-        </div>
-        
-    </div>
-    <div class="row">
-        <div class="col-md-12 ">
-            <div class="bottom-box p-4 mt-3 mb-3">
-                <h1 class="bottom-box-title login ">SteamWrapped</h1>
-                <p class="bottom-box-text">To get, view and share your Steam Wrappeds, please log in</p>
-                <form action="{{ url_for('login') }}" method="get">
-                    <button type="submit" class="button mb-3">
-                        Log In
-                    </button>
-                </form>
-                <p class="bottom-box-text">
-                    Or <a href="{{ url_for('register') }}" class="link light-style"> <strong>create an account</strong></a> to get started
-                </p>
-            </div>
-        </div>
+        {% include "tutorial.html" %}
     </div>
 
+{% endblock %}
+
+{% block bottom_content %}
+    {% include "log_in_footer.html" %}
 {% endblock %}
