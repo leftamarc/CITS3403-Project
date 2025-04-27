@@ -1,0 +1,61 @@
+{% extends "header.html" %}
+{% block content %}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <!-- Left Column: Registration Form -->
+        <div class="col-md-6">
+            <h1 class="basic-title mt-5 ml-2">Create an account</h1>
+            <div class="bottom-box p-4 mt-4" style="text-align: left; height: 420px">
+                <form action="{{ url_for('register') }}" method="post">
+                    <div class="form-group">
+                        <label class="bottom-box-text" for="username" style="font-weight: bold; color: #06BFFF;">Username</label>
+                        <input type="text" class="form-control dark-input" id="username" name="username" required autocomplete="off">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="bottom-box-text" for="password" style="font-weight: bold;">Password</label>
+                        <input type="password" class="form-control dark-input" id="password" name="password" required autocomplete="off">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="bottom-box-text" for="confirm_password" style="font-weight: bold;">Confirm Password</label>
+                        <input type="password" class="form-control dark-input" id="confirm_password" name="confirm_password" required autocomplete="off">
+                    </div>
+
+                    <button type="submit" class="button mt-3 mb-3">
+                        Register
+                    </button>
+                    <p class="bottom-box-text">
+                        Already have an account? <a href="{{ url_for('login') }}" class="link light-style"> <strong>Log in</strong></a>
+                    </p>
+                </form>
+            </div>
+        </div>
+
+        <!-- Right Column: Steam ID Instructions -->
+        <div class="col-md-6 d-flex align-items-end">
+            <div class="half-col-box p-4 mb-5" >
+                <h2 class="half-col-head m-4">You will need your Steam ID to generate your SteamWrappeds</h2>
+                <ol class="half-col-text">
+                    <li class="mb-2">Log in to <a href="https://store.steampowered.com/" class="no-style-link">Steam</a></li>
+                    <li class="mb-2">In the top right-hand corner, click on the dropdown menu of your profile name</li>
+                    <li class="mb-2">Click on "Account details"</li>
+                    <li class="mb-5">In the top left is your username, underneath is your Steam ID</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="footer-text text-center mt-4 mb-4">
+                <p>University of Western Australia CITS3403 Agile Web Development Project Submission. <br>
+                   SteamWrapped is not associated with Steam.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

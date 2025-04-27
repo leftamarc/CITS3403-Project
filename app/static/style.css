@@ -114,8 +114,6 @@ button.header {
     animation: gradientMove 5s linear infinite;
 }
 
-
-
 .h4 {
     font-size: 1.5rem;
     color: #c7d5e0;
@@ -148,7 +146,7 @@ p {
 }
 
 /* Links */
-a.no-style-link {
+a.link.no-style {
     text-decoration: none;
     color: inherit;
     font-weight: 700;
@@ -156,7 +154,7 @@ a.no-style-link {
     position: relative;
 }
 
-a.no-style-link::after {
+a.link::after {
     content: "";
     position: absolute;
     bottom: 0;
@@ -169,7 +167,7 @@ a.no-style-link::after {
     transition: transform 0.3s ease;
 }
 
-a.no-style-link:hover::after {
+a.link:hover::after {
     transform: scaleX(1);
     transform-origin: left;
 }
@@ -213,7 +211,7 @@ a.no-style-link:hover::after {
 
 
 
-/*.register-link {
+a.link.light-style {
     color: #c7d5e0;
     text-decoration: none;
     position: relative;
@@ -221,28 +219,10 @@ a.no-style-link:hover::after {
     font-weight: bold;
 }
 
-.register-link::after {
-    content: "";
-    position: absolute;
-    bottom: -2px;
-    left: 0;
-    height: 2px;
-    width: 100%;
-    background-color: #1a9fff;
-    transform: scaleX(0);
-    transform-origin: right;
-    transition: transform 0.3s ease;
-}
-
-.register-link:hover {
+a.link.light-style:hover {
     color: #ffffff;
     cursor: pointer;
 }
-
-.register-link:hover::after {
-    transform: scaleX(1);
-    transform-origin: left;
-} */
 
 .button.generate {
     padding: 0.75rem 2rem;
@@ -273,4 +253,27 @@ a.no-style-link:hover::after {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
+
+/* Login Page */
+.basic-title {
+    font-size: 26px;
+    font-weight: 700;
+    color: #ffffff
+}
+.dark-input[type="text"], .dark-input[type="password"], .dark-input[type="text"]:focus, .dark-input[type="password"]:focus {
+    border-radius: 2px;
+    color: #fff;
+    padding: 10px;
+    background-color: #32353c;
+    outline: none;
+    font-size: 15px;
+    border: 1px solid #32353c;
+    box-shadow: none;
+}
+
+.dark-input[type="text"]:hover, .dark-input[type="password"]:hover {
+    filter: brightness(1.1);
+    transition: filter 0.2s ease;
+}
+
 
