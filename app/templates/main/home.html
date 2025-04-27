@@ -1,4 +1,4 @@
-{% extends "header.html" %}
+{% extends "main/header.html" %}
 {% block content %}
 
 <div class="container">
@@ -20,11 +20,11 @@
                 </section>
             </div>
         </div>
-        {% include "tutorial.html" %}
+        {% include "elements/tutorial.html" %}
     </div>
 
 {% endblock %}
 
 {% block bottom_content %}
-    {% include "log_in_footer.html" %}
+    {% include "elements/log_in_footer.html" %}
 {% endblock %}
