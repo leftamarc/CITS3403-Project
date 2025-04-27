@@ -11,7 +11,7 @@
 
 </head>
 
-<body>
+<body class="d-flex flex-column min-vh-100">
     <ul class="header-tabs"> 
         <div class="header-title clickable-text {% if request.endpoint == 'home' %}active-tab{% endif %}" 
         onclick="window.location.href='{{ url_for('home') }}'">SteamWrapped</div>
@@ -40,7 +40,15 @@
 
     </ul>
 
-    {% block content %}{% endblock %}
+    <main class="flex-grow-1">
+        {% block content %}{% endblock %}
+    </main>
+
+
+    <footer class="footer py-3 mt-auto mb-3">
+        <p class="text-center"> University of Western Australia CITS3403 Agile Web Development Project Submission. <br>
+            SteamWrapped is not associated with Steam.</p>
+    </footer>
 
     <script src="{{ url_for('static', filename='script.js') }}" defer></script>
     <!-- jQuery -->
