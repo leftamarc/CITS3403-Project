@@ -26,13 +26,13 @@ After creating your virtual environment navigate to its 'Scripts' subfolder.
 
 You will need to edit the file associated with your console of choice and add the appropriate line.
 
-### activate.bat (Windows CMD)
+### activate.bat    (Windows CMD)
 set STEAM_API_KEY=your_api_key_here
 
-### Activate.ps1 (Windows PowerShell)
-$env:$env:STEAM_API_KEY = "your_api_key_here"
+### Activate.ps1    (Windows PowerShell)
+$env:STEAM_API_KEY = "your_api_key_here"
 
-### activate (Linux/Mac)
+### activate        (bash)
 export STEAM_API_KEY="your_api_key_here"
 
 Now when you run the application from the python virtual environment your api key will always be initialised.
