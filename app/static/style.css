@@ -2,6 +2,7 @@
 body {
     background-color: #1B2838; /* Page background color */
     font-family: "Motiva Sans", "Twemoji", "Noto Sans", Helvetica, sans-serif; /* Font family */
+    margin: 0; /* Removes default body margin */
 }
 
 /* Inherited Header Bar */
@@ -276,4 +277,51 @@ a.link.light-style:hover {
     transition: filter 0.2s ease;
 }
 
+/* Content wrapper */
+.content-wrapper {
+    background-color: #1B2838; /* Content background color */
+}
+
+/* Background Animation Container */
+.animated-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: -1; /* Ensures it stays behind other content */
+    pointer-events: none; /* Prevents interaction with the background */
+}
+
+/* Individual Logo */
+.animated-logo {
+    position: absolute;
+    width: 100px; /* Adjust size as needed */
+    height: 100px;
+    background-image: url('./SWLogo.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 0.25; /* Set transparency */
+    animation: drift 20s linear infinite; /* Apply drifting animation */
+}
+
+/* Keyframes for Drifting Animation */
+@keyframes drift {
+    0% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+    25% {
+        transform: translate(3rem, -2rem) rotate(15deg);
+    }
+    50% {
+        transform: translate(-3rem, 3rem) rotate(-15deg);
+    }
+    75% {
+        transform: translate(2rem, -3rem) rotate(10deg);
+    }
+    100% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+}
 
