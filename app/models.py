@@ -51,4 +51,17 @@ class User_Game(db.Model):
     app_id = db.Column(db.Integer, db.ForeignKey('game.app_id'), primary_key=True)
 
 
+#Represents a genre
+class Genre(db.Model):
+    genre_name = db.Column(db.String(50), primary_key=True)
+    # Name of the genre
+
+
+#Reprents a specific game tagged with a specific genre
+class Game_Genre(db.Model):
+    game_id = db.Column(db.Integer, db.ForeignKey('game.app_id'), primary_key=True)
+    # The game in question
+    genre_id = db.Column(db.Integer, db.ForeignKey('genre.genre_id'), primary_key=True)
+    # The genre in question
+
 
