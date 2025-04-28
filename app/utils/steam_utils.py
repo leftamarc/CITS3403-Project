@@ -92,7 +92,7 @@ def GetRecentlyPlayedGames(steam_id):
         raise RequestFail(f"Error: {e}")
 
 
-#Retrieves possibly useful metadata about a given app, returns the names name, a list of developers, a list of publishers, a list of tuples of the form (genre_id, genre_name)
+#Retrieves possibly useful metadata about a given app, returns the games name, a list of developers, a list of publishers, a list of tuples of the form (genre_id, genre_name)
 #and the games release date
 def GetAppMetadata(app_id):
     url = f"https://store.steampowered.com/api/appdetails/?appids={app_id}&filters=basic,genres,release_date,developers,publishers,metacritic"
