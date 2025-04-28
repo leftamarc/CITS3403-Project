@@ -17,13 +17,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
 document.addEventListener("DOMContentLoaded", () => {
     const elements = document.querySelectorAll("ul#elements li");
+    const elementPositions = []; // store positions of elements
 
     elements.forEach(element => {
-        // Generate random positions within the window dimensions
-        const randomX = Math.random() * window.innerWidth;
-        const randomY = Math.random() * window.innerHeight;
+        let randomX, randomY;
+        let isOverlapping;
+
+        do {
+            // Generate random positions within the window dimensions
+            randomX = Math.random() * (window.innerWidth - element.offsetWidth);
+            randomY = Math.random() * (window.innerHeight - element.offsetHeight);
+
+            // Check for overlap with existing elements
+            isOverlapping = elementPositions.some(pos => {
+                const distanceX = Math.abs(pos.x - randomX);
+                const distanceY = Math.abs(pos.y - randomY);
+                return distanceX < element.offsetWidth && distanceY < element.offsetHeight;
+            });
+        } while (isOverlapping);
+
+        // Store the position to avoid future overlaps
+        elementPositions.push({ x: randomX, y: randomY });
 
         // Apply the random positions to each element
+        element.style.position = "absolute"; // Ensure position is absolute
         element.style.left = `${randomX}px`;
         element.style.top = `${randomY}px`;
     });

@@ -299,8 +299,8 @@ a.link.light-style:hover {
 /* Individual Logo */
 .animated-logo {
     position: relative; /* Adjusted for column alignment */
-    width: 10vw; /* Scales with viewport width */
-    height: 10vw; /* Maintains aspect ratio */
+    width: 5vw; /* Scales with viewport width */
+    height: 5vw; /* Maintains aspect ratio */
     background-image: url('./SWLogo.png');
     background-size: contain;
     background-repeat: no-repeat;
