@@ -292,11 +292,13 @@ a.link.light-style:hover {
     overflow: hidden;
     z-index: -1; /* Ensures it stays behind other content */
     pointer-events: none; /* Prevents interaction with the background */
+    display: flex;
+    flex-wrap: wrap; /* Allows wrapping of logos */
 }
 
 /* Individual Logo */
 .animated-logo {
-    position: absolute;
+    position: relative; /* Adjusted for column alignment */
     width: 100px; /* Adjust size as needed */
     height: 100px;
     background-image: url('./SWLogo.png');
@@ -312,13 +314,13 @@ a.link.light-style:hover {
         transform: translate(0, 0) rotate(0deg);
     }
     25% {
-        transform: translate(3rem, -2rem) rotate(15deg);
+        transform: translate(50px, -30px) rotate(15deg);
     }
     50% {
-        transform: translate(-3rem, 3rem) rotate(-15deg);
+        transform: translate(-50px, 50px) rotate(-15deg);
     }
     75% {
-        transform: translate(2rem, -3rem) rotate(10deg);
+        transform: translate(30px, -50px) rotate(10deg);
     }
     100% {
         transform: translate(0, 0) rotate(0deg);
