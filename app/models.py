@@ -139,6 +139,9 @@ class Developer_Games(db.Model):
 
 #********************************************************************************************************************************************************************************
 
+
+
+
 #represents a user login system (using werzeug security)
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
