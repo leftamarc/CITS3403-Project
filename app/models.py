@@ -1,5 +1,7 @@
 from app import db
-
+from datetime import datetime
+from security import hash_password, check_password
+#using werkzeug security atm can change later if needed (just to hash passwords in database)
 
 #TODO: Make some wrapper functions: Calling dbAchievementAdd(name, rate, app_id) is going to be more readable then SQL statements and a function 
 #      like getAchievement(name) that returns all the associated data in a python list will be easier to work with
@@ -50,5 +52,14 @@ class User_Game(db.Model):
     #The game in question
     app_id = db.Column(db.Integer, db.ForeignKey('game.app_id'), primary_key=True)
 
+#represents a user login system (using werzeug security)
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(15), nullable=False, unique=True)
+    password_hash = db.Column(db.String(128), nullable=False)
+    date_created = db.Column(db.DateTime, default=datetime.utcnow)
 
+    def set_password(self, password):
+        self.password_hash = hash_password(password)
+    
 
