@@ -299,31 +299,51 @@ a.link.light-style:hover {
 /* Individual Logo */
 .animated-logo {
     position: relative; /* Adjusted for column alignment */
-    width: 100px; /* Adjust size as needed */
-    height: 100px;
+    width: 10vw; /* Scales with viewport width */
+    height: 10vw; /* Maintains aspect ratio */
     background-image: url('./SWLogo.png');
     background-size: contain;
     background-repeat: no-repeat;
     opacity: 0.25; /* Set transparency */
-    animation: drift 20s linear infinite; /* Apply drifting animation */
+    animation: animateLogo 20s infinite; /* Apply drifting and new animation */
 }
 
-/* Keyframes for Drifting Animation */
-@keyframes drift {
+ul#elements {
+    position: relative;
+}
+
+ul#elements li {
+    list-style: none;
+    position: absolute;
+    transition: 0.1s;
+    opacity: 0.0; /* Set a base opacity */
+    left: calc(20vw + 60vw * var(--random-x)); /* Randomized horizontal position */
+    top: calc(20vh + 50vh * var(--random-y)); /* Randomized vertical position */
+    font-size: calc(16px + 16px * var(--random-size)); /* Randomized font size */
+    animation: animateElement 20s infinite ease-in-out; /* Apply the single animation */
+}
+
+/* Keyframes for the single animation */
+@keyframes animateElement {
     0% {
-        transform: translate(0, 0) rotate(0deg);
+        transform: scale(1) translateY(0) translateX(0);
+        opacity: 0.25;
     }
     25% {
-        transform: translate(50px, -30px) rotate(15deg);
+        transform: rotate(-10deg) scale(0.4) translateY(10px) translateX(10px);
+        opacity: 0.1;
     }
     50% {
-        transform: translate(-50px, 50px) rotate(-15deg);
+        transform: rotate(-10deg) scale(0.4) translateY(10px) translateX(10px);
+        opacity: 0;
     }
     75% {
-        transform: translate(30px, -50px) rotate(10deg);
+        transform: rotate(20deg) scale(0.5) translateY(15px) translateX(15px);
+        opacity: 0.1;
     }
     100% {
-        transform: translate(0, 0) rotate(0deg);
+        transform: scale(1) translateY(0) translateX(0);
+        opacity: 0.25;
     }
 }
 
