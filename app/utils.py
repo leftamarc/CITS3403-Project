@@ -52,7 +52,7 @@ def GetPlayerAchievements(steam_id, app_id):
         #Request failed
         raise Exception(f"Error: {e}")
 
-#Selects a player by steam id and returns a list of their owned games
+#Retrieves info about users game library, returns number of games owned and a list of tuples of the form (app_id, total_playtime, app_img_url, last_time_played)
 def GetOwnedGames(steam_id):
     url = f"http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key={STEAM_API_KEY}&steamid={steam_id}&include_appinfo=True&include_played_free_games=True"
     try:
@@ -68,7 +68,7 @@ def GetOwnedGames(steam_id):
         #Request failed
         raise Exception(f"Error: {e}")
 
-#Selects a player by steam id and returns a list of their recently played games
+#Retrieves info about a players recent game data, returns number of games played in the last 2 week, and a list of tuples of the form (app_id, playtime_last_2_weeks)
 def GetRecentlyPlayedGames(steam_id):
     url = f"http://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v0001/?key={STEAM_API_KEY}&steamid={steam_id}"
     try:
