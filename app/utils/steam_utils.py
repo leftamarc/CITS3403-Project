@@ -5,7 +5,6 @@ STEAM_API_KEY = os.getenv("STEAM_API_KEY")
 
 #                                                              //STEAM WEB API FUNCTIONS//
 
-
 class PrivateAccount(Exception):
     pass
 
@@ -102,7 +101,8 @@ def GetAppMetadata(app_id):
             if not data:
                 raise NoMatches("No matching data for input parameters")
             result = json.loads(data) 
-            if result[str(app_id)]["success"] != TrNoMatches
+            if result[str(app_id)]["success"] != True:
+                raise NoMatches("No matching data for input parameters")
             metadata = result[str(app_id)]["data"]
             return  metadata["name"], metadata["developers"], metadata["publishers"], [(genre["id"], genre["description"]) for genre in metadata["genres"]], metadata["release_date"]["date"]
     except Exception as e:
