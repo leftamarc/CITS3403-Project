@@ -1,6 +1,6 @@
 from app import db
 from datetime import datetime
-from security import hash_password, check_password
+from app.security import hash_password, check_password
 #using werkzeug security atm can change later if needed (just to hash passwords in database)
 
 #TODO: Make some wrapper functions: Calling dbAchievementAdd(name, rate, app_id) is going to be more readable then SQL statements and a function 
@@ -23,7 +23,7 @@ class Achievement(db.Model):
     app_id          =   db.Column(db.Integer, db.ForeignKey('game.app_id'), nullable=False)
 
     #The display name of the achievement on steam
-    display_name    =   db.Column(db.String(500) nullable=False)
+    display_name    =   db.Column(db.String(500), nullable=False)
 
     #The description of the achievement on steam
     description     =   db.Column(db.String(500))
@@ -41,7 +41,7 @@ class Game(db.Model):
     image           =   db.Column(db.String(200), nullable=False)
 
     #Release date
-    release_date    =   db.Colum(db.Integer)
+    release_date    =   db.Column(db.Integer)
 
 
 #Represents a steam user
@@ -59,7 +59,7 @@ class Steam_User(db.Model):
 #Represents a genre
 class Genre(db.Model):
     #The internal ID of the genre tag on steam
-    genre_id        =   db.Column(db.Integer(100), primary_key=True)
+    genre_id        =   db.Column(db.Integer, primary_key=True)
 
     #The name of the genre
     name            =   db.Column(db.String(100), nullable=False)
@@ -130,7 +130,7 @@ class Developer_Games(db.Model):
 
 
 #Reprents a specific game published by a specific publisher
-class Developer_Games(db.Model):
+class Publisher_Games(db.Model):
     # The game in question
     app_id          =   db.Column(db.Integer, db.ForeignKey('game.app_id'), primary_key=True)
 
