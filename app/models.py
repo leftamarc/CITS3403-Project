@@ -142,7 +142,7 @@ class Publisher_Games(db.Model):
 
 
 
-#represents a user login system (using werzeug security)
+#represents a user login system (using werkzeug security)
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(15), nullable=False, unique=True)
