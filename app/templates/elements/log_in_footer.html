@@ -1,16 +1,23 @@
 <div class="row justify-content-center">
     <div class="col-md-5 ">
         <div class="bottom-box p-4 mt-3 mb-3">
-            <h1 class="bottom-box-title login ">SteamWrapped</h1>
-            <p class="bottom-box-text">To get, view and share your Steam Wrappeds, please log in</p>
-            <form action="{{ url_for('login') }}" method="get">
-                <button type="submit" class="button mb-3">
-                    Log In
-                </button>
-            </form>
-            <p class="bottom-box-text">
-                Or <a href="{{ url_for('register') }}" class="link light-style"> <strong>create an account</strong></a> to get started
-            </p>
+            <h1 class="bottom-box-title login">SteamWrapped</h1>
+            
+            {% if session.get('user_id') %}
+                <p class="bottom-box-text">You are logged in as <strong>{{ session.get('username') }}</strong>.</p>
+                <form action="{{ url_for('logout') }}" method="post">
+                    <button type="submit" class="button mb-3">Log Out</button>
+                </form>
+            {% else %}
+                <p class="bottom-box-text">To get, view and share your Steam Wrappeds, please log in</p>
+                <form action="{{ url_for('login') }}" method="get">
+                    <button type="submit" class="button mb-3">Log In</button>
+                </form>
+                <p class="bottom-box-text">
+                    Or <a href="{{ url_for('register') }}" class="link light-style"> <strong>create an account</strong></a> to get started
+                </p>
+            {% endif %}
+            
         </div>
     </div>
 </div>
