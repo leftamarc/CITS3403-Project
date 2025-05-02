@@ -46,6 +46,7 @@ class Game(db.Model):
 
 #Represents a steam user
 class Steam_User(db.Model):
+    __tablename__ = 'steam_user'
     #Steam ID of the user
     steam_id        =   db.Column(db.Integer, primary_key=True) 
     
