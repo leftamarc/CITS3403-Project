@@ -14,7 +14,8 @@ def home():
 
 @app.route('/get')
 def get():
-    return render_template('main/get.html')
+    steam_user = Steam_User.query.filter_by(id=User.id).first()
+    return render_template('main/get.html',steam_id=steam_user.steam_id if steam_user else None)
 
 @app.route('/view')
 def view():
