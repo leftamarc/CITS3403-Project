@@ -75,17 +75,17 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-// Function to handle editing steam_id in profile
-function editSteamID() {
-    // Enable the steam_id input field to allow editing
-    var steamIDField = document.getElementById('steam_id');
+function resetToLink() {
+    const steamIDField = document.getElementById('steam_id');
+    const button = document.getElementById('editToggleButton');
+
+    // Enable the field and clear the value
     steamIDField.disabled = false;
-
-    // Clear the current steam_id value
     steamIDField.value = '';
+    steamIDField.placeholder = 'Enter your Steam ID';
 
-    // Change the button to submit the form (since the user is now editing)
-    var button = document.querySelector("button[type='button']");
-    button.innerHTML = "Update"; // Change button text
-    button.type = "submit"; // Change button to submit form
+    // Change button to submit
+    button.innerText = 'Link';
+    button.setAttribute('type', 'submit');
+    button.removeAttribute('onclick');  // remove JS handler so it behaves like a submit button
 }

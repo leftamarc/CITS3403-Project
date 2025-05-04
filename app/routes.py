@@ -103,46 +103,52 @@ def profile():
         return redirect(url_for('login'))
 
     user = User.query.get(session['user_id'])
-
-    # Check if the user has a linked Steam ID
     steam_user = Steam_User.query.filter_by(id=user.id).first()
 
     if request.method == 'POST':
-        steam_id = request.form['steam_id']
-        
-        # Call GetPlayerSummaries to fetch the profile data for the given Steam ID
+        steam_id = request.form['steam_id'].strip()
+
+        # If the field is left blank, remove the existing Steam_User entry (unlink account)
+        if not steam_id:
+            if steam_user:
+                db.session.delete(steam_user)
+                db.session.commit()
+                flash("Steam ID unlinked successfully.", "info")
+            return redirect(url_for('profile'))
+
+        # Otherwise, try to fetch the profile and update/create as usual
         try:
             steam_id, username, avatar_url = GetPlayerSummaries(steam_id)
         except Exception as e:
             flash(f"Error fetching Steam profile data: {e}", "danger")
             return redirect(url_for('profile'))
-        
-        # Check if Steam ID already exists (if enforcing uniqueness)
+
+        # Ensure the steam_id isn't linked to another user
         existing_steam_user = Steam_User.query.filter_by(steam_id=steam_id).first()
-        if existing_steam_user:
+        if existing_steam_user and existing_steam_user.id != user.id:
             flash('Steam ID is already linked to another account.', 'danger')
             return redirect(url_for('profile'))
-        
-        # If there is no existing linked Steam ID, create a new one
+
         if not steam_user:
-            # Create a new Steam user instance and link it to the current user
+            # Link new Steam ID
             bound_steam_id = Steam_User(steam_id=steam_id, username=username, avatar_url=avatar_url, id=user.id)
             db.session.add(bound_steam_id)
-            db.session.commit()
-            flash('Steam ID link successful', 'success')
+            flash('Steam ID linked successfully.', 'success')
         else:
-            # If a Steam ID is already linked, update it
+            # Update existing Steam ID
             steam_user.steam_id = steam_id
             steam_user.username = username
             steam_user.avatar_url = avatar_url
-            db.session.commit()
-            flash('Steam ID updated successfully', 'success')
+            flash('Steam ID updated successfully.', 'success')
 
+        db.session.commit()
         return redirect(url_for('profile'))
 
-    # Pass the steam_id and user info from the database if available
-    return render_template('main/profile.html', steam_id=steam_user.steam_id if steam_user else None, 
-                           username=user.username if steam_user else None)
+    return render_template(
+        'main/profile.html',
+        steam_id=steam_user.steam_id if steam_user else None,
+        username=user.username
+    )
 
 
 
