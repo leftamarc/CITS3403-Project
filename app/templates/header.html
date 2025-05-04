@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport"="width=device-width, initial-scale=1.0">
     <title>CITS3403 Project</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 
@@ -59,6 +59,13 @@
         {% block bottom_content %}{% endblock %}
     </div>
 
+    <div class="animated-background">
+        <ul id="elements">
+            {% for i in range(25) %}
+                <li class="animated-logo" style="animation-delay: -{{ loop.index }}s;"></li>
+            {% endfor %}
+        </ul>
+    </div>
 
     <footer class="footer py-3 mt-auto mb-3">
         <p class="text-center"> University of Western Australia CITS3403 Agile Web Development Project Submission. <br>
