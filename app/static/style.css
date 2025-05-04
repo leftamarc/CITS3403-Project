@@ -282,6 +282,26 @@ a.link.light-style:hover {
     background-color: #1B2838; /* Content background color */
 }
 
+/* Custom Scrollbar for scroll-box */
+.scroll-box::-webkit-scrollbar {
+    width: 10px; /* Width of the scrollbar */
+}
+
+.scroll-box::-webkit-scrollbar-track {
+    background: #171a21; /* Background of the scrollbar track */
+    border-radius: 5px; /* Rounded corners for the track */
+}
+
+.scroll-box::-webkit-scrollbar-thumb {
+    background: #1a9fff; /* Color of the scrollbar thumb */
+    border-radius: 5px; /* Rounded corners for the thumb */
+    border: 2px solid #171a21; /* Adds spacing around the thumb */
+}
+
+.scroll-box::-webkit-scrollbar-thumb:hover {
+    background: #06BFFF; /* Color of the thumb on hover */
+}
+
 /* Background Animation Container */
 .animated-background {
     position: fixed;
@@ -323,6 +343,7 @@ ul#elements li {
     animation: animateElement 20s infinite ease-in-out; /* Apply the single animation */
 }
 
+
 /* Keyframes for the single animation */
 @keyframes animateElement {
     0% {
@@ -346,4 +367,5 @@ ul#elements li {
         opacity: 0.25;
     }
 }
+
 
