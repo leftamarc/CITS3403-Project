@@ -26,5 +26,9 @@
 {% endblock %}
 
 {% block bottom_content %}
-    {% include "elements/log_in_footer.html" %}
+    {% if session.get('user_id') %}
+        {% include "elements/gen_footer.html" %}
+    {% else %}
+        {% include "elements/log_in_footer.html" %}
+    {% endif %}
 {% endblock %}

@@ -6,6 +6,16 @@
             <div class="col-md-6">
                 <h1 class="basic-title mt-5 ml-2">Log In</h1>
                     <div class="bottom-box p-4 mt-4" style="height: 350px; text-align: left;">
+                        {% with messages = get_flashed_messages(with_categories=true) %}
+                            {% if messages %}
+                                {% for category, message in messages %}
+                                <div class="alert alert-{{ category }}" role="alert">
+                                {{ message }}
+                                </div>
+                                {%endfor %}
+                            {% endif %}
+                        {% endwith %}
+                        
 
                         <form action="{{ url_for('login') }}" method="post">
 
@@ -32,6 +42,7 @@
                             <p class="bottom-box-text">
                                 Don't have an account? <a href="{{ url_for('register') }}" class="link light-style"> <strong>Create an account</strong></a> to get started!
                             </p>
+                        </form> 
                     </div>
                 </div>
             

@@ -46,3 +46,32 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
+document.addEventListener("DOMContentLoaded", () => {
+    let formSubmitted = false;
+
+    const form = document.querySelector("form");
+    const pathname = window.location.pathname;
+    const monitoredPages = ["/login", "/register"];
+
+    if (form && monitoredPages.includes(pathname)) {
+        // Track submission via buttons only
+        const submitButtons = form.querySelectorAll("button[type='submit'], input[type='submit']");
+
+        submitButtons.forEach(button => {
+            button.addEventListener("click", () => {
+                formSubmitted = true;
+            });
+        });
+
+        // Fallback: If form is submitted (e.g., via Enter key), mark as submitted
+        form.addEventListener("submit", () => {
+            formSubmitted = true;
+        });
+
+        window.addEventListener("beforeunload", function (e) {
+            if (!formSubmitted) {
+                e.preventDefault();            }
+        });
+    }
+});
+
