@@ -8,3 +8,27 @@ document.querySelector('form').addEventListener('submit', function(event) {
     }
 });
 
+document.addEventListener("DOMContentLoaded", () => {
+    let formSubmitted = false;
+
+    const form = document.querySelector("form");
+    const pathname = window.location.pathname;
+    const monitoredPages = ["/login", "/register"];
+
+    if (form && monitoredPages.includes(pathname)) {
+        form.addEventListener("submit", () => {
+            formSubmitted = true;
+        });
+
+        window.addEventListener("beforeunload", function (e) {
+            if (!formSubmitted) {
+                e.preventDefault();
+                e.returnValue = ''; // Required for Chrome to show alert
+            }
+        });
+    }
+});
+
+
+
+
