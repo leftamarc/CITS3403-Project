@@ -351,8 +351,9 @@ a.link.light-style:hover {
     background-image: url('./SWLogo.png');
     background-size: contain;
     background-repeat: no-repeat;
-    opacity: 0.25;
+    opacity: 0;
     animation: animateLogo 20s infinite;
+    transition: opacity 0.1s ease; /* Smooth transition for opacity */
 }
 
 ul#elements {
@@ -364,7 +365,7 @@ ul#elements li {
     /* Styles individual animated elements */
     list-style: none;
     position: absolute;
-    transition: 0.1s;
+    transition: transform 1s ease, opacity 0.5s ease; /* Smooth transition for transform and opacity */
     opacity: 0.0;
     left: calc(20vw + 60vw * var(--random-x));
     top: calc(20vh + 50vh * var(--random-y));
