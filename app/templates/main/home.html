@@ -4,7 +4,11 @@
 <div class="container">
     <div class="row mt-5">
         <div class="col-md-6 d-flex flex-column align-items-start">
+            {% if session.get('user_id') %}
+            <h1 class="tab-title display-4 mb-5"> Hello {{ username }}</h1>  
+            {% else %}
             <h1 class="tab-title display-4 mb-5">Welcome to SteamWrapped!</h1>  
+            {% endif %}
             <div>
                 <section>
                     <h2 class="h4">What kind of player are you?</h2>

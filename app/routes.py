@@ -9,7 +9,7 @@ from flask_login import login_user, login_required
 @app.route('/')
 @app.route('/home')
 def home():
-    return render_template('main/home.html')
+    return render_template('main/home.html', username=session.get('username'))
 
 @app.route('/get')
 def get():
