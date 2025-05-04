@@ -36,7 +36,7 @@
 
         {% if session.get('user_id') %}
             <li>
-                <span class="clickable-text" onclick="window.location.href='{{ url_for('profile') }}'">
+                <span class="clickable-text {% if request.endpoint == 'profile' %}active-tab{% endif %}" onclick="window.location.href='{{ url_for('profile') }}'">
                     {{ session.get('username')|upper }}
                 </span>
             </li>
