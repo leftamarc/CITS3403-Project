@@ -16,19 +16,23 @@ document.addEventListener("DOMContentLoaded", () => {
     const monitoredPages = ["/login", "/register"];
 
     if (form && monitoredPages.includes(pathname)) {
+        // Track submission via buttons only
+        const submitButtons = form.querySelectorAll("button[type='submit'], input[type='submit']");
+
+        submitButtons.forEach(button => {
+            button.addEventListener("click", () => {
+                formSubmitted = true;
+            });
+        });
+
+        // Fallback: If form is submitted (e.g., via Enter key), mark as submitted
         form.addEventListener("submit", () => {
             formSubmitted = true;
         });
 
         window.addEventListener("beforeunload", function (e) {
             if (!formSubmitted) {
-                e.preventDefault();
-                e.returnValue = ''; // Required for Chrome to show alert
-            }
+                e.preventDefault();            }
         });
     }
 });
-
-
-
-

@@ -1,6 +1,8 @@
 from app import db
 from datetime import datetime
 from app.security import hash_password, check_password
+from flask_login import UserMixin
+
 #using werkzeug security atm can change later if needed (just to hash passwords in database)
 
 #TODO: Make some wrapper functions: Calling dbAchievementAdd(name, rate, app_id) is going to be more readable then SQL statements and a function 
@@ -144,11 +146,12 @@ class Publisher_Games(db.Model):
 
 
 #represents a user login system (using werkzeug security)
-class User(db.Model):
+class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(15), nullable=False, unique=True)
     password_hash = db.Column(db.String(128), nullable=False)
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
+    
 
     def set_password(self, password):
         self.password_hash = hash_password(password)

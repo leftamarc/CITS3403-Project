@@ -4,6 +4,7 @@ from flask import Flask
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from app.config import Config
+from flask_login import LoginManager 
 
 #Checks for STEAM_API_KEY
 STEAM_API_KEY = os.getenv("STEAM_API_KEY")
@@ -16,6 +17,18 @@ app.config.from_object(Config)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
+# Initialise flask-login
+login_manager = LoginManager()
+login_manager.login_view = 'login'  # Set default login view
+login_manager.init_app(app)
+
+
 #generate secret key 
 app.config['SECRET_KEY'] = os.urandom(24)
 from app import routes, models
+
+# Define the user_loader function
+from app.models import User
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))  

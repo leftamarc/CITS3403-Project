@@ -3,6 +3,7 @@ from app import app, db
 from app.models import User
 from werkzeug.security import generate_password_hash, check_password_hash
 from app.security import *
+from flask_login import login_user, login_required
 
 
 @app.route('/')
@@ -31,27 +32,32 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
+        remember_me = request.form.get('rememberMe')  # Get the value of the 'remember me' checkbox
         
-        #check if user exists
+        # Check if the user exists
         user = User.query.filter_by(username=username).first()
         if not user:
-            flash('Username does not exist.' , 'danger')
+            flash('Username does not exist.', 'danger')
             return redirect(url_for('login'))
         
-        if not check_password(user.password_hash, password):
+        # Check if password matches
+        if not check_password_hash(user.password_hash, password):
             flash('Incorrect password.', 'danger')
             return redirect(url_for('login'))
         
-        #successful login
+        # Successful login
         else:
-            session['user_id'] = user.id
+            # Log the user in and remember them if selected
+            login_user(user, remember=(remember_me == 'on'))
+            
+            session['user_id'] = user.id  # You can still set session data as needed
             session['username'] = user.username
+            
             flash('Login successful', 'success')
             return redirect(url_for('home'))
-            
-        
 
     return render_template('main/login.html')
+
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
