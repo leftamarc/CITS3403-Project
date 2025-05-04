@@ -89,3 +89,11 @@ function resetToLink() {
     button.setAttribute('type', 'submit');
     button.removeAttribute('onclick');  // remove JS handler so it behaves like a submit button
 }
+
+function showLoadingPage() {
+    document.getElementById('loading-overlay').style.display = 'flex'; // Show loading overlay
+}
+
+//function hideLoadingPage() {
+//    document.getElementById('loading-overlay').style.display = 'none'; // Hide loading overlay
+//}
