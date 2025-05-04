@@ -56,7 +56,10 @@ class Steam_User(db.Model):
     username        =   db.Column(db.String(200), nullable=False)
  
     #Url to the users avatar
-    image           =   db.Column(db.String(200), nullable=False)
+    avatar_url           =   db.Column(db.String(200), nullable=False)
+
+    #Associated SteamWrapped Account ID
+    id =  db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
 
 #Represents a genre

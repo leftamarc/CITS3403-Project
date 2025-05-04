@@ -5,7 +5,7 @@
     <div class="row justify-content-center">
         <div class="col-md-6">
             <h1 class="basic-title mt-5 ml-2">Create an account</h1>
-            <div class="bottom-box p-4 mt-4" style="text-align: left; height: 420px">
+            <div class="bottom-box p-4 mt-4" style="text-align: left; height: 500px">
                 {% with messages = get_flashed_messages(with_categories=true) %}
                     {% if messages %}
                        {% for category, message in messages %}
@@ -20,6 +20,11 @@
                     <div class="form-group">
                         <label class="bottom-box-text" for="username" style="font-weight: bold;">Username</label>
                         <input type="text" class="form-control dark-input" id="username" name="username" required autocomplete="off">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="bottom-box-text" for="steam_id" style="font-weight: bold;">Steam ID</label>
+                        <input type="text" class="form-control dark-input" id="steam_id" name="steam_id" required autocomplete="off">
                     </div>
 
                     <div class="form-group">
