@@ -1,78 +1,86 @@
 /* Base */
 body {
-    background-color: #1B2838; /* Page background color */
-    font-family: "Motiva Sans", "Twemoji", "Noto Sans", Helvetica, sans-serif; /* Font family */
-    margin: 0; /* Removes default body margin */
+    /* Styles the page background and font */
+    background-color: #1B2838;
+    font-family: "Motiva Sans", "Twemoji", "Noto Sans", Helvetica, sans-serif;
+    margin: 0;
 }
 
 /* Inherited Header Bar */
 .header-tabs {
-    margin: 0; /* Removes default margin */
-    gap: 1.5rem; /* Gap between the tabs */
-    height: 100px;  /* Increased height for a thicker header */
-    display: flex; /* Uses flexible box for the layout, i.e. horizontal list */
-    padding: 1rem 2rem; /* Adjusted padding for better spacing */
-    background-color: #171a21; /* Steam header color */
-    
-    font-size: 16px; /* Steam header font size */
-    font-weight: 700; /* Boldness */
-    color: #c7d5e0; /* Steam header font color */
-    align-items: center; /* Centers the header text vertically */
-    list-style-type: none; /* Removes the list style */
-    justify-content: center; /* Centers the header text horizontally */
+    /* Styles the header navigation bar */
+    margin: 0;
+    gap: 1.5rem;
+    height: 100px;
+    display: flex;
+    padding: 1rem 2rem;
+    background-color: #171a21;
+    font-size: 16px;
+    font-weight: 700;
+    color: #c7d5e0;
+    align-items: center;
+    list-style-type: none;
+    justify-content: center;
 }
 
 .header-title {
-    cursor: pointer; /* Pointer cursor on hover */
-    margin-right: 2rem; /* Space between the title and tabs */
-
+    /* Styles the title in the header */
+    cursor: pointer;
+    margin-right: 2rem;
     font-size: 25px;
     font-weight: 700;
     letter-spacing: 1px;
 }
 
-.header-title:hover { /* Changes color on hover to moving gradient */
+.header-title:hover {
+    /* Adds hover effect to the title */
     color: transparent;
     background: linear-gradient(90deg, #06BFFF, #2D73FF, #06BFFF, #c7d5e0);
     background-size: 300% 300%;
     -webkit-background-clip: text;
-    animation: gradientMove 4s linear infinite;}
+    animation: gradientMove 4s linear infinite;
+}
 
-.header-tabs li { 
-    cursor: pointer; /* Pointer cursor on hover */
-    position: relative; /* For the underline effect */
-    text-transform: uppercase; /* Uppercase text */
+.header-tabs li {
+    /* Styles individual header tabs */
+    cursor: pointer;
+    position: relative;
+    text-transform: uppercase;
 }
 
 .header-tabs li:hover {
-    color: #ffffff; /* Changes color on hover */
-    transition: color 0.2s ease; /* Smooth color transition */
-
+    /* Adds hover effect to header tabs */
+    color: #ffffff;
+    transition: color 0.2s ease;
 }
 
-.header-tabs li::after { /* Underline effect */
-    left: 0; /* Aligns the underline to the left */
-    bottom: 0; /* Aligns the underline to the bottom */
-    height: 2px; /* Height of the underline */
-    width: 100%; /* Full width underline */
-    content: ""; /* Empty content for the pseudo-element */
-    position: absolute; /* Absolute positioning */ 
-    transform: scaleX(0); /* Initial scale for the underline */
-    transform-origin: right; /* Origin for the scaling effect */
-    background-color: #1a9fff; /* Underline color */
-    transition: transform 0.3s ease; /* Smooth transition for the scaling effect */
+.header-tabs li::after {
+    /* Adds underline effect to header tabs */
+    left: 0;
+    bottom: 0;
+    height: 2px;
+    width: 100%;
+    content: "";
+    position: absolute;
+    transform: scaleX(0);
+    transform-origin: right;
+    background-color: #1a9fff;
+    transition: transform 0.3s ease;
 }
 
 .header-tabs li:hover::after {
-    transform: scaleX(1); /* Scales the underline to full width */
-    transform-origin: left; /* Origin for the scaling effect */
+    /* Animates underline on hover */
+    transform: scaleX(1);
+    transform-origin: left;
 }
 
 .active-tab {
-    color: #1a9fff; /* Active tab color */
+    /* Highlights the active tab */
+    color: #1a9fff;
 }
 
 button.header {
+    /* Styles the login button in the header */
     margin-left: 2rem;
     margin-top: 0.9rem;
     padding: 0.75rem 2rem;
@@ -86,12 +94,14 @@ button.header {
 }
 
 .button.login.header:hover {
+    /* Adds hover effect to the login button */
     filter: brightness(1.1);
     transition: filter 0.2s ease;
 }
 
 /* Animation */
 @keyframes gradientMove {
+    /* Animates gradient background */
     0% {
         background-position: 0% 50%;
     }
@@ -105,9 +115,9 @@ button.header {
 
 /* Home: Intro Text */
 .tab-title {
+    /* Styles the main title with gradient animation */
     font-size: 2.5rem;
     font-weight: 700;
-    /* Gradient Settings */
     color: transparent;
     background: linear-gradient(90deg, #06BFFF, #2D73FF, #06BFFF, #c7d5e0);
     background-size: 300% 300%;
@@ -116,24 +126,28 @@ button.header {
 }
 
 .h4 {
+    /* Styles h4 elements */
     font-size: 1.5rem;
     color: #c7d5e0;
     font-weight: 700;
 }
 
 p {
+    /* Styles paragraph text */
     font-size: 1rem;
     color: #c7d5e0;
 }
 
 /* Right Half Column Box */
 .half-col-box {
+    /* Styles the right half column box */
     background: linear-gradient(45deg, #B3DFFF 0%, #c7d5e0 100%);
     border-radius: 4px;
     width: 100%;
 }
 
 .half-col-head {
+    /* Styles the header inside the half column box */
     font-size: 1.5rem;
     color: #1B2838;
     font-weight: 700;
@@ -141,6 +155,7 @@ p {
 }
 
 .half-col-text {
+    /* Styles the text inside the half column box */
     font-size: 1rem;
     color: #1B2838;
     text-align: left;
@@ -148,6 +163,7 @@ p {
 
 /* Links */
 a.link.no-style {
+    /* Styles links with no underline */
     text-decoration: none;
     color: inherit;
     font-weight: 700;
@@ -156,6 +172,7 @@ a.link.no-style {
 }
 
 a.link::after {
+    /* Adds underline effect to links */
     content: "";
     position: absolute;
     bottom: 0;
@@ -169,12 +186,14 @@ a.link::after {
 }
 
 a.link:hover::after {
+    /* Animates underline on hover */
     transform: scaleX(1);
     transform-origin: left;
 }
 
 /* Bottom Box */
 .bottom-box {
+    /* Styles the bottom box container */
     background-color: #171a21;
     border-radius: 4px;
     text-align: center;
@@ -182,6 +201,7 @@ a.link:hover::after {
 }
 
 .bottom-box-title.login {
+    /* Styles the title in the bottom box */
     font-weight: 700;
     font-size: 2rem;
     background: linear-gradient(to right, #06BFFF 0%, #2D73FF 100%);
@@ -190,11 +210,13 @@ a.link:hover::after {
 }
 
 .bottom-box-text {
+    /* Styles the text in the bottom box */
     font-size: 1rem;
     color: #c7d5e0;
 }
 
 .button {
+    /* Styles general buttons */
     padding: 0.75rem 2rem;
     font-size: 16px;
     background: linear-gradient(to right, #06BFFF 0%, #2D73FF 100%);
@@ -206,11 +228,10 @@ a.link:hover::after {
 }
 
 .button:hover {
+    /* Adds hover effect to buttons */
     filter: brightness(1.1);
     transition: filter 0.2s ease;
 }
-
-
 
 a.link.light-style {
     color: #c7d5e0;
@@ -284,68 +305,76 @@ a.link.light-style:hover {
 
 /* Custom Scrollbar for scroll-box */
 .scroll-box::-webkit-scrollbar {
-    width: 10px; /* Width of the scrollbar */
+    /* Styles the scrollbar width */
+    width: 10px;
 }
 
 .scroll-box::-webkit-scrollbar-track {
-    background: #171a21; /* Background of the scrollbar track */
-    border-radius: 5px; /* Rounded corners for the track */
+    /* Styles the scrollbar track */
+    background: #171a21;
+    border-radius: 5px;
 }
 
 .scroll-box::-webkit-scrollbar-thumb {
-    background: #1a9fff; /* Color of the scrollbar thumb */
-    border-radius: 5px; /* Rounded corners for the thumb */
-    border: 2px solid #171a21; /* Adds spacing around the thumb */
+    /* Styles the scrollbar thumb */
+    background: #1a9fff;
+    border-radius: 5px;
+    border: 2px solid #171a21;
 }
 
 .scroll-box::-webkit-scrollbar-thumb:hover {
-    background: #06BFFF; /* Color of the thumb on hover */
+    /* Adds hover effect to the scrollbar thumb */
+    background: #06BFFF;
 }
 
 /* Background Animation Container */
 .animated-background {
+    /* Styles the animated background container */
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     overflow: hidden;
-    z-index: -1; /* Ensures it stays behind other content */
-    pointer-events: none; /* Prevents interaction with the background */
+    z-index: -1;
+    pointer-events: none;
     display: flex;
-    flex-wrap: wrap; /* Allows wrapping of logos */
+    flex-wrap: wrap;
 }
 
 /* Individual Logo */
 .animated-logo {
-    position: relative; /* Adjusted for column alignment */
-    width: 5vw; /* Scales with viewport width */
-    height: 5vw; /* Maintains aspect ratio */
+    /* Styles individual animated logos */
+    position: relative;
+    width: 5vw;
+    height: 5vw;
     background-image: url('./SWLogo.png');
     background-size: contain;
     background-repeat: no-repeat;
-    opacity: 0.25; /* Set transparency */
-    animation: animateLogo 20s infinite; /* Apply drifting and new animation */
+    opacity: 0.25;
+    animation: animateLogo 20s infinite;
 }
 
 ul#elements {
+    /* Styles the container for animated elements */
     position: relative;
 }
 
 ul#elements li {
+    /* Styles individual animated elements */
     list-style: none;
     position: absolute;
     transition: 0.1s;
-    opacity: 0.0; /* Set a base opacity */
-    left: calc(20vw + 60vw * var(--random-x)); /* Randomized horizontal position */
-    top: calc(20vh + 50vh * var(--random-y)); /* Randomized vertical position */
-    font-size: calc(16px + 16px * var(--random-size)); /* Randomized font size */
-    animation: animateElement 20s infinite ease-in-out; /* Apply the single animation */
+    opacity: 0.0;
+    left: calc(20vw + 60vw * var(--random-x));
+    top: calc(20vh + 50vh * var(--random-y));
+    font-size: calc(16px + 16px * var(--random-size));
+    animation: animateElement 20s infinite ease-in-out;
 }
-
 
 /* Keyframes for the single animation */
 @keyframes animateElement {
+    /* Animates the movement and opacity of elements */
     0% {
         transform: scale(1) translateY(0) translateX(0);
         opacity: 0.25;
