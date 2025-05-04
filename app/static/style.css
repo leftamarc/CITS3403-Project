@@ -9,9 +9,9 @@ body {
 .header-tabs {
     margin: 0; /* Removes default margin */
     gap: 1.5rem; /* Gap between the tabs */
-    height: 78px;  /* Mimics Steam header height */
+    height: 100px;  /* Increased height for a thicker header */
     display: flex; /* Uses flexible box for the layout, i.e. horizontal list */
-    padding: 0.75rem 1.5rem; /* Adds padding around the header */
+    padding: 1rem 2rem; /* Adjusted padding for better spacing */
     background-color: #171a21; /* Steam header color */
     
     font-size: 16px; /* Steam header font size */

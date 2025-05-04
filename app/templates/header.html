@@ -52,19 +52,9 @@
 
     <div class="animated-background">
         <ul id="elements">
-            <li class="animated-logo" style="animation-delay: -1s;"></li>
-            <li class="animated-logo" style="animation-delay: -3s;"></li>
-            <li class="animated-logo" style="animation-delay: -7s;"></li>
-            <li class="animated-logo" style="animation-delay: -2s;"></li>
-            <li class="animated-logo" style="animation-delay: -9s;"></li>
-            <li class="animated-logo" style="animation-delay: -4s;"></li>
-            <li class="animated-logo" style="animation-delay: -6s;"></li>
-            <li class="animated-logo" style="animation-delay: -8s;"></li>
-            <li class="animated-logo" style="animation-delay: -5s;"></li>
-            <li class="animated-logo" style="animation-delay: -10s;"></li>
-            <li class="animated-logo" style="animation-delay: -3s;"></li>
-            <li class="animated-logo" style="animation-delay: -7s;"></li>
-            <li class="animated-logo" style="animation-delay: -2s;"></li>
+            {% for i in range(100) %}
+                <li class="animated-logo" style="animation-delay: -{{ loop.index }}s;"></li>
+            {% endfor %}
         </ul>
     </div>
 
