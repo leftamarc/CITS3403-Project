@@ -37,14 +37,10 @@
         {% if session.get('user_id') %}
             <li>
                 <span class="clickable-text" onclick="window.location.href='{{ url_for('profile') }}'">
-                    Profile ({{ session.get('username') }})
+                    {{ session.get('username')|upper }}
                 </span>
             </li>
-            <form action="{{ url_for('logout') }}" method="post">
-                <button type="submit" class="button mb-3 mt-3 ml-4">
-                    Log Out
-                </button>
-            </form>
+            
         {%else%}
 
         <form action="{{ url_for('login') }}" method="get">

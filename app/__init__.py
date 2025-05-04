@@ -16,4 +16,6 @@ app.config.from_object(Config)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
+#generate secret key 
+app.config['SECRET_KEY'] = os.urandom(24)
 from app import routes, models
