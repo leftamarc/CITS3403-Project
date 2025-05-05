@@ -1,5 +1,7 @@
-from flask import render_template
+from flask import render_template, request
 from app import app
+from app.utils.insights import total_hours, most_played_genre, missed_easy_achievement
+from app.utils.fetch_player_data import FetchPlayerData
 
 @app.route('/')
 @app.route('/home')
@@ -26,7 +28,12 @@ def login():
 def register():
     return render_template('main/register.html')
 
-@app.route('/generate')
+@app.route('/generate', methods=['POST'])
 def generate():
-    return render_template('main/home.html')
+    # Get the Steam ID from the form
+    steam_id = request.form.get('steamid')
+
+    #FetchPlayerData(steam_id)
+
+    return render_template('main/wrapped.html', cards=[total_hours(steam_id), most_played_genre(steam_id), missed_easy_achievement(steam_id)])
     

@@ -12,11 +12,8 @@ class PrivateAccount(Exception):
 class NoMatches(Exception):
     pass
 
-class RequestFail(Exception):
-    pass
-
-MAX_RETRIES = 3
-RETRY_DELAY = 3
+MAX_RETRIES = 1
+RETRY_DELAY = 0
 HEADERS ={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'}    
 
 #Fetches achievement data for a given game by app id, returns a list of tuples of the form (achievement_name, achievement_percentage)
@@ -27,17 +24,26 @@ def GetGlobalAchievementPercentagesForApp(app_id):
     while attempt < MAX_RETRIES:
         try:
             request = urllib.request.Request(url, headers=HEADERS)
-            with urllib.request.urlopen(request) as response:
-                data = response.read()
-                if not data:
-                    raise NoMatches("No matching data for input parameters")
-                result = json.loads(data) 
-                achievements = result["achievementpercentages"]["achievements"]
-                return [(achievement["name"], achievement["percent"]) for achievement in achievements]
+            try:
+                with urllib.request.urlopen(request) as response:
+                    data = response.read()
+                    if not data:
+                        raise NoMatches("No matching data for input parameters")
+                    result = json.loads(data)
+                    if not result["achievementpercentages"]["achievements"]:
+                        raise NoMatches("This game has no achievements")
+                    achievements = result["achievementpercentages"]["achievements"]
+                    return [(achievement["name"], achievement["percent"]) for achievement in achievements]
+            except urllib.error.HTTPError as e:
+                if e.code == 400:
+                    raise NoMatches("This game has no achievements")
+                else:
+                    raise  # Re-raise other HTTP errors to be handled by the outer try-except
         except Exception as e:
             attempt += 1
             if attempt >= MAX_RETRIES:
-                raise RequestFail(f"Error: {e}")
+                print(f"Attempt {attempt} for GetGlobalAchievementPercentagesForApp({app_id}) failed: {e}")
+                raise e
             time.sleep(RETRY_DELAY)
 
 
@@ -60,8 +66,8 @@ def GetPlayerSummaries(steam_id):
         except Exception as e:
             attempt += 1
             if attempt >= MAX_RETRIES:
-                print(f"Attempt {attempt} failed: {e}")
-                raise RequestFail(f"Error: {e}")
+                print(f"Attempt {attempt} for GetPlayerSummaries({steam_id}) failed: {e}")
+                raise e
             time.sleep(RETRY_DELAY)
 
 
@@ -72,22 +78,41 @@ def GetPlayerAchievements(steam_id, app_id):
     while attempt < MAX_RETRIES:
         try:
             request = urllib.request.Request(url, headers=HEADERS)
-            with urllib.request.urlopen(request) as response:
-                data = response.read()
-                if not data:
-                    raise NoMatches("No matching data for input parameters")
-                result = json.loads(data) 
-                game_name = result["playerstats"]["gameName"]
-                achievement_data = [(achievement["apiname"], achievement["achieved"], achievement["unlocktime"], achievement["name"], achievement["description"]) for achievement in result["playerstats"]["achievements"]]
-                return game_name, achievement_data
+            try:
+                with urllib.request.urlopen(request) as response:
+                    data = response.read()
+                    if not data:
+                        raise NoMatches("No matching data for input parameters")
+                    result = json.loads(data)
+                    if not result["playerstats"]["success"]:
+                        raise NoMatches("This game has no achievements")
+                    if not result["playerstats"].get("achievements"):
+                        raise NoMatches("This game has no achievements")
+                    game_name = result["playerstats"]["gameName"]
+                    achievement_data = [
+                        (
+                            achievement["apiname"],
+                            achievement["achieved"],
+                            achievement["unlocktime"],
+                            achievement["name"],
+                            achievement["description"],
+                        )
+                        for achievement in result["playerstats"]["achievements"]
+                    ]
+                    return game_name, achievement_data
+            except urllib.error.HTTPError as e:
+                if e.code == 400:
+                    raise NoMatches("This game has no achievements")
+                else:
+                    raise  # Re-raise other HTTP errors to be handled by the outer try-except
         except Exception as e:
             attempt += 1
             if attempt >= MAX_RETRIES:
-                print(f"Attempt {attempt} failed: {e}")
-                raise RequestFail(f"Error: {e}")
+                print(f"Attempt {attempt} for GetPlayerAchievements({steam_id}, {app_id}) failed: {e}")
+                raise e
             time.sleep(RETRY_DELAY)
 
-#Retrieves info about users game library, returns number of games owned and a list of tuples of the form (app_id, total_playtime, app_img_url, last_time_played)
+#Retrieves info about users game library, returns number of games owned and a list of tuples of the form (app_id, game_name, total_playtime, app_img_url, last_time_played)
 def GetOwnedGames(steam_id):
     url = f"http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key={STEAM_API_KEY}&steamid={steam_id}&include_appinfo=True&include_played_free_games=True"
     attempt = 0
@@ -100,13 +125,22 @@ def GetOwnedGames(steam_id):
                     raise NoMatches("No matching data for input parameters")
                 result = json.loads(data) 
                 game_count = result["response"]["game_count"]
-                games = [(game["appid"], game["playtime_forever"], "http://media.steampowered.com/steamcommunity/public/images/apps/"+str(game["appid"])+"/"+game["img_icon_url"]+".jpg", game["rtime_last_played"]) for game in result["response"]["games"]]
+                games = [
+                    (
+                        game["appid"],
+                        game["name"],
+                        game["playtime_forever"],
+                        f"http://media.steampowered.com/steamcommunity/public/images/apps/{game['appid']}/{game['img_icon_url']}.jpg",
+                        game.get("rtime_last_played", 0)  # Use .get() with a default value of 0
+                    )
+                    for game in result["response"]["games"]
+                ]
                 return game_count, games
         except Exception as e:
             attempt += 1
             if attempt >= MAX_RETRIES:
-                print(f"Attempt {attempt} failed: {e}")
-                raise RequestFail(f"Error: {e}")
+                print(f"Attempt {attempt} for GetOwnedGames({steam_id}) failed: {e}")
+                raise e
             time.sleep(RETRY_DELAY)
 
 #Retrieves info about a players recent game data, returns number of games played in the last 2 week, and a list of tuples of the form (app_id, playtime_last_2_weeks)
@@ -127,13 +161,13 @@ def GetRecentlyPlayedGames(steam_id):
         except Exception as e:
             attempt += 1
             if attempt >= MAX_RETRIES:
-                print(f"Attempt {attempt} failed: {e}")
-                raise RequestFail(f"Error: {e}")
+                print(f"Attempt {attempt} for GetRecentlyPlayedGames({steam_id}) failed: {e}")
+                raise e
             time.sleep(RETRY_DELAY)
 
 
 #Retrieves possibly useful metadata about a given app, returns the games name, a list of developers, a list of publishers, a list of tuples of the form (genre_id, genre_name)
-#and the games release date
+#and the games release date and metacritic score
 def GetAppMetadata(app_id):
     url = f"https://store.steampowered.com/api/appdetails/?appids={app_id}&filters=basic,genres,release_date,developers,publishers,metacritic"
     attempt = 0
@@ -144,16 +178,26 @@ def GetAppMetadata(app_id):
                 data = response.read()
                 if not data:
                     raise NoMatches("No matching data for input parameters")
-                result = json.loads(data) 
+                result = json.loads(data)
                 if result[str(app_id)]["success"] != True:
-                    raise NoMatches("No matching data for input parameters")
+                    raise NoMatches("This game has no storefront")
                 metadata = result[str(app_id)]["data"]
-                return  metadata["name"], metadata["developers"], metadata["publishers"], [(genre["id"], genre["description"]) for genre in metadata["genres"]], metadata["release_date"]["date"]
+                developers = metadata.get("developers", [])
+                publishers = metadata.get("publishers", [])
+                genres = metadata.get("genres", [])  
+                metacritic_score = metadata.get("metacritic", {}).get("score", None)
+                return (
+                    metadata["name"],
+                    developers,
+                    publishers,
+                    [(genre["id"], genre["description"]) for genre in genres],
+                    metadata["release_date"]["date"],
+                    metacritic_score
+                )
         except Exception as e:
             attempt += 1
             if attempt >= MAX_RETRIES:
-                print(f"Attempt {attempt} failed: {e}")
-                raise RequestFail(f"Error: {e}")
+                print(f"Attempt {attempt} for GetAppMetadata({app_id}) failed: {e}")
+                raise e
             time.sleep(RETRY_DELAY)
-      
 

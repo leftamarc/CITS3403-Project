@@ -6,8 +6,8 @@
         <div class="col-md-6 d-flex flex-column align-items-start">
             <h1 class="tab-title generate display-4 mb-5">Generate your SteamWrappeds</h1>  
             <div>
-                <p>With your Steam ID ready, enter it below and press "Generate" to get a new SteamWrapped.</p>
-                <form action="{{ url_for('generate') }}">
+                <p>Press "Generate" to view your SteamWrapped.</p>
+                <form action="{{ url_for('generate') }}" method="POST">
                     <div class="form-group">
                         <label for="steamid" class="bottom-box-text" style="font-weight: bold;">Steam ID</label>
                         <input type="text" class="form-control dark-input" id="steamid" name="steamid" placeholder="Enter your Steam ID" required>
