@@ -7,8 +7,8 @@
             <div class="carousel-inner">
                 {% for card in cards %}
                     <div class="carousel-item {% if loop.first %}active{% endif %}">
-                        <div class="card text-center" style="background-color: #171a21; height: 30rem;">
-                        {{ card|safe }}
+                        <div class="card text-center flex-column justify-content-center" style="background-color: #171a21; height: 30rem; padding: 10rem;">
+                            {{ card|safe }}
                         </div>
                     </div>
                 {% endfor %}
