@@ -9,11 +9,15 @@ STEAM_API_KEY = os.getenv("STEAM_API_KEY")
 class PrivateAccount(Exception):
     pass
 
-class NoMatches(Exception):
+class NoAchievements(Exception):
     pass
 
-MAX_RETRIES = 1
-RETRY_DELAY = 0
+class NoStoreFront(Exception):
+    pass
+
+
+MAX_RETRIES = 3
+RETRY_DELAY = 1
 HEADERS ={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'}    
 
 #Fetches achievement data for a given game by app id, returns a list of tuples of the form (achievement_name, achievement_percentage)
@@ -28,17 +32,20 @@ def GetGlobalAchievementPercentagesForApp(app_id):
                 with urllib.request.urlopen(request) as response:
                     data = response.read()
                     if not data:
-                        raise NoMatches("No matching data for input parameters")
+                        raise Exception(f"The steam api is not responding correctly for endpoint GetGlobalAchievementPercentagesForApp({app_id})")
                     result = json.loads(data)
                     if not result["achievementpercentages"]["achievements"]:
-                        raise NoMatches("This game has no achievements")
+                        raise NoAchievements(f"app_id: {app_id} has no achievements")
                     achievements = result["achievementpercentages"]["achievements"]
                     return [(achievement["name"], achievement["percent"]) for achievement in achievements]
             except urllib.error.HTTPError as e:
                 if e.code == 400:
-                    raise NoMatches("This game has no achievements")
+                    raise NoAchievements(f"app_id: {app_id} has no achievements")
                 else:
                     raise  # Re-raise other HTTP errors to be handled by the outer try-except
+        except NoAchievements as e:
+            print(e)
+            break
         except Exception as e:
             attempt += 1
             if attempt >= MAX_RETRIES:
@@ -57,7 +64,7 @@ def GetPlayerSummaries(steam_id):
             with urllib.request.urlopen(request) as response:
                 data = response.read()
                 if not data:
-                    raise NoMatches("No matching data for input parameters")
+                        raise Exception(f"The steam api is not responding correctly for endpoint GetPlayerSummaries({steam_id})")
                 result = json.loads(data) 
                 player_summary = result["response"]["players"][0]
                 if player_summary["communityvisibilitystate"] != 3:
@@ -82,12 +89,12 @@ def GetPlayerAchievements(steam_id, app_id):
                 with urllib.request.urlopen(request) as response:
                     data = response.read()
                     if not data:
-                        raise NoMatches("No matching data for input parameters")
+                        raise Exception(f"The steam api is not responding correctly for endpoint GetPlayerAchievements({steam_id}, {app_id})")
                     result = json.loads(data)
                     if not result["playerstats"]["success"]:
-                        raise NoMatches("This game has no achievements")
+                        raise NoAchievements(f"app_id: {app_id} has no achievements")
                     if not result["playerstats"].get("achievements"):
-                        raise NoMatches("This game has no achievements")
+                        raise NoAchievements(f"app_id: {app_id} has no achievements")
                     game_name = result["playerstats"]["gameName"]
                     achievement_data = [
                         (
@@ -102,9 +109,12 @@ def GetPlayerAchievements(steam_id, app_id):
                     return game_name, achievement_data
             except urllib.error.HTTPError as e:
                 if e.code == 400:
-                    raise NoMatches("This game has no achievements")
+                    raise NoAchievements(f"app_id: {app_id} has no achievements")
                 else:
                     raise  # Re-raise other HTTP errors to be handled by the outer try-except
+        except NoAchievements as e:
+            print(e)
+            break
         except Exception as e:
             attempt += 1
             if attempt >= MAX_RETRIES:
@@ -122,7 +132,7 @@ def GetOwnedGames(steam_id):
             with urllib.request.urlopen(request) as response:
                 data = response.read()
                 if not data:
-                    raise NoMatches("No matching data for input parameters")
+                        raise Exception(f"The steam api is not responding correctly for endpoint GetOwnedGames({steam_id})")
                 result = json.loads(data) 
                 game_count = result["response"]["game_count"]
                 games = [
@@ -153,7 +163,7 @@ def GetRecentlyPlayedGames(steam_id):
             with urllib.request.urlopen(request) as response:
                 data = response.read()
                 if not data:
-                    raise NoMatches("No matching data for input parameters")
+                        raise Exception(f"The steam api is not responding correctly for endpoint GetRecentlyPlayedGames({steam_id})")
                 result = json.loads(data) 
                 game_count = result["response"]["total_count"]
                 games = [(game["appid"], game["playtime_2weeks"]) for game in result["response"]["games"]]
@@ -177,10 +187,10 @@ def GetAppMetadata(app_id):
             with urllib.request.urlopen(request) as response:
                 data = response.read()
                 if not data:
-                    raise NoMatches("No matching data for input parameters")
+                        raise Exception(f"The steam api is not responding correctly for endpoint GetAppMetadata({app_id})")
                 result = json.loads(data)
                 if result[str(app_id)]["success"] != True:
-                    raise NoMatches("This game has no storefront")
+                    raise NoStoreFront(f"app_id: {app_id} has no storefront")
                 metadata = result[str(app_id)]["data"]
                 developers = metadata.get("developers", [])
                 publishers = metadata.get("publishers", [])
@@ -194,6 +204,9 @@ def GetAppMetadata(app_id):
                     metadata["release_date"]["date"],
                     metacritic_score
                 )
+        except NoStoreFront as e:
+            print(e)
+            break
         except Exception as e:
             attempt += 1
             if attempt >= MAX_RETRIES:

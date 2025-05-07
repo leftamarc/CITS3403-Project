@@ -6,7 +6,7 @@ are documented here
 SELECT CAST(ROUND(SUM(user_game.playtime_total), 0) AS INT) AS total_playtime
 FROM user_game
 JOIN game ON user_game.app_id = game.app_id
-WHERE steam_id = steam_id
+WHERE steam_id = :steam_id
 //**********//
 
 //most_played_genre//
@@ -14,7 +14,7 @@ SELECT genre.name, CAST(ROUND(SUM(user_game.playtime_total), 0) AS INT) AS total
 FROM user_game
 JOIN game_genre ON user_game.app_id = game_genre.app_id
 JOIN genre ON genre.genre_id = game_genre.genre_id
-WHERE steam_id = 76561198068078942
+WHERE steam_id = :steam_id
 GROUP BY genre.name
 ORDER BY total_playtime DESC
 LIMIT 1
@@ -26,7 +26,26 @@ FROM user_achievement
 JOIN user_game ON user_achievement.app_id = user_game.app_id AND user_achievement.steam_id = user_game.steam_id
 JOIN achievement ON user_achievement.internal_name = achievement.internal_name AND user_achievement.app_id = achievement.app_id
 JOIN game ON game.app_id = user_game.app_id
-WHERE user_achievement.steam_id = steam_id AND user_achievement.achieved = 0 AND user_game.playtime_total > 10 AND achievement.rate > 85
+WHERE user_achievement.steam_id = :steam_id AND user_achievement.achieved = 0 AND user_game.playtime_total > 10 AND achievement.rate > 85
 ORDER BY achievement.rate DESC
 LIMIT 1;
 //***********************//
+
+//most_played_release_year//
+SELECT strftime('%Y', datetime(game.release_date, 'unixepoch')) AS release_year, CAST(ROUND(SUM(user_game.playtime_total), 0) AS INT) AS total_playtime
+FROM game
+JOIN user_game ON game.app_id = user_game.app_id
+WHERE user_game.steam_id = :steam_id AND game.release_date != 0
+GROUP BY strftime('%Y', datetime(game.release_date, 'unixepoch'))
+ORDER BY SUM(user_game.playtime_total) DESC
+LIMIT 1
+//***********************//
+
+//most_unloved_game//
+SELECT game.name AS game_name, user_game.last_played AS last_played
+FROM game
+JOIN user_game ON game.app_id = user_game.app_id
+WHERE user_game.steam_id = :steam_id AND user_game.playtime_total >= 10
+ORDER BY user_game.last_played ASC
+LIMIT 1;
+//****************//

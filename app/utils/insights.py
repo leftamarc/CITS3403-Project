@@ -2,6 +2,7 @@ from app.models import Game, User_Game, Developer, Developer_Game, Publisher, Pu
 from app import db
 from flask import render_template
 from sqlalchemy import func, cast, Integer
+from datetime import datetime, timedelta
 
 #################################################################################################################
 
@@ -28,12 +29,13 @@ def total_hours(steam_id):
         db.session.query(
             cast(func.round(func.sum(User_Game.playtime_total), 0), Integer).label("total_playtime")
         )
-        .join(Game, User_Game.app_id == Game.app_id)  # Join User_Game with Game
-        .filter(User_Game.steam_id == steam_id)  # Filter by the user's Steam ID
-        .scalar()  # Get the scalar value (total playtime)
+        .join(Game, User_Game.app_id == Game.app_id)  
+        .filter(User_Game.steam_id == steam_id)
+        .scalar()  
     )
 
     if result:
+        print(str(result))
         return  (
             True,
             render_template(
@@ -117,6 +119,68 @@ def missed_easy_achievement(steam_id):
                 achievement_rate=result.achievement_rate,
                 game_name=result.game_name,
             )
+        )
+    else:
+        return (False, None)
+
+
+'''Finds the release year that the user has the most hours in i.e. sums playtime and groups by release year'''
+def most_played_release_year(steam_id):
+    result = (
+        db.session.query(
+            func.strftime('%Y', func.datetime(Game.release_date, 'unixepoch')).label("release_year"),
+            cast(func.round(func.sum(User_Game.playtime_total), 0), Integer).label("total_playtime"),
+        )
+        .join(User_Game, Game.app_id == User_Game.app_id)  
+        .filter(
+            User_Game.steam_id == steam_id,  #
+            Game.release_date != 0,  
+        )
+        .group_by(func.strftime('%Y', func.datetime(Game.release_date, 'unixepoch')))  
+        .order_by(func.sum(User_Game.playtime_total).desc())  
+        .limit(1)  
+        .first()
+    )
+
+    if result:
+        return (
+            True,
+            render_template(
+                "insights/most_played_release_year.html",
+                release_year=int(result.release_year),
+                total_playtime=result.total_playtime,
+            ),
+        )
+    else:
+        return (False, None)
+
+'''Finds the users most unloved game i.e. finds a game with atleast 10 hours of playtime with the oldest last played date'''
+def most_unloved_game(steam_id):
+    MIN_PLAYTIME = 10  # Minimum playtime in hours to consider a game
+
+    result = (
+        db.session.query(
+            Game.name.label("game_name"),
+            User_Game.last_played.label("last_played"),  
+        )
+        .join(Game, Game.app_id == User_Game.app_id)
+        .filter(
+            User_Game.steam_id == steam_id,
+            User_Game.playtime_total >= MIN_PLAYTIME,
+        )
+        .order_by(User_Game.last_played.asc())  
+        .first()
+    )
+ 
+    if result:
+        days_since_last_played = (datetime.utcnow() - datetime.utcfromtimestamp(result.last_played)).days
+        return (
+            True,
+            render_template(
+                "insights/most_unloved_game.html",
+                game_name=result.game_name,
+                days_since_last_played=days_since_last_played,
+            ),
         )
     else:
         return (False, None)

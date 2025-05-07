@@ -1,6 +1,6 @@
 from flask import render_template, request
 from app import app
-from app.utils.insights import total_hours, most_played_genre, missed_easy_achievement
+from app.utils.insights import *
 from app.utils.fetch_player_data import FetchPlayerData
 import random
 
@@ -36,11 +36,16 @@ def generate():
     # Get the Steam ID from the form
     steam_id = request.form.get('steamid')
 
+    #Update the database with all player info
+    #FetchPlayerData(steam_id) #commented out while I test since it takes ages
+
     # Run all insight functions
     insights = [
         total_hours(steam_id),
         most_played_genre(steam_id),
         missed_easy_achievement(steam_id),
+        most_played_release_year(steam_id),
+        most_unloved_game(steam_id)
     ]
 
     # Remove insights that failed

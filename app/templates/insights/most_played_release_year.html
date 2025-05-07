@@ -1,0 +1,25 @@
+<h5 class="card-title" style="color:white">Your Favourite Year of Gaming</h5>
+    <p class="card-text">
+        You had the most playtime in games released during <strong>{{ release_year }}</strong> with a total of 
+        <strong>{{ total_playtime }}</strong> hours.
+
+        {% if release_year < 1990 %}
+        We didn't know that dinosaurs played video games.
+
+        {% elif 1990 < release_year < 2000 %}
+        You know being a 90s kid stopped being cool like 2 decades ago right?
+
+        {% elif 2000 < release_year < 2010 %}
+        Like a million other games have released since then, go play them.
+
+        {% elif 2010 < release_year < 2020 %}
+        Be honest. Most of these hours are skyrim right?
+
+        {% elif 2020 < release_year %}
+        Does your mommy know your using the internet unsupervised?
+
+        {% endif %}
+
+    </p>
+
+
