@@ -54,5 +54,8 @@ def generate():
     # Randomly select up to 8 successful insights
     selected_insights = random.sample(successful_insights, min(len(successful_insights), 8))
 
+    ''' TODO: If there are less than 8 successful insights, flash a message about account not having enough
+        steam data'''
+
     # Render the template with the selected insights
     return render_template('main/wrapped.html', cards=selected_insights)

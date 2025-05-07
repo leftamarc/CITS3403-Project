@@ -1,7 +1,7 @@
 import time as tm
 from datetime import datetime
 from app.models import Game, User_Game, Developer, Developer_Game, Publisher, Publisher_Game, Genre, Game_Genre, Achievement, User_Achievement, Steam_User
-from app.utils.api import GetPlayerSummaries, GetOwnedGames, GetAppMetadata, GetPlayerAchievements, GetGlobalAchievementPercentagesForApp, NoMatches
+from app.utils.api import GetPlayerSummaries, GetOwnedGames, GetAppMetadata, GetPlayerAchievements, GetGlobalAchievementPercentagesForApp
 
 def FetchPlayerData(steam_id):
     try:
@@ -13,8 +13,7 @@ def FetchPlayerData(steam_id):
         # Update game info for all owned games
         for game in library:
             app_id = game[0]
-            print('\n')
-            print(app_id)
+            print(f'\nfetching data for app_id {app_id}')
             game_name = game[1]
             playtime = (game[2] / 60)
             image = game[3]
@@ -22,7 +21,7 @@ def FetchPlayerData(steam_id):
 
             try:
                 game_name, developers, publishers, genres, release_date, metacritic = GetAppMetadata(app_id)
-            except NoMatches:
+            except:
                 continue
 
             # Convert release_date to Unix timestamp using the new function
@@ -72,8 +71,13 @@ def FetchPlayerData(steam_id):
                         if achievement["internal_name"] == global_achievement[0]:
                             achievement["rate"] = global_achievement[1]
 
+
+                
                 # Upsert achievements into the database
                 for achievement in achievement_dicts:
+                    if not achievement["rate"]:
+                        continue
+                    
                     Achievement.upsert(
                         achievement["internal_name"],
                         achievement["rate"],
@@ -89,6 +93,7 @@ def FetchPlayerData(steam_id):
                         achievement["unlock_time"],
                     )
             except Exception as e:
+                print(e)
                 continue
 
     except Exception as e:

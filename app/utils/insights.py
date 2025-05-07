@@ -79,8 +79,8 @@ def most_played_genre(steam_id):
 ''' Sees if the provided steam user has failed to acquire an achievement with a high global achievement rate
     in a game where they have atleast 10 hours of total playtime '''
 def missed_easy_achievement(steam_id):
-    MIN_PLAYTIME            =   10      #The minimum number of hours in the game 
-    MIN_ACHIEVEMENT_RATE    =   85      #The minimum global achievement rate as a percentage
+    MIN_PLAYTIME         = 10   #The minimum number of hours in the game 
+    MIN_ACHIEVEMENT_RATE = 85   #The minimum global achievement rate as a percentage
 
     result = (
         db.session.query(
@@ -156,7 +156,7 @@ def most_played_release_year(steam_id):
 
 '''Finds the users most unloved game i.e. finds a game with atleast 10 hours of playtime with the oldest last played date'''
 def most_unloved_game(steam_id):
-    MIN_PLAYTIME = 10  # Minimum playtime in hours to consider a game
+    MIN_PLAYTIME = 10   # Minimum playtime in hours to consider a game
 
     result = (
         db.session.query(
