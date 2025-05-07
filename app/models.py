@@ -2,28 +2,27 @@ from app import db
 from datetime import datetime
 from time import time
 
+
 # Represents an achievement
 class Achievement(db.Model):
-    __tablename__ = 'achievement'
+    __tablename__ =   'achievement'
 
+    #Unique internal name of the achievement on the steam api
     internal_name = db.Column(db.String(200), primary_key=True)
-    rate = db.Column(db.Integer, nullable=False)
-    app_id = db.Column(db.Integer, db.ForeignKey('game.app_id'), primary_key=True)
-    display_name = db.Column(db.String(500), nullable=False)
-    description = db.Column(db.String(500), nullable=False)
 
-    def __repr__(self):
-        return f"<Achievement(internal_name={self.internal_name}, app_id={self.app_id}, rate={self.rate}, display_name={self.display_name})>"
+    #Global achievement rate as a percentage
+    rate          = db.Column(db.Integer, nullable=False)
 
-    @classmethod
-    def print_all(cls):
-        rows = cls.query.all()
-        if rows:
-            for row in rows:
-                print(row)
-        else:
-            print(f"No data found in table {cls.__tablename__}.")
+    #App ID of the game the achievement is from
+    app_id        = db.Column(db.Integer, db.ForeignKey('game.app_id'), primary_key=True)
 
+    #External name of the achievement on steam
+    display_name  = db.Column(db.String(500), nullable=False)
+
+    #Description of the achievement on steam
+    description   = db.Column(db.String(500), nullable=False)
+
+    #Creates a new row or updates the existing one for the provided primary keys
     @classmethod
     def upsert(cls, internal_name, rate, app_id, display_name, description):
         achievement = cls.query.filter_by(internal_name=internal_name).first()
@@ -43,40 +42,30 @@ class Achievement(db.Model):
             db.session.add(achievement)
         db.session.commit()
 
-    @classmethod
-    def delete(cls, internal_name, app_id):
-        achievement = cls.query.filter_by(internal_name=internal_name, app_id=app_id).first()
-        if achievement:
-            db.session.delete(achievement)
-            db.session.commit()
 
-    @classmethod
-    def get(cls, internal_name):
-        return cls.query.filter_by(internal_name=internal_name).first()
+'''///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////'''
 
 
 # Represents a steam game
 class Game(db.Model):
     __tablename__ = 'game'
 
-    app_id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50), nullable=False)
-    image = db.Column(db.String(200), nullable=False)
-    release_date = db.Column(db.Integer, nullable=False)
-    metacritic = db.Column(db.Integer)
+    #Unique ID for the game
+    app_id        = db.Column(db.Integer, primary_key=True)
 
-    def __repr__(self):
-        return f"<Game(app_id={self.app_id}, name={self.name}, release_date={self.release_date}, metacritic={self.metacritic})>"
+    #Name of the game
+    name          = db.Column(db.String(50), nullable=False)
 
-    @classmethod
-    def print_all(cls):
-        rows = cls.query.all()
-        if rows:
-            for row in rows:
-                print(row)
-        else:
-            print(f"No data found in table {cls.__tablename__}.")
+    #Img url of the game
+    image         = db.Column(db.String(200), nullable=False)
 
+    #Releaste date of the game as a unix timestamp
+    release_date  = db.Column(db.Integer, nullable=False)
+
+    #Metacritic score of the game, if it has one
+    metacritic    = db.Column(db.Integer)
+
+    #Creates a new row or updates the existing one for the provided primary keys
     @classmethod
     def upsert(cls, app_id, name, image, release_date, metacritic):
         game = cls.query.filter_by(app_id=app_id).first()
@@ -96,39 +85,27 @@ class Game(db.Model):
             db.session.add(game)
         db.session.commit()
 
-    @classmethod
-    def delete(cls, app_id):
-        game = cls.query.filter_by(app_id=app_id).first()
-        if game:
-            db.session.delete(game)
-            db.session.commit()
 
-    @classmethod
-    def get(cls, app_id):
-        return cls.query.filter_by(app_id=app_id).first()
+'''///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////'''
 
 
 # Represents a steam user
 class Steam_User(db.Model):
     __tablename__ = 'steam_user'
 
-    steam_id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(200), nullable=False)
-    image = db.Column(db.String(200), nullable=False)
+    #Users unique Steam ID
+    steam_id      = db.Column(db.Integer, primary_key=True)
+
+    #Users most recent username
+    username      = db.Column(db.String(200), nullable=False)
+
+    #Url to profile picture
+    image         = db.Column(db.String(200), nullable=False)
+
+    #Total number of games owned
     n_games_owned = db.Column(db.Integer, nullable=False, default=0)
 
-    def __repr__(self):
-        return f"<Steam_User(steam_id={self.steam_id}, username={self.username}, n_games_owned={self.n_games_owned})>"
-
-    @classmethod
-    def print_all(cls):
-        rows = cls.query.all()
-        if rows:
-            for row in rows:
-                print(row)
-        else:
-            print(f"No data found in table {cls.__tablename__}.")
-
+    #Creates a new row or updates the existing one for the provided primary keys
     @classmethod
     def upsert(cls, steam_id, username, image, n_games_owned):
         user = cls.query.filter_by(steam_id=steam_id).first()
@@ -146,37 +123,21 @@ class Steam_User(db.Model):
             db.session.add(user)
         db.session.commit()
 
-    @classmethod
-    def delete(cls, steam_id):
-        user = cls.query.filter_by(steam_id=steam_id).first()
-        if user:
-            db.session.delete(user)
-            db.session.commit()
 
-    @classmethod
-    def get(cls, steam_id):
-        return cls.query.filter_by(steam_id=steam_id).first()
+'''///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////'''
 
 
 # Represents a genre
 class Genre(db.Model):
     __tablename__ = 'genre'
 
-    genre_id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
+    #Unique ID of the genre according to steam api
+    genre_id      = db.Column(db.Integer, primary_key=True)
 
-    def __repr__(self):
-        return f"<Genre(genre_id={self.genre_id}, name={self.name})>"
+    #Name of the genre
+    name          = db.Column(db.String(100), nullable=False)
 
-    @classmethod
-    def print_all(cls):
-        rows = cls.query.all()
-        if rows:
-            for row in rows:
-                print(row)
-        else:
-            print(f"No data found in table {cls.__tablename__}.")
-
+    #Creates a new row or updates the existing one for the provided primary keys
     @classmethod
     def upsert(cls, genre_id, name):
         genre = cls.query.filter_by(genre_id=genre_id).first()
@@ -190,36 +151,18 @@ class Genre(db.Model):
             db.session.add(genre)
         db.session.commit()
 
-    @classmethod
-    def delete(cls, genre_id):
-        genre = cls.query.filter_by(genre_id=genre_id).first()
-        if genre:
-            db.session.delete(genre)
-            db.session.commit()
 
-    @classmethod
-    def get(cls, genre_id):
-        return cls.query.filter_by(genre_id=genre_id).first()
+'''///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////'''
 
 
 # Represents a game developer
 class Developer(db.Model):
     __tablename__ = 'developer'
 
-    name = db.Column(db.String(200), primary_key=True)
+    #Name of the developer
+    name          = db.Column(db.String(200), primary_key=True)
 
-    def __repr__(self):
-        return f"<Developer(name={self.name})>"
-
-    @classmethod
-    def print_all(cls):
-        rows = cls.query.all()
-        if rows:
-            for row in rows:
-                print(row)
-        else:
-            print(f"No data found in table {cls.__tablename__}.")
-
+    #Creates a new row or updates the existing one for the provided primary keys
     @classmethod
     def upsert(cls, name):
         developer = cls.query.filter_by(name=name).first()
@@ -228,36 +171,18 @@ class Developer(db.Model):
             db.session.add(developer)
         db.session.commit()
 
-    @classmethod
-    def delete(cls, name):
-        developer = cls.query.filter_by(name=name).first()
-        if developer:
-            db.session.delete(developer)
-            db.session.commit()
 
-    @classmethod
-    def get(cls, name):
-        return cls.query.filter_by(name=name).first()
+'''///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////'''
 
 
 # Represents a game publisher
 class Publisher(db.Model):
     __tablename__ = 'publisher'
 
-    name = db.Column(db.String(200), primary_key=True)
+    #Name of the publisher
+    name          = db.Column(db.String(200), primary_key=True)
 
-    def __repr__(self):
-        return f"<Publisher(name={self.name})>"
-
-    @classmethod
-    def print_all(cls):
-        rows = cls.query.all()
-        if rows:
-            for row in rows:
-                print(row)
-        else:
-            print(f"No data found in table {cls.__tablename__}.")
-
+    #Creates a new row or updates the existing one for the provided primary keys
     @classmethod
     def upsert(cls, name):
         publisher = cls.query.filter_by(name=name).first()
@@ -266,40 +191,30 @@ class Publisher(db.Model):
             db.session.add(publisher)
         db.session.commit()
 
-    @classmethod
-    def delete(cls, name):
-        publisher = cls.query.filter_by(name=name).first()
-        if publisher:
-            db.session.delete(publisher)
-            db.session.commit()
 
-    @classmethod
-    def get(cls, name):
-        return cls.query.filter_by(name=name).first()
+'''///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////'''     
 
 
 # Represents a specific achievement unlocked by a specific user
 class User_Achievement(db.Model):
     __tablename__ = 'user_achievement'
 
+    #Internal name of the achievement on steam
     internal_name = db.Column(db.String(500), db.ForeignKey('achievement.internal_name'), primary_key=True)
-    app_id = db.Column(db.Integer, db.ForeignKey('game.app_id'), primary_key=True)
-    steam_id = db.Column(db.Integer, db.ForeignKey('steam_user.steam_id'), primary_key=True)
-    achieved = db.Column(db.Integer, nullable=False, default=0)
-    unlock_time = db.Column(db.Integer, nullable=False, default=0)
 
-    def __repr__(self):
-        return f"<User_Achievement(internal_name={self.internal_name}, app_id={self.app_id}, steam_id={self.steam_id}, achieved={self.achieved})>"
+    #App ID of the game the achievement is from
+    app_id        = db.Column(db.Integer, db.ForeignKey('game.app_id'), primary_key=True)
 
-    @classmethod
-    def print_all(cls):
-        rows = cls.query.all()
-        if rows:
-            for row in rows:
-                print(row)
-        else:
-            print(f"No data found in table {cls.__tablename__}.")
+    #Steam ID of the user who has the achievement
+    steam_id      = db.Column(db.Integer, db.ForeignKey('steam_user.steam_id'), primary_key=True)
 
+    #Achieved status 0 = false 1 = true
+    achieved      = db.Column(db.Integer, nullable=False, default=0)
+
+    #The unlock time as a unix timestamp 0 = never unlocked
+    unlock_time   = db.Column(db.Integer, nullable=False, default=0)
+
+    #Creates a new row or updates the existing one for the provided primary keys
     @classmethod
     def upsert(cls, internal_name, app_id, steam_id, achieved, unlock_time):
         user_achievement = cls.query.filter_by(
@@ -318,40 +233,27 @@ class User_Achievement(db.Model):
             db.session.add(user_achievement)
         db.session.commit()
 
-    @classmethod
-    def delete(cls, internal_name, app_id, steam_id):
-        user_achievement = cls.query.filter_by(
-            internal_name=internal_name, app_id=app_id, steam_id=steam_id).first()
-        if user_achievement:
-            db.session.delete(user_achievement)
-            db.session.commit()
 
-    @classmethod
-    def get(cls, internal_name, steam_id, app_id):
-        return cls.query.filter_by(internal_name=internal_name, steam_id=steam_id, app_id=app_id).first()
+'''///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////'''
 
 
 # Represents a specific game owned by a specific user
 class User_Game(db.Model):
-    __tablename__ = 'user_game'
+    __tablename__  = 'user_game'
 
-    steam_id = db.Column(db.Integer, db.ForeignKey('steam_user.steam_id'), primary_key=True)
-    app_id = db.Column(db.Integer, db.ForeignKey('game.app_id'), primary_key=True)
+    #Steam ID of the user who owns the game
+    steam_id       = db.Column(db.Integer, db.ForeignKey('steam_user.steam_id'), primary_key=True)
+
+    #Unique Application ID of the game
+    app_id         = db.Column(db.Integer, db.ForeignKey('game.app_id'), primary_key=True)
+
+    #The users total playtime in the game
     playtime_total = db.Column(db.Integer, nullable=False, default=0)
-    last_played = db.Column(db.Integer, nullable=False, default=0)
 
-    def __repr__(self):
-        return f"<User_Game(steam_id={self.steam_id}, app_id={self.app_id}, playtime_total={self.playtime_total}, last_played={self.last_played})>"
+    #The last time the game was played 0 = never
+    last_played    = db.Column(db.Integer, nullable=False, default=0)
 
-    @classmethod
-    def print_all(cls):
-        rows = cls.query.all()
-        if rows:
-            for row in rows:
-                print(row)
-        else:
-            print(f"No data found in table {cls.__tablename__}.")
-
+    #Creates a new row or updates the existing one for the provided primary keys
     @classmethod
     def upsert(cls, steam_id, app_id, playtime_total, last_played):
         user_game = cls.query.filter_by(steam_id=steam_id, app_id=app_id).first()
@@ -368,37 +270,18 @@ class User_Game(db.Model):
             db.session.add(user_game)
         db.session.commit()
 
-    @classmethod
-    def delete(cls, steam_id, app_id):
-        user_game = cls.query.filter_by(steam_id=steam_id, app_id=app_id).first()
-        if user_game:
-            db.session.delete(user_game)
-            db.session.commit()
-
-    @classmethod
-    def get(cls, steam_id, app_id):
-        return cls.query.filter_by(steam_id=steam_id, app_id=app_id).first()
+'''///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////'''
 
 
 # Represents a specific game tagged with a specific genre
 class Game_Genre(db.Model):
     __tablename__ = 'game_genre'
 
-    app_id = db.Column(db.Integer, db.ForeignKey('game.app_id'), primary_key=True)
-    genre_id = db.Column(db.Integer, db.ForeignKey('genre.genre_id'), primary_key=True)
+    app_id        = db.Column(db.Integer, db.ForeignKey('game.app_id'), primary_key=True)
 
-    def __repr__(self):
-        return f"<Game_Genre(app_id={self.app_id}, genre_id={self.genre_id})>"
+    genre_id      = db.Column(db.Integer, db.ForeignKey('genre.genre_id'), primary_key=True)
 
-    @classmethod
-    def print_all(cls):
-        rows = cls.query.all()
-        if rows:
-            for row in rows:
-                print(row)
-        else:
-            print(f"No data found in table {cls.__tablename__}.")
-
+    #Creates a new row or updates the existing one for the provided primary keys
     @classmethod
     def upsert(cls, app_id, genre_id):
         game_genre = cls.query.filter_by(app_id=app_id, genre_id=genre_id).first()
@@ -410,37 +293,21 @@ class Game_Genre(db.Model):
             db.session.add(game_genre)
         db.session.commit()
 
-    @classmethod
-    def delete(cls, app_id, genre_id):
-        game_genre = cls.query.filter_by(app_id=app_id, genre_id=genre_id).first()
-        if game_genre:
-            db.session.delete(game_genre)
-            db.session.commit()
 
-    @classmethod
-    def get(cls, app_id, genre_id):
-        return cls.query.filter_by(app_id=app_id, genre_id=genre_id).first()
+'''///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////'''
 
 
 # Represents a specific game created by a specific developer
 class Developer_Game(db.Model):
     __tablename__ = 'developer_game'
 
-    app_id = db.Column(db.Integer, db.ForeignKey('game.app_id'), primary_key=True)
-    developer = db.Column(db.String(500), db.ForeignKey('developer.name'), primary_key=True)
+    #Unique Application ID of the game
+    app_id        = db.Column(db.Integer, db.ForeignKey('game.app_id'), primary_key=True)
 
-    def __repr__(self):
-        return f"<Developer_Game(app_id={self.app_id}, developer={self.developer})>"
+    #Name of the developer
+    developer     = db.Column(db.String(500), db.ForeignKey('developer.name'), primary_key=True)
 
-    @classmethod
-    def print_all(cls):
-        rows = cls.query.all()
-        if rows:
-            for row in rows:
-                print(row)
-        else:
-            print(f"No data found in table {cls.__tablename__}.")
-
+    #Creates a new row or updates the existing one for the provided primary keys
     @classmethod
     def upsert(cls, app_id, developer_name):
         developer_game = cls.query.filter_by(app_id=app_id, developer=developer_name).first()
@@ -452,37 +319,21 @@ class Developer_Game(db.Model):
             db.session.add(developer_game)
         db.session.commit()
 
-    @classmethod
-    def delete(cls, app_id, developer_name):
-        developer_game = cls.query.filter_by(app_id=app_id, developer=developer_name).first()
-        if developer_game:
-            db.session.delete(developer_game)
-            db.session.commit()
 
-    @classmethod
-    def get(cls, app_id, developer_name):
-        return cls.query.filter_by(app_id=app_id, developer=developer_name).first()
+'''///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////'''     
 
 
 # Represents a specific game published by a specific publisher
 class Publisher_Game(db.Model):
     __tablename__ = 'publisher_game'
 
+    #Unique Application ID of the game
     app_id = db.Column(db.Integer, db.ForeignKey('game.app_id'), primary_key=True)
+
+    #Name of the publisher
     publisher = db.Column(db.String(500), db.ForeignKey('publisher.name'), primary_key=True)
 
-    def __repr__(self):
-        return f"<Publisher_Game(app_id={self.app_id}, publisher={self.publisher})>"
-
-    @classmethod
-    def print_all(cls):
-        rows = cls.query.all()
-        if rows:
-            for row in rows:
-                print(row)
-        else:
-            print(f"No data found in table {cls.__tablename__}.")
-
+    #Creates a new row or updates the existing one for the provided primary keys
     @classmethod
     def upsert(cls, app_id, publisher_name):
         publisher_game = cls.query.filter_by(app_id=app_id, publisher=publisher_name).first()
@@ -494,16 +345,8 @@ class Publisher_Game(db.Model):
             db.session.add(publisher_game)
         db.session.commit()
 
-    @classmethod
-    def delete(cls, app_id, publisher_name):
-        publisher_game = cls.query.filter_by(app_id=app_id, publisher=publisher_name).first()
-        if publisher_game:
-            db.session.delete(publisher_game)
-            db.session.commit()
 
-    @classmethod
-    def get(cls, app_id, publisher_name):
-        return cls.query.filter_by(app_id=app_id, publisher=publisher_name).first()
+'''///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////'''        
 
 
 # Logs the last time an API call was called successfully
