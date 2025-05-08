@@ -103,7 +103,7 @@ def profile():
         return redirect(url_for('login'))
 
     user = User.query.get(session['user_id'])
-    steam_user = Steam_User.query.filter_by(id=user.id).first()
+    steam_user = Steam_User.query.filter_by(id=User.id).first()
 
     if request.method == 'POST':
         steam_id = request.form['steam_id'].strip()

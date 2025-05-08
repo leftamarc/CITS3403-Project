@@ -8,7 +8,7 @@
         <div class="form-group">
             <label for="steam_id" class="bottom-box-text" style="font-weight: bold;">Steam ID</label>
     
-            {% if steam_id %}
+            {% if steam_id and session.get('user_id')%}
                 <input type="text" class="form-control dark-input" id="steam_id" name="steam_id" value="{{ steam_id }}" disabled>
                 <button type="button" class="button mt-3" id="editToggleButton" onclick="resetToLink()">Edit</button>
             {% else %}
