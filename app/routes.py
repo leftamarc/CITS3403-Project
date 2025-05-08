@@ -45,7 +45,12 @@ def generate():
         most_played_genre(steam_id),
         missed_easy_achievement(steam_id),
         most_played_release_year(steam_id),
-        most_unloved_game(steam_id)
+        most_unloved_game(steam_id),
+        avg_metacritic_score(steam_id),
+        achievement_completion_rate(steam_id),
+        backlog_size(steam_id),
+        highest_achievements_to_hours(steam_id),
+        rarest_achievement(steam_id)
     ]
 
     # Remove insights that failed

@@ -1,0 +1,24 @@
+<h5 class="card-title" style="color:white">How Good Is Your Taste?</h5>
+    <p class="card-text">
+        The average metacritic score of your library is <strong>{{ average_metacritic }}</strong>.
+
+        {% if average_metacritic < 60 %}
+        Yeesh.
+
+        {% elif 60 < average_metacritic < 70 %}
+        I guess good taste isn't for everyone.
+
+        {% elif 70 < average_metacritic < 80 %}
+        Just putting it out there that League of Legends also has a metacritic score in the 70s.
+
+        {% elif 80 < average_metacritic < 90 %}
+        Respectable.
+
+        {% elif 90 < average_metacritic %}
+        Looks like someone has an eye for quality.
+
+        {% endif %}
+
+    </p>
+
+
