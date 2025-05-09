@@ -1,7 +1,8 @@
-from flask import render_template, request
+from flask import render_template, request, flash
 from app import app
 from app.utils.insights import *
 from app.utils.fetch_player_data import FetchPlayerData
+from app.utils.api import PrivateAccount
 import random
 
 
@@ -32,12 +33,18 @@ def register():
 
 @app.route('/generate', methods=['POST'])
 def generate():
-    
+
     # Get the Steam ID from the form
+    
     steam_id = request.form.get('steamid')
 
-    #Update the database with all player info
-    #FetchPlayerData(steam_id) #commented out while I test since it takes ages
+    #Uncomment this after merge I cbf'd setting up sessions when I know its in main
+    '''try:
+        FetchPlayerData(steam_id) 
+    except PrivateAccount:
+        flash("The Steam account is set to private. Please make it public to generate insights.", "error")
+        return render_template('main/get.html') '''
+    
 
     # Run all insight functions
     insights = [

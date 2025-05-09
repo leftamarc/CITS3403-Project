@@ -13,7 +13,7 @@ from datetime import datetime, timedelta
     They should all return a tuple of the form (success, rendered_template) 
     
     Where: 
-        Success is a reporting whether or not the insight could be found for an account
+        Success is boolean a reporting whether or not the insight could be found for an account
         
         Rendered_template is the result of render_template() for the matching template or None if insight 
         couldn't be found'''
