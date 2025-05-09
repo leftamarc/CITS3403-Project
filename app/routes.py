@@ -45,6 +45,7 @@ def generate():
         flash("The Steam account is set to private. Please make it public to generate insights.", "error")
         return render_template('main/get.html') '''
     
+    FetchPlayerData(steam_id) #delete this line during merge and uncomment above
 
     # Run all insight functions
     insights = [

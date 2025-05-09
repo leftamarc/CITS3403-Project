@@ -15,9 +15,6 @@ def FetchPlayerData(steam_id):
             print(f'\nFetching data for app_id {app_id}')
             process_game_data(steam_id, app_id, game)
 
-            # Process achievements for the game
-            process_achievement_data(steam_id, app_id)
-
     except Exception as e:
         raise
 
@@ -42,6 +39,7 @@ def process_game_data(steam_id, app_id, game):
     except Exception as e:
         print(f"Error fetching metadata for app_id {app_id}: {e}")
         return
+        #Just skipping this game if error happens
 
     # Convert release_date to Unix timestamp
     release_date_timestamp = convert_to_unix_timestamp(release_date)
@@ -54,6 +52,7 @@ def process_game_data(steam_id, app_id, game):
     process_developer_data(app_id, developers)
     process_publisher_data(app_id, publishers)
     process_genre_data(app_id, genres)
+    process_achievement_data(steam_id, app_id)
 
 
 def process_developer_data(app_id, developers):
@@ -75,6 +74,8 @@ def process_genre_data(app_id, genres):
     for genre in genres:
         Genre.upsert(genre[0], genre[1])
         Game_Genre.upsert(app_id, genre[0])
+
+    
 
 
 def process_achievement_data(steam_id, app_id):
@@ -107,6 +108,8 @@ def process_achievement_data(steam_id, app_id):
         # Upsert achievements into the database
         for achievement in achievement_dicts:
             if not achievement["rate"]:
+                #For some reason sometimes steam will have no global achievement data but have user achievement data
+                #for the same achievement, in this case we just skip the achievement entirely
                 continue
 
             Achievement.upsert(
@@ -124,7 +127,9 @@ def process_achievement_data(steam_id, app_id):
                 achievement["unlock_time"],
             )
     except Exception as e:
-        print(f"Error processing achievements for app_id {app_id}: {e}")
+        return
+        #Most commonly just catches the NoAchievement's exception raised by the api call
+
 
 
 def convert_to_unix_timestamp(release_date):
