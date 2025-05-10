@@ -76,6 +76,10 @@ def register():
             flash('Passwords do not match.', 'danger')
             return redirect(url_for('register'))
         
+        if not is_strong_password(password):
+            flash('Password must be at least 8 characters long and include letters, numbers, and special characters.', 'danger')
+            return redirect(url_for('register'))
+        
         # Check if username already exists
         if User.query.filter_by(username=username).first():
             flash('Username already exists.', 'danger')
