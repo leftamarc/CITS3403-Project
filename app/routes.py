@@ -8,7 +8,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from app.security import *
 from flask_login import login_user, login_required
 from app.models import User, Steam_User
-
+from app.__init__ import limiter
 
 @app.route('/')
 @app.route('/home')
@@ -24,43 +24,40 @@ def get():
     steam_user = Steam_User.query.filter_by(id=User.id).first()
     return render_template('main/get.html',steam_id=steam_user.steam_id if steam_user else None)
 
+
 @app.route('/login', methods=['GET', 'POST'])
+@limiter.limit("10 per minute", error_message="Too many logins, please try again in a minute.")
 def login():
     if 'user_id' in session:
         flash('You are already logged in.', 'info')
         return redirect(url_for('home'))
-    
+
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        remember_me = request.form.get('rememberMe')  # Get the value of the 'remember me' checkbox
-        
-        # Check if the user exists
+        remember_me = request.form.get('rememberMe')
+
         user = User.query.filter_by(username=username).first()
         if not user:
             flash('Username does not exist.', 'danger')
-            return redirect(url_for('login'))
-        
-        # Check if password matches
+            return redirect(url_for('login'))  # Stay on the same page
+
         if not check_password_hash(user.password_hash, password):
             flash('Incorrect password.', 'danger')
-            return redirect(url_for('login'))
-        
-        # Successful login
-        else:
-            # Log the user in and remember them if selected
-            login_user(user, remember=(remember_me == 'on'))
-            
-            session['user_id'] = user.id  # You can still set session data as needed
-            session['username'] = user.username
-            
-            flash('Login successful', 'success')
-            return redirect(url_for('home'))
+            return redirect(url_for('login'))  # Stay on the same page
 
-    return render_template('main/login.html')
+        login_user(user, remember=(remember_me == 'on'))
+        session['user_id'] = user.id
+        session['username'] = user.username
+
+        flash('Login successful', 'success')
+        return redirect(url_for('home'))  # Redirect after successful login
+
+    return render_template('main/login.html')  # Show login page if method is GET
 
 
 @app.route('/register', methods=['GET', 'POST'])
+@limiter.limit("20 per hour", error_message="Too many registrations, please try again in a hour.")
 def register():
     if 'user_id' in session:
         flash('You are already logged in.', 'info')
