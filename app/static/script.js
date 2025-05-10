@@ -81,13 +81,12 @@ function resetToLink() {
 
     // Enable the field and clear the value
     steamIDField.disabled = false;
-    steamIDField.value = '';
     steamIDField.placeholder = 'Enter your Steam ID';
 
     // Change button to submit
     button.innerText = 'Link';
     button.setAttribute('type', 'submit');
-    button.removeAttribute('onclick');  // remove JS handler so it behaves like a submit button
+    button.removeAttribute('onclick');  // Remove the onclick handler so it behaves like a submit button
 }
 
 function showLoadingPage() {

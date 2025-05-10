@@ -5,10 +5,10 @@
     <h1 class="tab-title display-4 mb-5">{{ username }}</h1>
 
     <form action="{{ url_for('profile') }}" method="POST" onsubmit="showLoadingPage()">
-        <div class="form-group">
+<!--        <div class="form-group">
             <label for="steam_id" class="bottom-box-text" style="font-weight: bold;">Steam ID</label>
     
-            {% if steam_id and session.get('user_id')%}
+            {% if steam_id %}
                 <input type="text" class="form-control dark-input" id="steam_id" name="steam_id" value="{{ steam_id }}" disabled>
                 <button type="button" class="button mt-3" id="editToggleButton" onclick="resetToLink()">Edit</button>
             {% else %}
@@ -17,8 +17,7 @@
             {% endif %}
         </div>
     </form>
-    
-</div>
+</div> -->
 
 <div id="loading-overlay" style="display:none;">
     <div class="loading-spinner"></div>

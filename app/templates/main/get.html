@@ -2,7 +2,7 @@
 {% block content %}
 
 <div class="container">
-    <!-- Flash Messages -->
+    <!-- Flash Messages 
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
         <div class="mt-3">
@@ -14,29 +14,23 @@
           {% endfor %}
         </div>
       {% endif %}
-    {% endwith %}
+    {% endwith %}-->
 
-    <div class="row mt-5">
-        <div class="col-md-6 d-flex flex-column align-items-start">
-            <h1 class="tab-title generate display-4 mb-5">Generate your SteamWrappeds</h1>  
-            <div>
-                
-                {% if steam_id and session.get('user_id') %}
-                <p style="font-weight: bold;"> Steam ID: </p>
-                <p> {{ steam_id }} </p> 
-                {% elif not steam_id and session.get('user_id') %}
-                <p style="font-weight: bold;"> Steam ID not yet linked. You can link your Steam ID in your profile. </p>
-                {% else %}
-                <p> Please log in to link your Steam ID. </p>
-                {% endif %}
-
-                <form action="{{ url_for('generate') }}">
-                    <button type="submit" class="button generate mt-3">Generate</button>
-                </form>
-            </div>
+  <div class="row mt-5">
+    <div class="col-md-6 d-flex flex-column align-items-start">
+        <h1 class="tab-title generate display-4 mb-5">Generate your SteamWrappeds</h1>  
+        <div>
+            <p>Press "Generate" to view your SteamWrapped.</p>
+            <form action="{{ url_for('generate') }}" method="POST">
+                <div class="form-group">
+                    <label for="steamid" class="bottom-box-text" style="font-weight: bold;">Steam ID</label>
+                    <input type="text" class="form-control dark-input" id="steamid" name="steamid" placeholder="Enter your Steam ID" required>
+                </div>
+                <button type="submit" class="button generate mt-3">Generate</button>
+            </form>
         </div>
-        {% include "elements/tutorial.html" %}
     </div>
+    {% include "elements/tutorial.html" %}
 </div>
 
-{% endblock %}
+</div>{% endblock %}

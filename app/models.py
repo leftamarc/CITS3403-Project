@@ -113,19 +113,10 @@ class Steam_User(db.Model):
     username        =   db.Column(db.String(200), nullable=False)
  
     #Url to the users avatar
-    avatar_url           =   db.Column(db.String(200), nullable=False)
+    image           =   db.Column(db.String(200), nullable=False)
 
     #Associated SteamWrapped Account ID
-    id =  db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-
-    #Users unique Steam ID
-    steam_id      = db.Column(db.Integer, primary_key=True)
-
-    #Users most recent username
-    username      = db.Column(db.String(200), nullable=False)
-
-    #Url to profile picture
-    image         = db.Column(db.String(200), nullable=False)
+    id =  db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
 
     #Total number of games owned
     n_games_owned = db.Column(db.Integer, nullable=False, default=0)
@@ -358,6 +349,18 @@ class Publisher_Game(db.Model):
     # The developer in question
     publisher       =   db.Column(db.String(500), db.ForeignKey('publisher.name'), primary_key=True)
 
+    #Creates a new row or updates the existing one for the provided primary keys
+    @classmethod
+    def upsert(cls, app_id, publisher_name):
+        publisher_game = cls.query.filter_by(app_id=app_id, publisher=publisher_name).first()
+        if not publisher_game:
+            publisher_game = cls(
+                app_id=app_id,
+                publisher=publisher_name
+            )
+            db.session.add(publisher_game)
+        db.session.commit()
+
 #********************************************************************************************************************************************************************************
 
 
@@ -366,7 +369,13 @@ class Publisher_Game(db.Model):
 #represents a user login system (using werkzeug security)
 class User(db.Model, UserMixin):
     #Name of the publisher
-    publisher = db.Column(db.String(500), db.ForeignKey('publisher.name'), primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(15), nullable=False, unique=True)
+    password_hash = db.Column(db.String(128), nullable=False)
+    date_created = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    def set_password(self, password):
+        self.password_hash = hash_password(password)
 
     #Creates a new row or updates the existing one for the provided primary keys
     @classmethod
@@ -412,13 +421,4 @@ class Api_Log(db.Model):
         return (current_time - api_log.last_called) >= duration
 
 
-# Represents a user login system (using werkzeug security)
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(15), nullable=False, unique=True)
-    password_hash = db.Column(db.String(128), nullable=False)
-    date_created = db.Column(db.DateTime, default=datetime.utcnow)
-    
 
-    def set_password(self, password):
-        self.password_hash = hash_password(password)

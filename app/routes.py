@@ -1,13 +1,13 @@
 from flask import render_template, request, redirect, url_for, flash, session
 from app import app, db
 from app.utils.insights import *
-from app.utils.fetch_player_data import FetchPlayerData
+from app.utils.fetch_player_data import *
 from app.utils.api import PrivateAccount
 import random
 from werkzeug.security import generate_password_hash, check_password_hash
 from app.security import *
 from flask_login import login_user, login_required
-from fetch_player_data import FetchPlayerData
+from app.models import User, Steam_User
 
 
 @app.route('/')
@@ -105,54 +105,10 @@ def profile():
         flash("Please log in to access your profile.", "warning")
         return redirect(url_for('login'))
 
-    user = User.query.get(session['user_id'])
-    steam_user = Steam_User.query.filter_by(id=User.id).first()
-
-    if request.method == 'POST':
-        steam_id = request.form['steam_id'].strip()
-
-        # If the field is left blank, remove the existing Steam_User entry (unlink account)
-        if not steam_id:
-            if steam_user:
-                db.session.delete(steam_user)
-                db.session.commit()
-                flash("Steam ID unlinked successfully.", "info")
-            return redirect(url_for('profile'))
-
-        # Otherwise, try to fetch the profile and update/create as usual
-        try:
-            steam_id, username, avatar_url = FetchPlayerData(steam_id)
-        except Exception as e:
-            flash(f"Error fetching Steam profile data: {e}", "danger")
-            return redirect(url_for('profile'))
-
-        # Ensure the steam_id isn't linked to another user
-        existing_steam_user = Steam_User.query.filter_by(steam_id=steam_id).first()
-        if existing_steam_user and existing_steam_user.id != user.id:
-            flash('Steam ID is already linked to another account.', 'danger')
-            return redirect(url_for('profile'))
-
-        if not steam_user:
-            # Link new Steam ID
-            bound_steam_id = Steam_User(steam_id=steam_id, username=username, avatar_url=avatar_url, id=user.id)
-            db.session.add(bound_steam_id)
-            flash('Steam ID linked successfully.', 'success')
-        else:
-            # Update existing Steam ID
-            steam_user.steam_id = steam_id
-            steam_user.username = username
-            steam_user.avatar_url = avatar_url
-            flash('Steam ID updated successfully.', 'success')
-
-        db.session.commit()
-        return redirect(url_for('profile'))
-
+    # Pass the steam_id to the template
     return render_template(
-        'main/profile.html',
-        steam_id=steam_user.steam_id if steam_user else None,
-        username=user.username
+        'main/profile.html'
     )
-
 
 
 @app.route('/logout', methods = ['POST'])
@@ -161,7 +117,7 @@ def logout():
     flash("You have been logged out.", "info")
     return redirect(url_for('home'))
 
-@app.route('/generate')
+@app.route('/generate', methods=['POST'])
 def generate():
 
     # Get the Steam ID from the form
@@ -202,5 +158,3 @@ def generate():
 
     # Render the template with the selected insights
     return render_template('main/wrapped.html', cards=selected_insights)
-    
-    
