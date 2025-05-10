@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport"="width=device-width, initial-scale=1.0">
     <title>CITS3403 Project</title>
+    <link rel="icon" href="static/logo.PNG" type="png">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
@@ -15,6 +16,7 @@
 
 <body class="d-flex flex-column min-vh-100">
     <ul class="header-tabs"> 
+        <div> <img src="static/logo.png" alt="SteamWrapped Logo" width="70"/> </div>
         <div class="header-title clickable-text {% if request.endpoint == 'home' %}active-tab{% endif %}" 
         onclick="window.location.href='{{ url_for('home') }}'">SteamWrapped</div>
 
