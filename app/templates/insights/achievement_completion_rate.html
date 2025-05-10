@@ -1,0 +1,30 @@
+<h5 class="card-title" style="color:white">The Litmus Test For Skill</h5>
+    <p class="card-text">
+        You have an average achievement completion rate of <strong>{{ completion_rate }}%</strong>.
+
+        {% if completion_rate < 30 %}
+        How are you even this terrible? I scored higher on my chemistry exam.
+
+        {% elif 30 < completion_rate < 50 %}
+        Sucks to suck.
+
+        {% elif 50 < completion_rate < 60 %}
+        A passing grade.
+
+        {% elif 60 < completion_rate < 70 %}
+        Good enough.
+
+        {% elif 70 < completion_rate < 80 %}
+        Impressive.
+
+        {% elif 80 < completion_rate < 90 %}
+        Very impressive.
+
+        {% elif 90 < completion_rate %}
+        Looks like we've got a completionist on our hands.
+
+        {% endif %}
+
+    </p>
+
+

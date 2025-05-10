@@ -1,0 +1,27 @@
+<h5 class="card-title" style="color:white">The Pile of Shame</h5>
+    <p class="card-text">
+        You haven't played <strong>{{ backlog_percentage }}%</strong> of the games in your library.
+
+        {% if backlog_percentage < 10 %}
+        I'm sure you'll get around to playing that last percent
+
+        {% elif 10 < backlog_percentage < 35 %}
+        It's alright, we all have some shelf warmers.
+
+        {% elif 35 < backlog_percentage < 50 %}
+        Almost half? Really?
+
+        {% elif 50 < backlog_percentage < 80 %}
+        The games in your library aren't just for decorative purposes you know.
+
+        {% elif 80 < backlog_percentage < 90 %}
+        If you like throwing your money away that much I can give you my PayPal.
+
+        {% elif 90 < backlog_percentage %}
+        Either you don't own any games or you don't like video games, either way I'm questioning why your here.
+
+        {% endif %}
+
+    </p>
+
+

@@ -1,0 +1,26 @@
+<h5 class="card-title" style="color:white">Prized Possession</h5>
+    <p class="card-text">
+        The rarest achievement you have unlocked is <strong>{{ achievement_name }}</strong> in 
+        the game <strong>{{ game_name }}</strong>. It has been unlocked by only <strong>{{ global_unlock_rate }}%</strong> 
+        of players globally.
+
+        {% if global_unlock_rate <= 1 %}
+        Damn, well done.
+
+        {% elif 1 < global_unlock_rate < 5 %}
+        Maybe you should stick this one up on your profile
+
+        {% elif 5 < global_unlock_rate < 10 %}
+        Maybe you should stick this one up on your profile
+
+        {% elif 10 < global_unlock_rate < 30 %}
+        Nothing to write home about to be honest.
+
+        {% elif 30 < global_unlock_rate %}
+        An impressively unimpressive achievement
+
+        {% endif %}
+
+    </p>
+
+

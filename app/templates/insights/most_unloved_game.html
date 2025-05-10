@@ -1,0 +1,21 @@
+<h5 class="card-title" style="color:white">It's Been A While...</h5>
+    <p class="card-text">
+        {% if 3650 < days_since_last_played %}
+        Woah looks like were digging up the dead with this one.
+        {% endif %}
+
+        It's been <strong>{{ days_since_last_played }}</strong> days since you last played
+        <strong>{{ game_name }}</strong>.
+
+        {% if 1825 < days_since_last_played < 3650 %}
+        Go and show {{ game_name }} some love.
+
+        {% elif 365 < days_since_last_played < 1825 %}
+        Don't let them collect anymore dust!
+
+        {% elif days_since_last_played < 365 %}
+        Looks like you love all members of your library.
+        {% endif %}
+    </p>
+
+

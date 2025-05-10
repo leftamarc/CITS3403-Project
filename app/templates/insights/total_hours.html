@@ -1,0 +1,21 @@
+<h5 class="card-title" style="color:white">Total Account Hours</h5>
+<p class="card-text">
+    You have played a total of <strong>{{ total_hours }}</strong> hours across all games.
+    {% if total_hours < 100 %}
+    Do you even like video games? Why are you here.
+
+    {% elif 100 < total_hours < 500 %}
+    Gotta pump those numbers up. Those are rookie numbers in this racket.
+
+    {% elif 500 < total_hours < 5000 %}
+    Nice.
+
+    {% elif 5000 < total_hours < 10000 %}
+    Maybe you should go outside more.
+
+    {% elif 10000 < total_hours %}
+    According to the 10000 hour rule your a true master of wasting time.
+
+    {% endif %}
+ </p>
+    
