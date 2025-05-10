@@ -17,15 +17,25 @@ def home():
 
 @app.route('/get')
 def get():
+    if 'user_id' not in session:
+        flash("Please log in to access SteamWrapped's features.", "warning")
+        return redirect(url_for('login'))
+    
     steam_user = Steam_User.query.filter_by(id=User.id).first()
     return render_template('main/get.html',steam_id=steam_user.steam_id if steam_user else None)
 
 @app.route('/view')
 def view():
+    if 'user_id' not in session:
+        flash("Please log in to access SteamWrapped's features.", "warning")
+        return redirect(url_for('login'))
     return render_template('main/view.html')
 
 @app.route('/share')
 def share():
+    if 'user_id' not in session:
+        flash("Please log in to access SteamWrapped's features.", "warning")
+        return redirect(url_for('login'))
     return render_template('main/share.html')
 
 @app.route('/login', methods=['GET', 'POST'])
