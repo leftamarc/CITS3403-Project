@@ -2,7 +2,7 @@
 
 {% block content %}
 <div class="container">
-    <h1 class="tab-title display-4 mb-5 mt-5 text-center">Your Wrapped Insights</h1>
+    <h1 class="tab-title display-4 mb-5 mt-5 text-center">{{ collection.title }}</h1>
     <div id="userWrapped" class="carousel slide" data-interval="false">
         <div class="carousel-inner">
             {% for card in cards %}
@@ -10,10 +10,10 @@
                 <div class="card text-center flex-column justify-content-center position-relative" 
                      style="background-color: #171a21; height: 30rem; padding: 10rem;">
 
-                    {{ card|safe }}
+                    {{ card.card|safe }}
                     
                 </div>
-            </div>             
+            </div>
             {% endfor %}
         </div>
         <a class="carousel-control-prev" href="#userWrapped" role="button" data-slide="prev">
@@ -24,50 +24,19 @@
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
             <span class="sr-only">Next</span>
         </a>
-
-        <!-- Save Cards Form -->
-        <div style="text-align: center;"> 
-            
-            <button type="submit" class="button mt-3 mb-3" onclick="openNameModal();">Save</button>
-        
-        </div>
-        <!-- Display date created -->
         <div class="text-white" style="position: absolute; top: 10px; width: 100%; text-align: center;">
-            <small>Created on: {{ current_time.strftime('%Y-%m-%d %H:%M:%S') }}</small>
-         
+            <small>Created on: {{ collection.date_created.strftime('%Y-%m-%d %H:%M:%S') }}</small>
         </div>
-        <div class="d-flex justify-content-center gap-3 mt-3">
-            <!-- Share Icon -->
-            <a href="#" 
-               class="text-white" 
-               style="font-size: 1.5rem;" 
-               onclick="openModal();">
-                <i class="bi bi-share"></i>
-            </a>
-        </div>
-
     </div>
-</div>
 
-<!-- Rename Modal -->
-<div id="nameModal" class="modal" tabindex="-1" role="dialog" style="display: none;">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="mb-3"> 
-                <!--<h5 class="basic-title">Name this SteamWrapped!</h5>-->
-                <button type="button" class="close" onclick="closeModal()" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form action="{{ url_for('save_collection_route') }}" method="POST">
-                <input type="text" class="form-control dark-input" id="title" name="title" placeholder="Name this Wrapped!" required>
-                <div style="text-align: right;"> 
-                    <button type="submit" class="button mt-2 mb-1">
-                        Save
-                    </button>
-                </div>
-            </form>
-        </div>
+    <div class="d-flex justify-content-center gap-3 mt-3">
+        <!-- Share Icon -->
+        <a href="#" 
+           class="text-white" 
+           style="font-size: 1.5rem;" 
+           onclick="openModal();">
+            <i class="bi bi-share"></i>
+        </a>
     </div>
 </div>
 
@@ -76,7 +45,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="basic-title">Share your SteamWrappeds</h5>
+                <h5 class="basic-title">Share your SteamWrapped</h5>
                 <button type="button" class="close" onclick="closeModal()" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>

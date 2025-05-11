@@ -2,14 +2,15 @@ from flask import render_template, request, redirect, url_for, flash, session, j
 from app import app, db
 from app.utils.insights import *
 from app.utils.fetch_player_data import *
-from app.utils.save_cards import *
+from app.utils.save_a_collection import *
 from app.utils.api import PrivateAccount
 import random
 from werkzeug.security import generate_password_hash, check_password_hash
 from app.security import *
 from flask_login import login_user, login_required
-from app.models import User, Steam_User
+from app.models import User, Steam_User, saved_collections, saved_cards
 from app.__init__ import limiter
+import json
 
 @app.route('/')
 @app.route('/home')
@@ -18,9 +19,9 @@ def home():
 
 @app.route('/get')
 def get():
-    '''if 'user_id' not in session:
+    if 'user_id' not in session:
         flash("Please log in to access SteamWrapped's features.", "warning")
-        return redirect(url_for('login'))''' 
+        return redirect(url_for('login'))
     # Uncomment later
     
     steam_user = Steam_User.query.filter_by(id=User.id).first()
@@ -105,13 +106,14 @@ def profile():
         return redirect(url_for('login'))
     
     user_id = session['user_id']
-    saved_cards = SavedCards.query.filter_by(id=user_id).all()
+    # Fetch saved collections for the logged-in user
+    user_saved_collections = saved_collections.query.filter_by(id=user_id).all()
 
-    # Pass the steam_id to the template
+    # Pass the username and saved collections to the template
     return render_template(
         'main/profile.html', 
-        username=User.query.get(session['user_id']).username,
-        saved_cards=saved_cards
+        username=User.query.get(user_id).username,
+        saved_collections=user_saved_collections
     )
 
 
@@ -127,6 +129,7 @@ def generate():
     # Get the Steam ID from the form
     
     steam_id = request.form.get('steamid')
+    
 
     try:
         FetchPlayerData(steam_id) 
@@ -155,6 +158,8 @@ def generate():
 
     # Randomly select up to 8 successful insights
     selected_insights = random.sample(successful_insights, min(len(successful_insights), 8))
+    session['cards'] = selected_insights
+    session['steam_id'] = steam_id
 
     ''' TODO: If there are less than 8 successful insights, flash a message about account not having enough
         steam data'''
@@ -179,13 +184,35 @@ def search_users():
 
 
 @app.route('/save_cards', methods=['POST'])
-def save_cards_route():
+def save_collection_route():
     id = session.get('user_id')
-    steam_id = request.form.get('steam_id')
-    cards = request.form.get('cards', '').split('\n')  # Split the combined cards back into a list
+    steam_id = session['steam_id']
+    cards = session.get('cards')
     title = request.form.get('title')
 
-    response = save_cards(id, steam_id, cards, title)
+    response = save_a_collection(id, steam_id, cards, title)
     flash(response['message'], 'success' if response['status'] == 'success' else 'danger')
     return redirect(url_for('profile'))  # Redirect to a relevant page after saving
 
+@app.route('/view_card/<int:saved_id>', methods=['GET'])
+def view_card(saved_id):
+    if 'user_id' not in session:
+        flash("Please log in to view this card.", "warning")
+        return redirect(url_for('login'))
+
+    # Fetch the saved collection by its ID and ensure it belongs to the logged-in user
+    collection = saved_collections.query.filter_by(saved_id=saved_id, id=session['user_id']).first()
+    if not collection:
+        flash("Collection not found or you do not have permission to view it.", "danger")
+        return redirect(url_for('profile'))
+
+    # Fetch all cards associated with this collection
+    cards = saved_cards.query.filter_by(saved_id=saved_id).all()
+
+    # Render the card in a similar design to wrapped.html
+    return render_template(
+        'main/view_card.html',
+        collection=collection,
+        cards=cards,
+        current_time=collection.date_created.strftime('%Y-%m-%d %H:%M:%S')
+    )
