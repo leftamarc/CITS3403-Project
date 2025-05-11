@@ -2,6 +2,7 @@ from flask import render_template, request, redirect, url_for, flash, session, j
 from app import app, db
 from app.utils.insights import *
 from app.utils.fetch_player_data import *
+from app.utils.save_cards import *
 from app.utils.api import PrivateAccount
 import random
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -153,9 +154,10 @@ def generate():
     ''' TODO: If there are less than 8 successful insights, flash a message about account not having enough
         steam data'''
 
-    # Render the template with the selected insights
-    return render_template('main/wrapped.html', cards=selected_insights)
+    current_time = datetime.now()
 
+    # Render the template with the selected insights
+    return render_template('main/wrapped.html', cards=selected_insights, steam_id=steam_id, current_time=current_time)
 
 @app.route('/search_users', methods=['GET'])
 def search_users():
@@ -168,3 +170,16 @@ def search_users():
     results = [{'id': user.id, 'username': user.username} for user in users]
 
     return jsonify(results)
+
+
+
+@app.route('/save_cards', methods=['POST'])
+def save_cards_route():
+    id = session.get('user_id')
+    steam_id = request.form.get('steam_id')
+    cards = request.form.get('cards', '').split('\n')  # Split the combined cards back into a list
+
+    response = save_cards(id, steam_id, cards)
+    flash(response['message'], 'success' if response['status'] == 'success' else 'danger')
+    return redirect(url_for('profile'))  # Redirect to a relevant page after saving
+
