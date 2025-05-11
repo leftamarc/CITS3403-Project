@@ -423,6 +423,7 @@ class Api_Log(db.Model):
 # Saving Cards
 
 class shared_collections(db.Model):
+    share_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     saved_id = db.Column(db.Integer, primary_key=True)
     id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
