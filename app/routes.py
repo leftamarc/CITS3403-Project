@@ -17,9 +17,10 @@ def home():
 
 @app.route('/get')
 def get():
-    if 'user_id' not in session:
+    '''if 'user_id' not in session:
         flash("Please log in to access SteamWrapped's features.", "warning")
-        return redirect(url_for('login'))
+        return redirect(url_for('login'))''' 
+    # Uncomment later
     
     steam_user = Steam_User.query.filter_by(id=User.id).first()
     return render_template('main/get.html',steam_id=steam_user.steam_id if steam_user else None)
@@ -121,14 +122,13 @@ def generate():
     
     steam_id = request.form.get('steamid')
 
-    #Uncomment this after merge I cbf'd setting up sessions when I know its in main
-    '''try:
+    try:
         FetchPlayerData(steam_id) 
     except PrivateAccount:
         flash("The Steam account is set to private. Please make it public to generate insights.", "error")
-        return render_template('main/get.html') '''
+        return render_template('main/get.html') 
     
-    FetchPlayerData(steam_id) #delete this line during merge and uncomment above
+
 
     # Run all insight functions
     insights = [
