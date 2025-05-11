@@ -1,4 +1,4 @@
-from flask import render_template, request, redirect, url_for, flash, session
+from flask import render_template, request, redirect, url_for, flash, session, jsonify
 from app import app, db 
 from app.models import User, Steam_User
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -161,4 +161,16 @@ def logout():
 @app.route('/generate')
 def generate():
     return render_template('main/home.html')
-    
+
+@app.route('/search_users', methods=['GET'])
+def search_users():
+    query = request.args.get('query', '').strip()
+    if not query:
+        return jsonify([])  # Return an empty list if no query is provided
+
+    # Search for users in the database (adjust based on your ORM)
+    users = User.query.filter(User.username.ilike(f"%{query}%")).all()
+    results = [{'id': user.id, 'username': user.username} for user in users]
+
+    return jsonify(results)
+
