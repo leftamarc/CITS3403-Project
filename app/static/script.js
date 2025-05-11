@@ -102,18 +102,32 @@ function openModal() {
     resultsContainer.innerHTML = ''; // Clear any previous results
 }
 
-function closeModal() {
-    const modal = document.getElementById('shareModal');
-    modal.style.display = 'none';
+function openNameModal() {
+    const modal = document.getElementById('nameModal');
+
+    modal.style.display = 'flex'; // Show the modal
 }
 
-// Close the modal when clicking outside of it
+function closeModal() {
+    const modals = ['nameModal', 'shareModal'];
+    modals.forEach(id => {
+        const modal = document.getElementById(id);
+        if (modal) {
+            modal.style.display = 'none';
+        }
+    });
+}
+
 window.onclick = function(event) {
-    const modal = document.getElementById('shareModal');
-    if (event.target === modal) {
-        modal.style.display = 'none';
-    }
+    const modals = ['nameModal', 'shareModal'];
+    modals.forEach(id => {
+        const modal = document.getElementById(id);
+        if (modal && event.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
 };
+
 
 
 document.getElementById('userSearch').addEventListener('input', function () {
@@ -159,38 +173,3 @@ document.getElementById('userSearch').addEventListener('input', function () {
         .catch(error => console.error('Error fetching search results:', error));
 });
 
-document.getElementById("saveCards").addEventListener("click", function () {
-    const steamId = document.getElementById("saveCards").dataset.steamId; // Use a data attribute for steam_id
-    const cards = [];
-
-    document.querySelectorAll('.carousel-item .card').forEach(card => {
-        cards.push(card.innerHTML);
-    });
-
-    if (!steamId || cards.length === 0) {
-        alert("Error: Missing Steam ID or no cards to save.");
-        return;
-    }
-
-    const combinedCards = cards.join('\n');
-
-    fetch("/save_cards", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ steam_id: steamId, cards: combinedCards })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.status === "success") {
-            alert("Saved successfully!");
-        } else {
-            alert("Error saving cards.");
-        }
-    })
-    .catch(error => {
-        console.error("Error during save:", error);
-        alert("An unexpected error occurred.");
-    });
-});

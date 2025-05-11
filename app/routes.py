@@ -103,10 +103,15 @@ def profile():
     if 'user_id' not in session:
         flash("Please log in to access your profile.", "warning")
         return redirect(url_for('login'))
+    
+    user_id = session['user_id']
+    saved_cards = SavedCards.query.filter_by(id=user_id).all()
 
     # Pass the steam_id to the template
     return render_template(
-        'main/profile.html', username=User.query.get(session['user_id']).username
+        'main/profile.html', 
+        username=User.query.get(session['user_id']).username,
+        saved_cards=saved_cards
     )
 
 
@@ -178,8 +183,9 @@ def save_cards_route():
     id = session.get('user_id')
     steam_id = request.form.get('steam_id')
     cards = request.form.get('cards', '').split('\n')  # Split the combined cards back into a list
+    title = request.form.get('title')
 
-    response = save_cards(id, steam_id, cards)
+    response = save_cards(id, steam_id, cards, title)
     flash(response['message'], 'success' if response['status'] == 'success' else 'danger')
     return redirect(url_for('profile'))  # Redirect to a relevant page after saving
 

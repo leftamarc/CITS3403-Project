@@ -3,7 +3,7 @@ from app.models import SavedCards
 from datetime import datetime
 from app import db
 
-def save_cards(id, steam_id, cards):
+def save_cards(id, steam_id, cards,title):
     """
     Save the provided cards to the database for the given Steam ID.
 
@@ -25,7 +25,8 @@ def save_cards(id, steam_id, cards):
         id=id,
         steam_id=steam_id,
         html_content=combined_cards,
-        date_created=datetime.utcnow()
+        date_created=datetime.utcnow(),
+        title=title
     )
 
     db.session.add(new_saved)

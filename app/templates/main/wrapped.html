@@ -27,33 +27,57 @@
 
         <!-- Save Cards Form -->
         <div style="text-align: center;"> 
-            <form action="{{ url_for('save_cards_route') }}" method="POST">
-                <input type="hidden" name="steam_id" value="{{ steam_id }}">
-                <textarea name="cards" style="display: none;">
-                    {% for card in cards %}
-                    {{ card|safe }}
-                    {% endfor %}
-                </textarea>
-                <button type="submit" class="button mt-3 mb-3">Save</button>
-            </form>
+            
+            <button type="submit" class="button mt-3 mb-3" onclick="openNameModal();">Save</button>
+        
         </div>
         <!-- Display date created -->
         <div class="text-white" style="position: absolute; top: 10px; width: 100%; text-align: center;">
             <small>Created on: {{ current_time.strftime('%Y-%m-%d %H:%M:%S') }}</small>
+            </a>
         </div>
-        <div style="position: absolute; width: 100%; text-align: center;"> 
+        <div class="d-flex justify-content-center gap-3 mt-3">
             <!-- Share Icon -->
             <a href="#" 
-            class="text-white position-absolute" 
-            style="bottom: 1rem; left: 50%; transform: translateX(-50%); font-size: 1.5rem; width: 35px; height: 35px;" 
-            onclick="openModal();">
+               class="text-white" 
+               style="font-size: 1.5rem;" 
+               onclick="openModal();">
                 <i class="bi bi-share"></i>
             </a>
         </div>
 
     </div>
 </div>
-<!-- Modal -->
+
+<!-- Rename Modal -->
+<div id="nameModal" class="modal" tabindex="-1" role="dialog" style="display: none;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="mb-3"> 
+                <!--<h5 class="basic-title">Name this SteamWrapped!</h5>-->
+                <button type="button" class="close" onclick="closeModal()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{{ url_for('save_cards_route') }}" method="POST">
+                <input type="text" class="form-control dark-input" id="title" name="title" placeholder="Name this Wrapped!">
+                <input type="hidden" name="steam_id" value="{{ steam_id }}">
+                <textarea name="cards" style="display: none;">
+                    {% for card in cards %}
+                    {{ card|safe }}
+                    {% endfor %}
+                </textarea>
+                <div style="text-align: right;"> 
+                    <button type="submit" class="button mt-2 mb-1">
+                        Save
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Share Modal -->
 <div id="shareModal" class="modal" tabindex="-1" role="dialog" style="display: none;">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
