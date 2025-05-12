@@ -130,7 +130,7 @@ window.onclick = function(event) {
 
 
 
-document.getElementById('userSearch').addEventListener('input', function () {
+document.getElementById('search_username').addEventListener('input', function () {
     const query = this.value.trim();
     const resultsContainer = document.getElementById('searchResults');
 
@@ -173,3 +173,21 @@ document.getElementById('userSearch').addEventListener('input', function () {
         .catch(error => console.error('Error fetching search results:', error));
 });
 
+
+function showSaved() {
+    document.getElementById('savedCollectionsBox').style.display = 'block';
+    document.getElementById('sharedCollectionsBox').style.display = 'none';
+    document.getElementById('toggleSaved').classList.add('btn-primary');
+    document.getElementById('toggleSaved').classList.remove('btn-secondary');
+    document.getElementById('toggleShared').classList.add('btn-secondary');
+    document.getElementById('toggleShared').classList.remove('btn-primary');
+}
+
+function showShared() {
+    document.getElementById('savedCollectionsBox').style.display = 'none';
+    document.getElementById('sharedCollectionsBox').style.display = 'block';
+    document.getElementById('toggleShared').classList.add('btn-primary');
+    document.getElementById('toggleShared').classList.remove('btn-secondary');
+    document.getElementById('toggleSaved').classList.add('btn-secondary');
+    document.getElementById('toggleSaved').classList.remove('btn-primary');
+}
