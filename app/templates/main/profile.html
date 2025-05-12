@@ -7,13 +7,19 @@
 
 <div class="d-flex flex-column align-items-center mt-5">
     <h1 class="tab-title display-4 text-center w-100"> {{ username }}</h1>  
-    <div>
-        <p class="text-center">Select from your saved Wrappeds below to share with your friends</p>
+
+    <!-- Toggle Buttons -->
+    <div class="d-flex justify-content-center mt-4">
+        <button id="toggleSaved" class="btn btn-primary mx-2" onclick="showSaved()">Saved Wrappeds</button>
+        <button id="toggleShared" class="btn btn-secondary mx-2" onclick="showShared()">Shared with You</button>
     </div>
 
-    <!-- Scrollable Box -->
-    <div class="scroll-box mt-4 p-3 col-md-6" style="max-height: 300px; overflow-y: auto; width: 100%;">
+    <!-- Scrollable Box for Saved Collections -->
+    <div id="savedCollectionsBox" class="scroll-box mt-4 p-3 col-md-6" style="max-height: 300px; overflow-y: auto; width: 100%;">
         {% if saved_collections %}
+            <div>
+                <p class="text-center">Select from your saved Wrappeds below to share with your friends</p>
+            </div>
             {% for collection, image in saved_collections %}
             <div class="d-flex align-items-center p-4 mb-3" style="background-color: #171a21; border-radius: 5px;">
                 <!-- Left Section: Image -->
@@ -26,21 +32,44 @@
                     </a>
                     <small class="text-muted">Created on: {{ collection.date_created.strftime('%Y-%m-%d') }} | For Steam ID: {{ collection.steam_id }}</small>
                 </div>
-
-                <!-- Right Section: Share Icon -->
-                <a href="#" class="text-white d-flex align-items-center justify-content-center" 
-                   style="font-size: 1.5rem; width: 35px; height: 35px;" onclick="openModal()">
-                    <i class="bi bi-share"></i>
-                </a>
             </div>
-            {% endfor %} 
+            {% endfor %}
         {% else %}
-            <p class="text-center text-muted">No saved Wrappeds found.</p>
+            <p class="text-center text-muted">You have no saved Wrappeds yet.</p>
+            <form class="text-center" action="{{ url_for('get') }}" method="get">
+                <button type="submit" class="button generate mb-3">Generate</button>
+            </form>
+        {% endif %}
+    </div>
+
+    <!-- Scrollable Box for Shared Collections -->
+    <div id="sharedCollectionsBox" class="scroll-box mt-4 p-3 col-md-6" style="max-height: 300px; overflow-y: auto; width: 100%; display: none;">
+        {% if shared_collections %}
+            <div>
+                <p class="text-center">View Wrappeds shared by your friends below</p>
+            </div>
+
+            {% for saved_id, title, date_created, username, image in shared_collections %}
+            <div class="d-flex align-items-center p-4 mb-3" style="background-color: #171a21; border-radius: 5px;">
+                <!-- Left Section: Image -->
+                <img src="{{ image }}" alt="Steam User Avatar" class="mr-3" style="width: 50px; height: 50px; border-radius: 10px;">
+
+                <!-- Middle Section: Card Synopsis -->
+                <div class="flex-grow-1">
+                    <a href="{{ url_for('view_shared', saved_id=saved_id) }}" class="text-white" style="text-decoration: none;">
+                        <p class="mb-0 font-weight-bold" style="font-size: 1.25rem;">{{ title }}</p>
+                    </a>
+                    <small class="text-muted">Created on: {{ date_created.strftime('%Y-%m-%d') }} | Shared by {{ username }}</small>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p class="text-center text-muted">No one has shared any Wrappeds with you yet.</p>
         {% endif %}
     </div>
 </div>
 
-<!-- Modal -->
+<!-- Share Modal -->
 <div id="shareModal" class="modal" tabindex="-1" role="dialog" style="display: none;">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -50,14 +79,18 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="mt-3 mb-3">
-                <p>Share this SteamWrapped with other users!</p>
-                <input type="text" class="form-control" id="userSearch" name="search" placeholder="Enter username" autocomplete="off">
-                <div id="searchResults" class="mt-2"></div> <!-- Container for search results -->
-            </div>
-            <button type="submit" class="button mt-3 mb-3">
-                Share
-            </button>
+            <form action="{{ url_for('share_collection_route') }}" method="POST">
+                <div class="mt-3 mb-3">
+                    <p>Share this SteamWrapped with other users!</p>
+                    <input type="text" class="form-control" id="search_username" name="search_username" placeholder="Enter username" autocomplete="off">
+                    <div id="searchResults" class="mt-2"></div> <!-- Container for search results -->
+                </div>
+                <div style="text-align: right;"> 
+                    <button type="submit" class="button mt-3 mb-3">
+                        Share
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
