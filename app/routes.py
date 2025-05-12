@@ -3,12 +3,13 @@ from app import app, db
 from app.utils.insights import *
 from app.utils.fetch_player_data import *
 from app.utils.save_a_collection import *
+from app.utils.share_a_collection import *
 from app.utils.api import PrivateAccount
 import random
 from werkzeug.security import generate_password_hash, check_password_hash
 from app.security import *
 from flask_login import login_user, login_required
-from app.models import User, Steam_User, saved_collections, saved_cards
+from app.models import User, Steam_User, saved_collections, saved_cards, shared_collections
 from app.__init__ import limiter
 import json
 
@@ -113,11 +114,28 @@ def profile():
         saved_collections.id == user_id
     ).all()
 
+    user_shared_collections = db.session.query(
+        shared_collections.saved_id,  # Explicitly include saved_id
+        saved_collections.title,
+        saved_collections.date_created,
+        User.username,
+        Steam_User.image  # Include the image from steam_user
+    ).join(
+        saved_collections, shared_collections.saved_id == saved_collections.saved_id
+    ).join(
+        User, shared_collections.id == User.id
+    ).join(
+        Steam_User, saved_collections.steam_id == Steam_User.steam_id  # Join with steam_user using steam_id
+    ).filter(
+        shared_collections.id == user_id
+    ).all()
+
     # Pass the username and saved collections to the template
     return render_template(
         'main/profile.html', 
         username=User.query.get(user_id).username,
-        saved_collections=user_saved_collections
+        saved_collections=user_saved_collections,
+        shared_collections=user_shared_collections
     )
 
 
@@ -201,6 +219,20 @@ def save_collection_route():
     flash(response['message'], 'success' if response['status'] == 'success' else 'danger')
     return redirect(url_for('profile'))  # Redirect to a relevant page after saving
 
+@app.route('/share_cards', methods=['POST'])
+def share_collection_route():
+    creator_id = session.get('user_id')
+    # To Do? Check if the creator id matches the creator id for the collection (saved_id)
+    # Shouldn't be able to share a collection you didn't create
+    recipient_username = request.form.get('search_username')
+    recipient_user = User.query.filter_by(username=recipient_username).first()
+    recipient_id = recipient_user.id
+    saved_id = request.form.get('saved_id')
+
+    response = share_a_collection(recipient_id, saved_id)
+    flash(response['message'], 'success' if response['status'] == 'success' else 'danger')
+    return redirect(url_for('profile'))  # Redirect to a relevant page after saving
+
 @app.route('/view_card/<int:saved_id>', methods=['GET'])
 def view_card(saved_id):
     if 'user_id' not in session:
@@ -221,5 +253,28 @@ def view_card(saved_id):
         'main/view_card.html',
         collection=collection,
         cards=cards,
-        current_time=collection.date_created.strftime('%Y-%m-%d %H:%M:%S')
+        current_time=collection.date_created.strftime('%Y-%m-%d %H:%M:%S'),
+    )
+
+@app.route('/view_shared/<int:saved_id>', methods=['GET'])
+def view_shared(saved_id):
+    if 'user_id' not in session:
+        flash("Please log in to view this card.", "warning")
+        return redirect(url_for('login'))
+
+    # Fetch the saved collection by its ID and ensure it belongs to the logged-in user
+    collection = saved_collections.query.filter_by(saved_id=saved_id).first()
+    if not collection:
+        flash("Collection not found or you do not have permission to view it.", "danger")
+        return redirect(url_for('profile'))
+
+    # Fetch all cards associated with this collection
+    cards = saved_cards.query.filter_by(saved_id=saved_id).all()
+
+    # Render the card in a similar design to wrapped.html
+    return render_template(
+        'main/view_shared.html',
+        collection=collection,
+        cards=cards,
+        current_time=collection.date_created.strftime('%Y-%m-%d %H:%M:%S'),
     )
