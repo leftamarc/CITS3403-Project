@@ -13,32 +13,55 @@
 
     <!-- Scrollable Box -->
     <div class="scroll-box mt-4 p-3 col-md-6" style="max-height: 300px; overflow-y: auto; width: 100%;">
-        <!-- Placeholder Elements -->
-        {% for i in range(1, 15) %}
-        <div class="d-flex align-items-center p-4 mb-3" style="background-color: #171a21; border-radius: 5px;">
-            <!-- Left Section: Profile Picture -->
-            <img src="https://images.steamusercontent.com/ugc/868480752636433334/1D2881C5C9B3AD28A1D8852903A8F9E1FF45C2C8/" 
-                 alt="Profile Picture" 
-                 class="rounded" 
-                 style="width: 65px; height: 65px; margin-right: 15px;">
+        {% if saved_collections %}
+            {% for collection in saved_collections %}
+            <div class="d-flex align-items-center p-4 mb-3" style="background-color: #171a21; border-radius: 5px;">
+                <!-- Middle Section: Card Synopsis -->
+                <div class="flex-grow-1">
+                    <!-- Make the title clickable -->
+                    <a href="{{ url_for('view_card', saved_id=collection.saved_id) }}" class="text-white" style="text-decoration: none;">
+                        <p class="mb-0 font-weight-bold" style="font-size: 1.25rem;">{{ collection.title }}</p>
+                    </a>
 
-            <!-- Middle Section: Username and Date -->
-            <div class="flex-grow-1">
-                <p class="mb-0 font-weight-bold" style="font-size: 1.25rem;">Username{{ i }}</p>
-                <small class="text-muted">Created on: 2025-04-{{ 28 - i }}</small>
+                    
+                    
+                    <small class="text-muted">Created on: {{ collection.date_created.strftime('%Y-%m-%d') }}</small>
+                </div>
+
+                <!-- Right Section: Share Icon -->
+                <a href="#" class="text-white d-flex align-items-center justify-content-center" 
+                   style="font-size: 1.5rem; width: 35px; height: 35px;" onclick="openModal()">
+                    <i class="bi bi-share"></i>
+                </a>
             </div>
-
-            <!-- Right Section: Share Icon -->
-            <a href="#" class="text-white d-flex align-items-center justify-content-center" 
-               style="font-size: 1.5rem; width: 35px; height: 35px;">
-                <i class="bi bi-share"></i>
-            </a>
-        </div>
-        {% endfor %}
+            {% endfor %} 
+        {% else %}
+            <p class="text-center text-muted">No saved Wrappeds found.</p>
+        {% endif %}
     </div>
 </div>
-    
 
+<!-- Modal -->
+<div id="shareModal" class="modal" tabindex="-1" role="dialog" style="display: none;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="basic-title">Share your SteamWrappeds</h5>
+                <button type="button" class="close" onclick="closeModal()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="mt-3 mb-3">
+                <p>Share this SteamWrapped with other users!</p>
+                <input type="text" class="form-control" id="userSearch" name="search" placeholder="Enter username" autocomplete="off">
+                <div id="searchResults" class="mt-2"></div> <!-- Container for search results -->
+            </div>
+            <button type="submit" class="button mt-3 mb-3">
+                Share
+            </button>
+        </div>
+    </div>
+</div>
 
 <div id="loading-overlay" style="display:none;">
     <div class="loading-spinner"></div>

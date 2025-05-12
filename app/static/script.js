@@ -93,6 +93,83 @@ function showLoadingPage() {
     document.getElementById('loading-overlay').style.display = 'flex'; // Show loading overlay
 }
 
-//function hideLoadingPage() {
-//    document.getElementById('loading-overlay').style.display = 'none'; // Hide loading overlay
-//}
+function openModal() {
+    const modal = document.getElementById('shareModal');
+    const resultsContainer = document.getElementById('searchResults');
+
+    modal.style.display = 'flex'; // Show the modal
+    resultsContainer.style.display = 'none'; // Hide the search results container
+    resultsContainer.innerHTML = ''; // Clear any previous results
+}
+
+function openNameModal() {
+    const modal = document.getElementById('nameModal');
+
+    modal.style.display = 'flex'; // Show the modal
+}
+
+function closeModal() {
+    const modals = ['nameModal', 'shareModal'];
+    modals.forEach(id => {
+        const modal = document.getElementById(id);
+        if (modal) {
+            modal.style.display = 'none';
+        }
+    });
+}
+
+window.onclick = function(event) {
+    const modals = ['nameModal', 'shareModal'];
+    modals.forEach(id => {
+        const modal = document.getElementById(id);
+        if (modal && event.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
+};
+
+
+
+document.getElementById('userSearch').addEventListener('input', function () {
+    const query = this.value.trim();
+    const resultsContainer = document.getElementById('searchResults');
+
+    if (query.length < 2) {
+        resultsContainer.innerHTML = ''; // Clear results
+        resultsContainer.style.display = 'none'; // Hide the container
+        return;
+    }
+
+    fetch(`/search_users?query=${encodeURIComponent(query)}`)
+        .then(response => response.json())
+        .then(data => {
+            resultsContainer.innerHTML = ''; // Clear previous results
+
+            if (data.length === 0) {
+                resultsContainer.innerHTML = '<p class="text-muted">No users found.</p>';
+            } else {
+                data.forEach(user => {
+                    const userElement = document.createElement('div');
+                    userElement.textContent = user.username;
+                    userElement.className = 'search-result-item';
+                    userElement.style.cursor = 'pointer';
+
+                    // Onclick handler for selecting a user
+                    userElement.onclick = () => {
+                        
+                        // Optionally, hide the search results after selection
+                        resultsContainer.style.display = 'none';
+                        
+                        // Optionally, populate the input field with the selected username
+                        document.getElementById('userSearch').value = user.username;
+                    };
+
+                    resultsContainer.appendChild(userElement);
+                });
+            }
+
+            resultsContainer.style.display = 'block'; // Show the container
+        })
+        .catch(error => console.error('Error fetching search results:', error));
+});
+

@@ -377,7 +377,7 @@ class User(db.Model, UserMixin):
     def set_password(self, password):
         self.password_hash = hash_password(password)
 
-    #Creates a new row or updates the existing one for the provided primary keys
+    """#Creates a new row or updates the existing one for the provided primary keys
     @classmethod
     def upsert(cls, app_id, publisher_name):
         publisher_game = cls.query.filter_by(app_id=app_id, publisher=publisher_name).first()
@@ -387,7 +387,7 @@ class User(db.Model, UserMixin):
                 publisher=publisher_name
             )
             db.session.add(publisher_game)
-        db.session.commit()
+        db.session.commit()"""
 
 
 '''///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////'''        
@@ -420,5 +420,25 @@ class Api_Log(db.Model):
             return True
         return (current_time - api_log.last_called) >= duration
 
+# Saving Cards
+
+class shared_collections(db.Model):
+    share_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    saved_id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+class saved_collections(db.Model):
+    saved_id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+    title = db.Column(db.String(255), default="Untitled")  # Updated line
+    steam_id = db.Column(db.Integer, db.ForeignKey('steam_user.steam_id'))
+    date_created = db.Column(db.DateTime, default=datetime.utcnow)
+
+class saved_cards(db.Model):
+    card_no = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    saved_id = db.Column(db.Integer, db.ForeignKey('saved_collections.saved_id'), nullable=False)
+    card = db.Column(db.Text, nullable=False)
+
+    
 
 

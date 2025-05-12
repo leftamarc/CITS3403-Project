@@ -15,8 +15,10 @@
 </head>
 
 <body class="d-flex flex-column min-vh-100">
+
+    <!-- Navigation Bar -->
     <ul class="header-tabs"> 
-        <div> <img src="static/logo.png" alt="SteamWrapped Logo" width="70"/> </div>
+        <div> <img src="{{ url_for('static', filename='logo.png') }}" alt="SteamWrapped Logo" width="70"/> </div>
         <div class="header-title clickable-text {% if request.endpoint == 'home' %}active-tab{% endif %}" 
         onclick="window.location.href='{{ url_for('home') }}'">SteamWrapped</div>
 
@@ -43,14 +45,17 @@
         {% endif %}
     </ul>
 
+    <!-- Main Page Content -->
     <main class="flex-grow-1">
         {% block content %}{% endblock %}
     </main>
 
+    <!-- Dynamic Footers -->
     <div class="dynamic-bottom-content">
         {% block bottom_content %}{% endblock %}
     </div>
 
+    <!-- Animated Background  -->
     <div class="animated-background">
         <ul id="elements">
             {% for i in range(25) %}
@@ -59,6 +64,7 @@
         </ul>
     </div>
 
+    <!-- Static Footers -->
     <footer class="footer py-3 mt-auto mb-3">
         <p class="text-center"> University of Western Australia CITS3403 Agile Web Development Project Submission. <br>
             SteamWrapped is not associated with Steam.</p>
