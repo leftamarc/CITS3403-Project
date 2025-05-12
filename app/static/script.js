@@ -6,11 +6,8 @@ document.querySelector('form').addEventListener('submit', function(event) {
         alert('Passwords do not match!');
     }
 });
-document.addEventListener("DOMContentLoaded", () => {
-    positionAnimatedElements();
-});
 
-function positionAnimatedElements() {
+document.addEventListener("DOMContentLoaded", () => {
     const elements = document.querySelectorAll("ul#elements li");
     const elementPositions = []; 
 
@@ -28,7 +25,7 @@ function positionAnimatedElements() {
             isOverlapping = elementPositions.some(pos => {
                 const distanceX = Math.abs(pos.x - randomX);
                 const distanceY = Math.abs(pos.y - randomY);
-                return distanceX < 0.1 && distanceY < 0.1;
+                return distanceX < 0.1 && distanceY < 0.1; // Adjust overlap threshold as needed
             });
         } while (isOverlapping);
 
@@ -40,7 +37,7 @@ function positionAnimatedElements() {
         element.style.setProperty('--randomY', randomY);
         element.style.setProperty('--randomSize', randomSize);
     });
-};
+});
 
 document.addEventListener("DOMContentLoaded", () => {
     let formSubmitted = false;
