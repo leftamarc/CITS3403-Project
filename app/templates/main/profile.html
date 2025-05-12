@@ -56,7 +56,7 @@
                 <!-- Middle Section: Card Synopsis -->
                 <div class="flex-grow-1">
                     <a href="{{ url_for('view_card', saved_id=collection.saved_id) }}" class="text-white" style="text-decoration: none;">
-                        <p class="mb-0 font-weight-bold" style="font-size: 1.25rem;">{{ collection.title }}</p>
+                        <p class="mb-0 font-weight-bold header-title" style="font-size: 1.25rem;">{{ collection.title }}</p>
                     </a>
                     <small class="text-muted">Created on: {{ collection.date_created.strftime('%Y-%m-%d') }} | For Steam ID: {{ collection.steam_id }}</small>
                 </div>
@@ -92,7 +92,7 @@
                 <!-- Middle Section: Card Synopsis -->
                 <div class="flex-grow-1">
                     <a href="{{ url_for('view_shared', saved_id=saved_id) }}" class="text-white" style="text-decoration: none;">
-                        <p class="mb-0 font-weight-bold" style="font-size: 1.25rem;">{{ title }}</p>
+                        <p class="mb-0 font-weight-bold header-title" style="font-size: 1.25rem;">{{ title }}</p>
                     </a>
                     <small class="text-muted">Created on: {{ date_created.strftime('%Y-%m-%d') }} | For Steam ID: {{ steam_id }} | Shared by {{ username }}</small>
                 </div>
