@@ -1,52 +1,49 @@
 {% extends "header.html" %}
 {% block content %}
 
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <h1 class="basic-title mt-5 ml-2">Log In</h1>
-                    <div class="bottom-box p-4 mt-4" style="height: 350px; text-align: left;">
-                        {% with messages = get_flashed_messages(with_categories=true) %}
-                            {% if messages %}
-                                {% for category, message in messages %}
-                                <div class="alert alert-{{ category }}" role="alert">
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h1 class="basic-title mt-5 ml-2">Log In</h1>
+            <div class="rounded p-4 mt-4" style="background-color: #171a21;">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}" role="alert">
                                 {{ message }}
-                                </div>
-                                {%endfor %}
-                            {% endif %}
-                        {% endwith %}
-                        
-
-                        <form action="{{ url_for('login') }}" method="post">
-
-                            <div class="form-group">
-                                <label class="bottom-box-text" for="username" style="font-weight: bold;">Username</label>
-                                <input type="text" class="form-control dark-input" id="username" name="username" required autocomplete="off">
                             </div>
-                            
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
 
-                            <div class="form-group">
-                                <label class="bottom-box-text" for="password" style="font-weight: bold;">Password</label>
-                                <input type="password" class="form-control dark-input" id="password" name="password" required autocomplete="off">
-                            </div>
-                            
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="rememberMe" name="rememberMe">
-                                <label class="form-check-label bottom-box-text" for="rememberMe">Remember me</label>
-                            </div>
-
-                            <button type="submit" class="button mt-3 mb-3">
-                                Log In
-                            </button>
-
-                            <p class="bottom-box-text">
-                                Don't have an account? <a href="{{ url_for('register') }}" class="link light-style"> <strong>Create an account</strong></a> to get started!
-                            </p>
-                        </form> 
+                <form action="{{ url_for('login') }}" method="post">
+                    <div class="form-group">
+                        <label class="bottom-box-text" for="username" style="font-weight: bold;">Username</label>
+                        <input type="text" class="form-control dark-input" id="username" name="username" required autocomplete="off">
                     </div>
-                </div>
-            
+
+                    <div class="form-group">
+                        <label class="bottom-box-text" for="password" style="font-weight: bold;">Password</label>
+                        <input type="password" class="form-control dark-input" id="password" name="password" required autocomplete="off">
+                    </div>
+
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="rememberMe" name="rememberMe">
+                        <label class="form-check-label bottom-box-text" for="rememberMe">Remember me</label>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary mt-3 mb-3">
+                        Log In
+                    </button>
+
+                    <p class="bottom-box-text">
+                        Don't have an account? <a href="{{ url_for('register') }}" class="link light-style"> <strong>Create an account</strong></a> to get started!
+                    </p>
+                </form>
+            </div>
+            <!-- End of custom box wrapper -->
         </div>
+    </div>
+</div>
 
 {% endblock %}
-

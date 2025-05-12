@@ -53,8 +53,7 @@ def login():
         session['user_id'] = user.id
         session['username'] = user.username
 
-        flash('Login successful', 'success')
-        return redirect(url_for('home'))  # Redirect after successful login
+        return redirect(url_for('profile'))  # Redirect after successful login
 
     return render_template('main/login.html')  # Show login page if method is GET
 
@@ -102,7 +101,6 @@ def register():
 @app.route('/profile', methods=['GET', 'POST'])
 def profile():
     if 'user_id' not in session:
-        flash("Please log in to access your profile.", "warning")
         return redirect(url_for('login'))
     
     user_id = session['user_id']
@@ -121,7 +119,7 @@ def profile():
 def logout():
     session.clear()
     flash("You have been logged out.", "info")
-    return redirect(url_for('home'))
+    return redirect(url_for('profile'))
 
 @app.route('/generate', methods=['POST'])
 def generate():
@@ -134,7 +132,7 @@ def generate():
     try:
         FetchPlayerData(steam_id) 
     except PrivateAccount:
-        flash("The Steam account is set to private. Please make it public to generate insights.", "error")
+        flash("The steam account associated with the provided steam ID is set to private. Please make it public to generate insights.", "danger")
         return render_template('main/get.html') 
     
 
