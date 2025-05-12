@@ -1,4 +1,5 @@
 import time as tm
+from app import db
 from datetime import datetime
 from app.models import Game, User_Game, Developer, Developer_Game, Publisher, Publisher_Game, Genre, Game_Genre, Achievement, User_Achievement, Steam_User
 from app.utils.api import GetPlayerSummaries, GetOwnedGames, GetAppMetadata, GetPlayerAchievements, GetGlobalAchievementPercentagesForApp
@@ -14,6 +15,8 @@ def FetchPlayerData(steam_id):
             app_id = game[0]
             print(f'\nFetching data for app_id {app_id}')
             process_game_data(steam_id, app_id, game)
+
+        db.session.commit()
 
     except Exception as e:
         raise

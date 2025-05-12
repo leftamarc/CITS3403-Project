@@ -17,7 +17,7 @@ class NoStoreFront(Exception):
 
 
 MAX_RETRIES = 3
-RETRY_DELAY = 1
+RETRY_DELAY = 5
 HEADERS ={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'}    
 
 #Fetches achievement data for a given game by app id, returns a list of tuples of the form (achievement_name, achievement_percentage)

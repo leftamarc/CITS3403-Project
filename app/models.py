@@ -54,7 +54,7 @@ class Achievement(db.Model):
                 description=description
             )
             db.session.add(achievement)
-        db.session.commit()
+
 
 
 '''///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////'''
@@ -97,7 +97,7 @@ class Game(db.Model):
                 metacritic=metacritic
             )
             db.session.add(game)
-        db.session.commit()
+
 
 
 '''///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////'''
@@ -137,7 +137,7 @@ class Steam_User(db.Model):
                 n_games_owned=n_games_owned
             )
             db.session.add(user)
-        db.session.commit()
+
 
 
 '''///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////'''
@@ -165,7 +165,7 @@ class Genre(db.Model):
                 name=name
             )
             db.session.add(genre)
-        db.session.commit()
+
 
 
 '''///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////'''
@@ -185,7 +185,7 @@ class Developer(db.Model):
         if not developer:
             developer = cls(name=name)
             db.session.add(developer)
-        db.session.commit()
+
 
 
 '''///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////'''
@@ -205,7 +205,7 @@ class Publisher(db.Model):
         if not publisher:
             publisher = cls(name=name)
             db.session.add(publisher)
-        db.session.commit()
+
 
 
 '''///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////'''     
@@ -247,7 +247,7 @@ class User_Achievement(db.Model):
                 unlock_time=unlock_time
             )
             db.session.add(user_achievement)
-        db.session.commit()
+
 
 
 '''///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////'''
@@ -284,7 +284,6 @@ class User_Game(db.Model):
                 last_played=last_played
             )
             db.session.add(user_game)
-        db.session.commit()
 
 '''///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////'''
 
@@ -307,7 +306,7 @@ class Game_Genre(db.Model):
                 genre_id=genre_id
             )
             db.session.add(game_genre)
-        db.session.commit()
+
 
 
 '''///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////'''
@@ -333,7 +332,7 @@ class Developer_Game(db.Model):
                 developer=developer_name
             )
             db.session.add(developer_game)
-        db.session.commit()
+
 
 
 '''///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////'''     
@@ -359,7 +358,10 @@ class Publisher_Game(db.Model):
                 publisher=publisher_name
             )
             db.session.add(publisher_game)
-        db.session.commit()
+
+
+
+'''///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////'''        
 
 #********************************************************************************************************************************************************************************
 
@@ -377,20 +379,7 @@ class User(db.Model, UserMixin):
     def set_password(self, password):
         self.password_hash = hash_password(password)
 
-    """#Creates a new row or updates the existing one for the provided primary keys
-    @classmethod
-    def upsert(cls, app_id, publisher_name):
-        publisher_game = cls.query.filter_by(app_id=app_id, publisher=publisher_name).first()
-        if not publisher_game:
-            publisher_game = cls(
-                app_id=app_id,
-                publisher=publisher_name
-            )
-            db.session.add(publisher_game)
-        db.session.commit()"""
 
-
-'''///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////'''        
 
 
 # Logs the last time an API call was called successfully
