@@ -14,17 +14,16 @@
     <!-- Scrollable Box -->
     <div class="scroll-box mt-4 p-3 col-md-6" style="max-height: 300px; overflow-y: auto; width: 100%;">
         {% if saved_collections %}
-            {% for collection in saved_collections %}
+            {% for collection, image in saved_collections %}
             <div class="d-flex align-items-center p-4 mb-3" style="background-color: #171a21; border-radius: 5px;">
+                <!-- Left Section: Image -->
+                <img src="{{ image }}" alt="Steam User Avatar" class="mr-3" style="width: 50px; height: 50px; border-radius: 10px;">
+
                 <!-- Middle Section: Card Synopsis -->
                 <div class="flex-grow-1">
-                    <!-- Make the title clickable -->
                     <a href="{{ url_for('view_card', saved_id=collection.saved_id) }}" class="text-white" style="text-decoration: none;">
                         <p class="mb-0 font-weight-bold" style="font-size: 1.25rem;">{{ collection.title }}</p>
                     </a>
-
-                    
-                    
                     <small class="text-muted">Created on: {{ collection.date_created.strftime('%Y-%m-%d') }}</small>
                 </div>
 

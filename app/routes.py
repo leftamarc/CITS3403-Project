@@ -105,7 +105,13 @@ def profile():
     
     user_id = session['user_id']
     # Fetch saved collections for the logged-in user
-    user_saved_collections = saved_collections.query.filter_by(id=user_id).all()
+    user_saved_collections = db.session.query(
+        saved_collections, Steam_User.image
+    ).join(
+        Steam_User, saved_collections.steam_id == Steam_User.steam_id
+    ).filter(
+        saved_collections.id == user_id
+    ).all()
 
     # Pass the username and saved collections to the template
     return render_template(
