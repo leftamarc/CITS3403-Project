@@ -1,0 +1,21 @@
+<h5 class="card-title" style="color:white">Does Quality Even Matter?</h5>
+<p class="card-text">
+    The correlation between a game's Metacritic score and how much you play it is <strong>{{ correlation }}</strong>.
+
+    {% if correlation < 0.2 %}
+    So, basically, you're just out here ignoring quality entirely. Do you even read reviews, or do you just pick games at random? Bold strategy.
+
+    {% elif 0.2 <= correlation < 0.5 %}
+    A weak correlation. You might care about quality, but not enough to actually let it influence your decisions. A true rebel.
+
+    {% elif 0.5 <= correlation < 0.7 %}
+    Ah, a moderate correlation. You probably check the Metacritic score, nod thoughtfully, and then do whatever you were going to do anyway. Classic.
+
+    {% elif 0.7 <= correlation < 0.9 %}
+    A strong correlation. You’re starting to look like someone who lets the critics decide what’s worth playing. Conformist tendencies detected.
+
+    {% elif correlation >= 0.9 %}
+    Wow, a very strong correlation. Do you even have opinions of your own, or do you just let Metacritic run your life? Peak conformist energy.
+
+    {% endif %}
+</p>

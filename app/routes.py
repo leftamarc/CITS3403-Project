@@ -129,6 +129,9 @@ def logout():
 
 @app.route('/generate', methods=['POST'])
 def generate():
+    if 'user_id' not in session:
+        flash("Please log in to access SteamWrapped's features.", "warning")
+        return render_template('main/get.html')
 
     # Get the Steam ID from the form
     
@@ -160,19 +163,28 @@ def generate():
         rarest_achievement(steam_id),
         preference_for_game_age(steam_id),
         taste_breaker(steam_id),
-        favorite_publisher(steam_id)
+        favorite_publisher(steam_id),
+        genre_regression_stop_playing(steam_id),
+        genre_synergy(steam_id),
+        metacritic_vs_playtime(steam_id),
+        genre_metacritic_influence(steam_id),
+        predict_playtime(steam_id)
     ]
 
+   
     # Remove insights that failed
     successful_insights = [insight[1] for insight in insights if insight[0]]
 
     # Randomly select up to 8 successful insights
     selected_insights = random.sample(successful_insights, min(len(successful_insights), 8))
+
+    if len(selected_insights) < 8:
+        flash("There is not enough data available for this account.", "danger")
+        return render_template('main/get.html')
+
     session['cards'] = selected_insights
     session['steam_id'] = steam_id
 
-    ''' TODO: If there are less than 8 successful insights, flash a message about account not having enough
-        steam data'''
 
     current_time = datetime.now()
 
