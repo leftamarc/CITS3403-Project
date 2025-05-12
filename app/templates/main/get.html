@@ -6,7 +6,9 @@
     <div class="col-md-6 d-flex flex-column align-items-start">
         <h1 class="tab-title generate display-4 mb-5">Generate your SteamWrappeds</h1>  
         <div>
-            <p>Press "Generate" to view your SteamWrapped.</p>
+            <p>Press "Generate" to view your SteamWrapped. <br><br>
+              For big libraries this can take a while (up to 10 minutes or more) as the Steam Web API is quite slow.<br><br>
+              Make sure you have your steam account set to public for all account details or we may miss some key account insights.</p>
             <form action="{{ url_for('generate') }}" method="POST" onsubmit="showLoadingPage()">
                 <div class="form-group">
                     <label for="steamid" class="bottom-box-text" style="font-weight: bold;">Steam ID</label>
