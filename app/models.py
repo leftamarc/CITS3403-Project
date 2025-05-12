@@ -412,9 +412,9 @@ class Api_Log(db.Model):
 # Saving Cards
 
 class shared_collections(db.Model):
-    share_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    saved_id = db.Column(db.Integer, primary_key=True)
-    id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    share_id = db.Column(db.Integer, primary_key=True, autoincrement=True)  # Auto-incrementing primary key
+    saved_id = db.Column(db.Integer, db.ForeignKey('saved_collections.saved_id'), nullable=False)  # Foreign key
+    id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)  # Foreign key
 
 class saved_collections(db.Model):
     saved_id = db.Column(db.Integer, primary_key=True)
@@ -428,6 +428,6 @@ class saved_cards(db.Model):
     saved_id = db.Column(db.Integer, db.ForeignKey('saved_collections.saved_id'), nullable=False)
     card = db.Column(db.Text, nullable=False)
 
-    
+
 
 
