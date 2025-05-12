@@ -3,6 +3,15 @@ from app import db
 from flask import render_template
 from sqlalchemy import func, cast, Integer
 from datetime import datetime, timedelta
+import random
+import pandas as pd
+import numpy as np
+import sklearn
+from sklearn.ensemble import IsolationForest
+from sklearn.linear_model import LogisticRegression, LinearRegression, Ridge
+from sklearn.cluster import KMeans
+from sklearn.preprocessing import StandardScaler
+from itertools import combinations
 
 #################################################################################################################
 
@@ -363,10 +372,14 @@ def rarest_achievement(steam_id):
             )
     return (False, None)
 
+
 def preference_for_game_age(steam_id):
     """
-    Determines whether the user prefers older or more modern games based on playtime using regression with default Python libraries.
+    Determines whether the user prefers older or newer games based on playtime compared to the mean age of their library.
+    Only considers games with a minimum playtime.
     """
+    MIN_PLAYTIME = 10  # Minimum playtime in hours to consider a game
+
     # Query to get release years and playtime for the user's games
     result = (
         db.session.query(
@@ -377,7 +390,7 @@ def preference_for_game_age(steam_id):
         .filter(
             User_Game.steam_id == steam_id,  # Filter by the user's Steam ID
             Game.release_date != 0,  # Exclude games with no release date
-            User_Game.playtime_total > 0,  # Exclude games with no playtime
+            User_Game.playtime_total >= MIN_PLAYTIME,  # Exclude games with less than the minimum playtime
         )
         .group_by(func.strftime('%Y', func.datetime(Game.release_date, 'unixepoch')))
         .all()
@@ -387,26 +400,27 @@ def preference_for_game_age(steam_id):
     if len(result) < 2:
         return (False, None)
 
+    # Convert query result to a DataFrame
+    df = pd.DataFrame(result, columns=["release_year", "total_playtime"])
+    df["release_year"] = df["release_year"].astype(int)
+
+    # Calculate the mean release year of the user's library
+    mean_release_year = df["release_year"].mean()
+
     # Prepare data for regression
-    release_years = [int(row.release_year) for row in result]
-    playtimes = [row.total_playtime for row in result]
+    X = df[["release_year"]].values  # Feature: release year
+    y = df["total_playtime"].values  # Target: total playtime
 
-    # Calculate means
-    x_mean = sum(release_years) / len(release_years)
-    y_mean = sum(playtimes) / len(playtimes)
+    # Perform linear regression
+    model = sklearn.linear_model.LinearRegression()
+    model.fit(X, y)
 
-    # Calculate the slope of the regression line
-    numerator = sum((x - x_mean) * (y - y_mean) for x, y in zip(release_years, playtimes))
-    denominator = sum((x - x_mean) ** 2 for x in release_years)
-
-    if denominator == 0:
-        return (False, None)  # Avoid division by zero
-
-    slope = numerator / denominator
+    # Get the slope of the regression line
+    slope = model.coef_[0]
 
     # Interpret the slope
     if slope > 0:
-        preference = "modern games"
+        preference = "newer games"
     elif slope < 0:
         preference = "older games"
     else:
@@ -419,194 +433,667 @@ def preference_for_game_age(steam_id):
             "insights/preference_for_game_age.html",
             slope=round(slope, 2),
             preference=preference,
+            mean_release_year=int(mean_release_year),
         ),
     )
 
 def taste_breaker(steam_id):
     """
-    Finds a game where the user has an unusually high number of hours in a genre they typically don't play much.
+    Finds a game where the user's playtime is a strong outlier compared to other games in its listed genres.
+    If multiple games fit this criterion, selects one randomly and provides a statistic about its outlierness.
+    Only considers games with a minimum playtime and a minimum anomaly score.
     """
-    from math import sqrt
+    MIN_PLAYTIME = 10      # Minimum playtime in hours to consider a game
+    MIN_ANOMALY_SCORE = -0.25  # Minimum anomaly score to consider a game as an outlier
 
-    MIN_PLAYTIME = 10  # Minimum playtime in hours to consider a game
-
-    # Query to get total playtime for each genre and each game in the user's library
-    genre_playtime = (
+    # Subquery: get total playtime per game for this user
+    playtime_subquery = (
         db.session.query(
-            Genre.name.label("genre_name"),
-            func.sum(User_Game.playtime_total).label("total_genre_playtime"),
-            func.count(Game.app_id).label("total_games_in_genre"),
+            User_Game.app_id.label("app_id"),
+            func.sum(User_Game.playtime_total).label("total_playtime")
         )
-        .join(Game_Genre, Game.app_id == Game_Genre.app_id)
-        .join(Genre, Game_Genre.genre_id == Genre.genre_id)
-        .join(User_Game, Game.app_id == User_Game.app_id)
         .filter(
-            User_Game.steam_id == steam_id,  # Filter by the user's Steam ID
-            User_Game.playtime_total >= MIN_PLAYTIME,  # Exclude games with less than 10 hours of playtime
+            User_Game.steam_id == steam_id,
+            User_Game.playtime_total >= MIN_PLAYTIME
         )
-        .group_by(Genre.name)
-        .all()
+        .group_by(User_Game.app_id)
+        .subquery()
     )
 
-    # Create a dictionary to store average playtime per genre
-    genre_avg_playtime = {
-        row.genre_name: row.total_genre_playtime / row.total_games_in_genre
-        for row in genre_playtime
-    }
-
-    # Query to get playtime for each game and its genre
-    game_playtime = (
+    # Main query: join to genres
+    game_data = (
         db.session.query(
             Game.name.label("game_name"),
-            Genre.name.label("genre_name"),
-            func.sum(User_Game.playtime_total).label("game_playtime"),
+            playtime_subquery.c.total_playtime,
+            func.group_concat(Genre.name, ",").label("genres"),
         )
+        .join(playtime_subquery, Game.app_id == playtime_subquery.c.app_id)
         .join(Game_Genre, Game.app_id == Game_Genre.app_id)
         .join(Genre, Game_Genre.genre_id == Genre.genre_id)
-        .join(User_Game, Game.app_id == User_Game.app_id)
-        .filter(
-            User_Game.steam_id == steam_id,  # Filter by the user's Steam ID
-            User_Game.playtime_total >= MIN_PLAYTIME,  # Exclude games with less than 10 hours of playtime
-        )
-        .group_by(Game.name, Genre.name)
+        .group_by(Game.app_id, Game.name, playtime_subquery.c.total_playtime)
         .all()
     )
 
-    # Detect the game with the highest deviation from the genre average
-    outlier_game = None
-    max_deviation = -float("inf")
-
-    for row in game_playtime:
-        genre_name = row.genre_name
-        game_name = row.game_name
-        game_playtime = row.game_playtime
-
-        # Calculate deviation from the genre average
-        if genre_name in genre_avg_playtime:
-            avg_playtime = genre_avg_playtime[genre_name]
-            deviation = game_playtime - avg_playtime
-
-            # Check if this game has the highest deviation
-            if deviation > max_deviation:
-                max_deviation = deviation
-                outlier_game = {
-                    "game_name": game_name,
-                    "genre_name": genre_name,
-                    "game_playtime": game_playtime,
-                    "avg_playtime": avg_playtime,
-                    "deviation": deviation,
-                }
-
-    # If no outlier is found, return failure
-    if not outlier_game:
+    # Ensure we have enough data
+    if not game_data or len(game_data) < 2:
         return (False, None)
 
-    # Render the result
+    # Convert to DataFrame
+    df = pd.DataFrame(game_data, columns=["game_name", "total_playtime", "genres"])
+    df["total_playtime"] = df["total_playtime"].astype(float)
+
+    # Expand genres into separate rows for each game
+    genre_expanded = df.assign(genres=df["genres"].str.split(",")).explode("genres")
+
+    # Group by genre and calculate outliers using Isolation Forest
+    outlier_games = []
+    outlier_scores = {}
+    for genre, group in genre_expanded.groupby("genres"):
+        if len(group) < 2:
+            continue  # Skip genres with fewer than 2 games
+
+        X = group[["total_playtime"]].values
+        model = IsolationForest(contamination=0.1, random_state=42)
+        group["is_outlier"] = model.fit_predict(X)
+        group["anomaly_score"] = model.decision_function(X)
+
+        # Only consider strong outliers
+        outliers = group[(group["is_outlier"] == -1) & (group["anomaly_score"] <= MIN_ANOMALY_SCORE)]
+        outlier_games.extend(outliers["game_name"].tolist())
+        for _, row in outliers.iterrows():
+            outlier_scores[row["game_name"]] = row["anomaly_score"]
+
+    if not outlier_games:
+        return (False, None)
+
+    # Select a random outlier game
+    selected_game = random.choice(outlier_games)
+    selected_game_data = df[df["game_name"] == selected_game].iloc[0]
+    anomaly_score = outlier_scores[selected_game]
+
     return (
         True,
         render_template(
             "insights/taste_breaker.html",
-            game_name=outlier_game["game_name"],
-            genre_name=outlier_game["genre_name"],
-            game_playtime=round(outlier_game["game_playtime"], 2),
-            avg_playtime=round(outlier_game["avg_playtime"], 2),
-            deviation=round(outlier_game["deviation"], 2),
+            game_name=selected_game,
+            total_playtime=round(selected_game_data["total_playtime"], 2),
+            genres=selected_game_data["genres"],
+            anomaly_score=round(anomaly_score, 2),
         ),
     )
 
 def favorite_publisher(steam_id):
     """
-    Finds the user's favorite publisher by calculating the percentage increase in hours played
-    for games published by that publisher compared to games published by other studios.
-    Only considers publishers where the user has played at least 2 games with at least 10 hours of playtime each.
+    Finds the publisher whose games the user plays significantly more than their average,
+    quantifies the effect as a percentage increase, and shows the publisher with the greatest positive influence.
     """
-    MIN_PLAYTIME = 10  # Minimum playtime in hours to consider a game
-    MIN_GAMES = 2  # Minimum number of games played from a publisher
+    MIN_PLAYTIME = 5  # Only consider games with at least this much playtime
 
-    # Query to get total playtime and game count for each publisher
-    publisher_playtime = (
+    # Query: get playtime and publisher for each game the user owns
+    game_data = (
         db.session.query(
-            Publisher.name.label("publisher_name"),
-            func.sum(User_Game.playtime_total).label("total_publisher_playtime"),
-            func.count(Game.app_id).label("total_publisher_games"),
+            Game.name.label("game_name"),
+            func.sum(User_Game.playtime_total).label("total_playtime"),
+            Publisher.name.label("publisher"),
         )
+        .join(User_Game, Game.app_id == User_Game.app_id)
         .join(Publisher_Game, Game.app_id == Publisher_Game.app_id)
         .join(Publisher, Publisher_Game.publisher == Publisher.name)
-        .join(User_Game, Game.app_id == User_Game.app_id)
         .filter(
-            User_Game.steam_id == steam_id,  # Filter by the user's Steam ID
-            User_Game.playtime_total >= MIN_PLAYTIME,  # Exclude games with less than 10 hours of playtime
+            User_Game.steam_id == steam_id,
+            User_Game.playtime_total >= MIN_PLAYTIME,
         )
-        .group_by(Publisher.name)
-        .having(func.count(Game.app_id) >= MIN_GAMES)  # Only include publishers with at least 2 games
+        .group_by(Game.app_id, Game.name, Publisher.name)
         .all()
     )
 
-    # Calculate the user's total playtime and game count for all games
-    total_playtime = (
-        db.session.query(func.sum(User_Game.playtime_total))
-        .filter(
-            User_Game.steam_id == steam_id,
-            User_Game.playtime_total >= MIN_PLAYTIME,
-        )
-        .scalar()
-    )
-
-    total_games = (
-        db.session.query(func.count(User_Game.app_id))
-        .filter(
-            User_Game.steam_id == steam_id,
-            User_Game.playtime_total >= MIN_PLAYTIME,
-        )
-        .scalar()
-    )
-
-    if not total_playtime or not total_games:
+    if not game_data or len(game_data) < 2:
         return (False, None)
 
-    # Find the publisher with the highest percentage increase in playtime
-    favorite_publisher = None
-    max_percentage_increase = -float("inf")
+    # Convert to DataFrame
+    df = pd.DataFrame(game_data, columns=["game_name", "total_playtime", "publisher"])
+    df["total_playtime"] = df["total_playtime"].astype(float)
 
-    for row in publisher_playtime:
-        # Calculate average playtime for games published by the publisher
-        publisher_avg_playtime = row.total_publisher_playtime / row.total_publisher_games
+    # Calculate the user's average playtime for all games
+    overall_avg = df["total_playtime"].mean()
 
-        # Calculate average playtime for games not published by the publisher
-        non_publisher_avg_playtime = (
-            (total_playtime - row.total_publisher_playtime)
-            / (total_games - row.total_publisher_games)
-            if total_games > row.total_publisher_games
-            else 0
-        )
+    # Calculate the average playtime for each publisher
+    publisher_stats = (
+        df.groupby("publisher")["total_playtime"]
+        .agg(["mean", "count"])
+        .reset_index()
+    )
+    publisher_stats["percent_increase"] = ((publisher_stats["mean"] - overall_avg) / overall_avg) * 100
 
-        # Calculate percentage increase
-        if non_publisher_avg_playtime > 0:
-            percentage_increase = ((publisher_avg_playtime - non_publisher_avg_playtime) / non_publisher_avg_playtime) * 100
-        else:
-            percentage_increase = 0
+    # Only consider publishers with at least 2 games for robustness
+    publisher_stats = publisher_stats[publisher_stats["count"] >= 2]
 
-        # Update favorite publisher if this one has the highest percentage increase
-        if percentage_increase > max_percentage_increase:
-            max_percentage_increase = percentage_increase
-            favorite_publisher = {
-                "publisher_name": row.publisher_name,
-                "percentage_increase": percentage_increase,
-            }
-
-    # If no favorite publisher is found, return failure
-    if not favorite_publisher:
+    if publisher_stats.empty:
         return (False, None)
 
-    # Render the result
+    # Find the publisher with the greatest positive percent increase
+    fav_row = publisher_stats.loc[publisher_stats["percent_increase"].idxmax()]
+
+    if fav_row["percent_increase"] <= 0:
+        return (False, None)  # No publisher has a positive influence
+
     return (
         True,
         render_template(
             "insights/favorite_publisher.html",
-            publisher_name=favorite_publisher["publisher_name"],
-            percentage_increase=round(favorite_publisher["percentage_increase"], 2),
+            publisher=fav_row["publisher"],
+            percent_increase=round(fav_row["percent_increase"], 1),
+            avg_playtime=round(fav_row["mean"], 2),
+            overall_avg=round(overall_avg, 2),
+            game_count=int(fav_row["count"]),
+        ),
+    )
+
+def least_fav_genre(steam_id):
+    """
+    Uses logistic regression to find the genre most associated with the user playing a game for more than 5 but no more than 10 hours.
+    Quantifies the effect as an odds ratio.
+    """
+    MIN_PLAY = 5
+    MAX_PLAY = 10
+
+    # Query: get playtime and genres for each game the user owns
+    game_data = (
+        db.session.query(
+            Game.name.label("game_name"),
+            func.sum(User_Game.playtime_total).label("total_playtime"),
+            func.group_concat(Genre.name, ",").label("genres"),
+        )
+        .join(User_Game, Game.app_id == User_Game.app_id)
+        .join(Game_Genre, Game.app_id == Game_Genre.app_id)
+        .join(Genre, Game_Genre.genre_id == Genre.genre_id)
+        .filter(User_Game.steam_id == steam_id)
+        .group_by(Game.app_id, Game.name)
+        .all()
+    )
+
+    if not game_data or len(game_data) < 5:
+        return (False, None)
+
+    # DataFrame and label
+    df = pd.DataFrame(game_data, columns=["game_name", "total_playtime", "genres"])
+    df["total_playtime"] = df["total_playtime"].astype(float)
+    df["label"] = ((df["total_playtime"] > MIN_PLAY) & (df["total_playtime"] <= MAX_PLAY)).astype(int)
+
+    # One-hot encode genres (multi-label)
+    genre_dummies = df["genres"].str.get_dummies(sep=",")
+    if genre_dummies.shape[1] < 2:
+        return (False, None)  # Not enough genre variety
+
+    # Fit logistic regression
+    model = LogisticRegression(max_iter=1000)
+    model.fit(genre_dummies, df["label"])
+
+    # Find genre with highest positive coefficient
+    coefs = pd.Series(model.coef_[0], index=genre_dummies.columns)
+    top_genre = coefs.idxmax()
+    odds_ratio = np.exp(coefs[top_genre])
+    percent = 100 * (odds_ratio - 1)
+
+    # How many games in this genre and how many are in the "tried but didn't stick" range
+    genre_mask = genre_dummies[top_genre] == 1
+    total = genre_mask.sum()
+    in_range = ((df["label"] == 1) & genre_mask).sum()
+
+    return (
+        True,
+        render_template(
+            "insights/least_fav_genre.html",
+            genre=top_genre,
+            odds_ratio=round(odds_ratio, 2),
+            percent=round(percent, 1),
+            in_range=in_range,
+            total=total,
+        ),
+    )
+
+def genre_synergy(steam_id):
+    """
+    Finds the genre duo (pair) that, when both are present in a game, has the strongest positive influence on total playtime.
+    Uses linear regression to quantify the synergy effect.
+    """
+    MIN_PLAYTIME = 2  # Only consider games with at least this much playtime
+
+    # Query: get playtime and genres for each game the user owns
+    game_data = (
+        db.session.query(
+            Game.name.label("game_name"),
+            func.sum(User_Game.playtime_total).label("total_playtime"),
+            func.group_concat(Genre.name, ",").label("genres"),
+        )
+        .join(User_Game, Game.app_id == User_Game.app_id)
+        .join(Game_Genre, Game.app_id == Game_Genre.app_id)
+        .join(Genre, Game_Genre.genre_id == Genre.genre_id)
+        .filter(
+            User_Game.steam_id == steam_id,
+            User_Game.playtime_total >= MIN_PLAYTIME,
+        )
+        .group_by(Game.app_id, Game.name)
+        .all()
+    )
+
+    if not game_data or len(game_data) < 5:
+        return (False, None)
+
+    # DataFrame and one-hot encode genres
+    df = pd.DataFrame(game_data, columns=["game_name", "total_playtime", "genres"])
+    df["total_playtime"] = df["total_playtime"].astype(float)
+    genre_dummies = df["genres"].str.get_dummies(sep=",")
+    genre_names = genre_dummies.columns.tolist()
+
+    if len(genre_names) < 2:
+        return (False, None)
+
+    # Add pairwise (synergy) columns
+    pair_cols = []
+    for g1, g2 in combinations(genre_names, 2):
+        col_name = f"{g1} + {g2}"
+        df[col_name] = genre_dummies[g1] & genre_dummies[g2]
+        pair_cols.append(col_name)
+
+    # Prepare regression features: all single genres and all pairs
+    X = pd.concat([genre_dummies, df[pair_cols]], axis=1)
+    y = df["total_playtime"]
+
+    # Fit linear regression
+    model = LinearRegression()
+    model.fit(X, y)
+    coefs = pd.Series(model.coef_, index=X.columns)
+
+    # Find the pair with the highest positive coefficient
+    pair_coefs = coefs[pair_cols]
+    if pair_coefs.empty or pair_coefs.max() <= 0:
+        return (False, None)
+    best_pair = pair_coefs.idxmax()
+    synergy_value = pair_coefs.max()
+
+    # How many games have this duo
+    games_with_duo = int(df[best_pair].sum())
+    avg_playtime_with_duo = df[df[best_pair] == 1]["total_playtime"].mean() if games_with_duo > 0 else 0
+
+    # Calculate user's average playtime for all games
+    overall_avg_playtime = df["total_playtime"].mean() if len(df) > 0 else 0
+
+    # Calculate percent increase
+    percent_increase = ((avg_playtime_with_duo - overall_avg_playtime) / overall_avg_playtime * 100) if overall_avg_playtime > 0 else 0
+
+    g1, g2 = best_pair.split(" + ")
+
+    # Calculate multiplier (e.g., 2.0x means double the average)
+    multiplier = (avg_playtime_with_duo / overall_avg_playtime) if overall_avg_playtime > 0 else 0
+
+    return (
+        True,
+        render_template(
+            "insights/genre_synergy.html",
+            genre1=g1,
+            genre2=g2,
+            multiplier=round(multiplier, 2),
+            avg_playtime_with_duo=round(avg_playtime_with_duo, 1),
+            overall_avg_playtime=round(overall_avg_playtime, 1),
+            games_with_duo=games_with_duo,
+        ),
+    )
+
+def metacritic_vs_playtime(steam_id):
+    """
+    Quantifies how much the user's normalized playtime is influenced by Metacritic score.
+    Reports the extra normalized hours played per Metacritic point, and the correlation.
+    """
+    MIN_PLAYTIME = 5
+
+    game_data = (
+        db.session.query(
+            Game.name.label("game_name"),
+            func.sum(User_Game.playtime_total).label("total_playtime"),
+            Game.metacritic.label("metacritic"),
+        )
+        .join(User_Game, Game.app_id == User_Game.app_id)
+        .filter(
+            User_Game.steam_id == steam_id,
+            User_Game.playtime_total >= MIN_PLAYTIME,
+            Game.metacritic.isnot(None),
+        )
+        .group_by(Game.app_id, Game.name, Game.metacritic)
+        .all()
+    )
+
+    if not game_data or len(game_data) < 5:
+        return (False, None)
+
+    df = pd.DataFrame(game_data, columns=["game_name", "total_playtime", "metacritic"])
+    df["total_playtime"] = df["total_playtime"].astype(float)
+    df["metacritic"] = df["metacritic"].astype(float)
+
+    # Normalize playtime by user's average
+    user_avg = df["total_playtime"].mean()
+    df["norm_playtime"] = df["total_playtime"] / user_avg if user_avg > 0 else df["total_playtime"]
+
+    # Regression: normalized playtime ~ metacritic
+    X = df[["metacritic"]]
+    y = df["norm_playtime"]
+    model = LinearRegression()
+    model.fit(X, y)
+    slope = model.coef_[0]
+    corr = df["metacritic"].corr(df["norm_playtime"])
+
+    return (
+        True,
+        render_template(
+            "insights/metacritic_vs_playtime.html",
+            slope=round(slope, 3),
+            corr=round(corr, 2),
+            user_avg=round(user_avg, 1),
         ),
     )
 
 
+def genre_metacritic_influence(steam_id):
+    """
+    For each genre, regress normalized playtime against Metacritic score.
+    Reports the genre where the user's playtime is most and least influenced by Metacritic.
+    """
+    MIN_PLAYTIME = 5
 
+    # Query: get playtime, metacritic, and genres for each game the user owns
+    game_data = (
+        db.session.query(
+            Game.name.label("game_name"),
+            func.sum(User_Game.playtime_total).label("total_playtime"),
+            Game.metacritic.label("metacritic"),
+            func.group_concat(Genre.name, ",").label("genres"),
+        )
+        .join(User_Game, Game.app_id == User_Game.app_id)
+        .join(Game_Genre, Game.app_id == Game_Genre.app_id)
+        .join(Genre, Game_Genre.genre_id == Genre.genre_id)
+        .filter(
+            User_Game.steam_id == steam_id,
+            User_Game.playtime_total >= MIN_PLAYTIME,
+            Game.metacritic.isnot(None),
+        )
+        .group_by(Game.app_id, Game.name, Game.metacritic)
+        .all()
+    )
+
+    if not game_data or len(game_data) < 5:
+        return (False, None)
+
+    df = pd.DataFrame(game_data, columns=["game_name", "total_playtime", "metacritic", "genres"])
+    df["total_playtime"] = df["total_playtime"].astype(float)
+    df["metacritic"] = df["metacritic"].astype(float)
+
+    # Normalize playtime by user's average
+    user_avg = df["total_playtime"].mean()
+    df["norm_playtime"] = df["total_playtime"] / user_avg if user_avg > 0 else df["total_playtime"]
+
+    # Expand genres into separate rows for each game
+    genre_expanded = df.assign(genre=df["genres"].str.split(",")).explode("genre")
+
+    # Only keep genres with at least 4 games for robustness
+    genre_counts = genre_expanded["genre"].value_counts()
+    valid_genres = genre_counts[genre_counts >= 4].index
+
+    genre_slopes = {}
+    genre_corrs = {}
+    for genre in valid_genres:
+        sub = genre_expanded[genre_expanded["genre"] == genre]
+        if sub["metacritic"].nunique() > 1 and sub["norm_playtime"].nunique() > 1:
+            X = sub[["metacritic"]]
+            y = sub["norm_playtime"]
+            model = LinearRegression()
+            model.fit(X, y)
+            slope = model.coef_[0]
+            corr = sub["metacritic"].corr(sub["norm_playtime"])
+            genre_slopes[genre] = slope
+            genre_corrs[genre] = corr
+
+    if not genre_slopes:
+        return (False, None)
+
+    most_influenced_genre = max(genre_slopes, key=genre_slopes.get)
+    least_influenced_genre = min(genre_slopes, key=genre_slopes.get)
+
+    return (
+        True,
+        render_template(
+            "insights/genre_metacritic_influence.html",
+            most_genre=most_influenced_genre,
+            most_slope=round(genre_slopes[most_influenced_genre], 3),
+            most_corr=round(genre_corrs[most_influenced_genre], 2),
+            least_genre=least_influenced_genre,
+            least_slope=round(genre_slopes[least_influenced_genre], 3),
+            least_corr=round(genre_corrs[least_influenced_genre], 2),
+        ),
+    )
+
+def never_achieve(steam_id):
+    """
+    Finds an unachieved achievement the player is least likely to ever achieve,
+    using logistic regression on playtime, global unlock rate, metacritic, and the user's personal genre achievement rate.
+    Randomly selects from the 25 least likely.
+    Returns the achievement name, game, and the predicted probability of ever achieving it.
+    """
+    # Query all achievements for this user, with playtime, global unlock rate, and genres
+    achievement_data = (
+        db.session.query(
+            Achievement.display_name.label("achievement_name"),
+            Achievement.rate.label("global_rate"),
+            User_Achievement.achieved.label("achieved"),
+            User_Game.playtime_total.label("playtime"),
+            Game.name.label("game_name"),
+            Game.metacritic.label("metacritic"),
+            func.group_concat(Genre.name, ",").label("genres"),
+        )
+        .join(User_Achievement, (Achievement.app_id == User_Achievement.app_id) & (Achievement.internal_name == User_Achievement.internal_name))
+        .join(User_Game, (User_Achievement.app_id == User_Game.app_id) & (User_Achievement.steam_id == User_Game.steam_id))
+        .join(Game, Game.app_id == User_Game.app_id)
+        .outerjoin(Game_Genre, Game.app_id == Game_Genre.app_id)
+        .outerjoin(Genre, Game_Genre.genre_id == Genre.genre_id)
+        .filter(User_Achievement.steam_id == steam_id)
+        .group_by(Achievement.app_id, Achievement.internal_name, Achievement.display_name, Achievement.rate, User_Achievement.achieved, User_Game.playtime_total, Game.name, Game.metacritic)
+        .all()
+    )
+
+    if not achievement_data or len(achievement_data) < 10:
+        return (False, None)
+
+    df = pd.DataFrame(achievement_data, columns=["achievement_name", "global_rate", "achieved", "playtime", "game_name", "metacritic", "genres"])
+    df["global_rate"] = df["global_rate"].astype(float)
+    df["playtime"] = df["playtime"].astype(float)
+    df["metacritic"] = df["metacritic"].fillna(df["metacritic"].mean()).astype(float)
+    df["achieved"] = df["achieved"].astype(int)
+    df["genres"] = df["genres"].fillna("")
+
+    # Compute user's personal achievement rate per genre
+    genre_achievements = []
+    for _, row in df.iterrows():
+        for genre in set([g.strip() for g in row["genres"].split(",") if g.strip()]):
+            genre_achievements.append({
+                "genre": genre,
+                "achieved": row["achieved"]
+            })
+    genre_achievements_df = pd.DataFrame(genre_achievements)
+    if genre_achievements_df.empty:
+        return (False, None)
+    genre_rates = genre_achievements_df.groupby("genre")["achieved"].mean().to_dict()
+
+    # Add user's personal genre achievement rate as a feature
+    def get_personal_genre_rate(genres):
+        genres = [g.strip() for g in genres.split(",") if g.strip()]
+        if not genres:
+            return 0.0
+        return np.mean([genre_rates.get(g, 0.0) for g in genres])
+    df["personal_genre_rate"] = df["genres"].apply(get_personal_genre_rate)
+
+    # Only use rows with non-null playtime and global_rate
+    df = df.dropna(subset=["playtime", "global_rate"])
+
+    # Features: playtime, global_rate, metacritic, personal_genre_rate
+    X = df[["playtime", "global_rate", "metacritic", "personal_genre_rate"]]
+    y = df["achieved"]
+
+    # Only fit if both classes are present
+    if y.nunique() < 2:
+        return (False, None)
+
+    model = LogisticRegression(max_iter=1000)
+    model.fit(X, y)
+
+    # Predict probability for unachieved achievements
+    unachieved = df[df["achieved"] == 0].copy()
+    if unachieved.empty:
+        return (False, None)
+    unachieved["prob"] = model.predict_proba(unachieved[["playtime", "global_rate", "metacritic", "personal_genre_rate"]])[:, 1]
+
+    # Get the 25 least likely achievements and pick one at random
+    top_n = min(25, len(unachieved))
+    least_likely = unachieved.nsmallest(top_n, "prob")
+    hardest = least_likely.sample(n=1, random_state=random.randint(0, 999999)).iloc[0]
+
+    # Get the user's display name
+    user = db.session.query(Steam_User).filter_by(steam_id=steam_id).first()
+    username = user.username if user else "This user"
+
+    return (
+        True,
+        render_template(
+            "insights/never_achieve.html",
+            username=username,
+            achievement_name=hardest["achievement_name"],
+            game_name=hardest["game_name"],
+            likelihood=round(hardest["prob"] * 100, 2),
+        ),
+    )
+
+def they_got_stuck_at_the_tutorial(steam_id):
+    """
+    Finds the game in the user's library where low Metacritic score is most strongly correlated with rare achievements globally.
+    For each game, computes the correlation between the game's Metacritic and its achievements' global unlock rates.
+    Returns the game with the strongest negative correlation (i.e., lower Metacritic = rarer achievements).
+    """
+    # Query all games in the user's library with their metacritic and achievement global rates
+    game_ach_data = (
+        db.session.query(
+            Game.app_id,
+            Game.name.label("game_name"),
+            Game.metacritic.label("metacritic"),
+            Achievement.display_name.label("achievement_name"),
+            Achievement.rate.label("global_rate"),
+        )
+        .join(User_Game, Game.app_id == User_Game.app_id)
+        .join(Achievement, Game.app_id == Achievement.app_id)
+        .filter(
+            User_Game.steam_id == steam_id,
+            Game.metacritic.isnot(None),
+            Achievement.rate.isnot(None),
+        )
+        .all()
+    )
+
+    if not game_ach_data or len(game_ach_data) < 10:
+        return (False, None)
+
+    df = pd.DataFrame(game_ach_data, columns=["app_id", "game_name", "metacritic", "achievement_name", "global_rate"])
+    df["metacritic"] = df["metacritic"].astype(float)
+    df["global_rate"] = df["global_rate"].astype(float)
+
+    # Only keep games with at least 5 achievements
+    counts = df["app_id"].value_counts()
+    valid_games = counts[counts >= 5].index
+    df = df[df["app_id"].isin(valid_games)]
+
+    if df.empty:
+        return (False, None)
+
+    # For each game, compute the correlation between metacritic and global_rate (will be NaN if metacritic is constant, but it's not)
+    corrs = {}
+    for app_id, group in df.groupby("app_id"):
+        if group["global_rate"].nunique() > 1:
+            # All achievements in a game have the same metacritic, so correlation is undefined.
+            # Instead, use the mean global_rate as a proxy for "rareness" and find the game with lowest mean global_rate and lowest metacritic.
+            corrs[app_id] = (group["metacritic"].iloc[0], group["global_rate"].mean(), group["game_name"].iloc[0])
+
+    if not corrs:
+        return (False, None)
+
+    # Find the game with the lowest metacritic and lowest mean global_rate (rarest achievements)
+    # Score: (1 - metacritic/100) * (1 - mean_global_rate/100)
+    scored = {k: (1 - v[0]/100) * (1 - v[1]/100) for k, v in corrs.items()}
+    worst_app_id = max(scored, key=scored.get)
+    metacritic, mean_global_rate, game_name = corrs[worst_app_id]
+
+    return (
+        True,
+        render_template(
+            "insights/they_got_stuck_at_the_tutorial.html",
+            game_name=game_name,
+            metacritic=int(metacritic),
+            completion_rate=round(100 - mean_global_rate, 1),  # "completion_rate" here is % of rarest (lower is rarer)
+        ),
+    )
+
+def most_skilled_genre(steam_id):
+    """
+    Finds the genre where the player is most skilled, defined as the genre where the user has unlocked the rarest achievements on average.
+    Uses the average global unlock rate of the user's unlocked achievements per genre (lower = rarer = more skilled).
+    Only considers genres with at least 5 unlocked achievements.
+    """
+    # Query all unlocked achievements for this user, with their global unlock rate and genres
+    achievement_data = (
+        db.session.query(
+            Achievement.display_name.label("achievement_name"),
+            Achievement.rate.label("global_rate"),
+            func.group_concat(Genre.name, ",").label("genres"),
+        )
+        .join(User_Achievement, (Achievement.app_id == User_Achievement.app_id) & (Achievement.internal_name == User_Achievement.internal_name))
+        .join(Game_Genre, Achievement.app_id == Game_Genre.app_id)
+        .join(Genre, Game_Genre.genre_id == Genre.genre_id)
+        .filter(
+            User_Achievement.steam_id == steam_id,
+            User_Achievement.achieved == 1,
+            Achievement.rate.isnot(None),
+        )
+        .group_by(Achievement.app_id, Achievement.internal_name, Achievement.display_name, Achievement.rate)
+        .all()
+    )
+
+    if not achievement_data or len(achievement_data) < 10:
+        return (False, None)
+
+    df = pd.DataFrame(achievement_data, columns=["achievement_name", "global_rate", "genres"])
+    df["global_rate"] = df["global_rate"].astype(float)
+    df["genres"] = df["genres"].fillna("")
+
+    # Expand genres into separate rows for each achievement
+    genre_expanded = df.assign(genre=df["genres"].str.split(",")).explode("genre")
+    genre_expanded["genre"] = genre_expanded["genre"].str.strip()
+    genre_expanded = genre_expanded[genre_expanded["genre"] != ""]
+
+    # Only keep genres with at least 5 unlocked achievements
+    genre_counts = genre_expanded["genre"].value_counts()
+    valid_genres = genre_counts[genre_counts >= 5].index
+
+    if valid_genres.empty:
+        return (False, None)
+
+    # Compute the average global rarity (lower = more skilled) for each genre
+    genre_skill = genre_expanded[genre_expanded["genre"].isin(valid_genres)].groupby("genre")["global_rate"].mean()
+
+    # Find the genre with the lowest average global_rate (i.e., rarest achievements unlocked)
+    most_skilled = genre_skill.idxmin()
+    avg_rarity = genre_skill.min()
+
+    return (
+        True,
+        render_template(
+            "insights/most_skilled_genre.html",
+            genre=most_skilled,
+            avg_rarity=round(avg_rarity, 2),
+            count=int(genre_counts[most_skilled]),
+        ),
+    )
