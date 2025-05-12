@@ -25,7 +25,17 @@
         </div>
     </div>
 
+{% elif request.args.get('success') %}
+    <div class="d-flex justify-content-center mt-4">
+        <div class="col-md-6 text-center">
+            <div id="autoDismissAlert" class="alert alert-success alert-dismissible fade show" role="alert">
+                Your SteamWrapped has been shared successfully!
+            </div>
+        </div>
+    </div>
 {% endif %}
+
+
 
 
 

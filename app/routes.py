@@ -239,8 +239,7 @@ def save_collection_route():
 @app.route('/share_cards', methods=['POST'])
 def share_collection_route():
     creator_id = session.get('user_id')
-    # To Do? Check if the creator id matches the creator id for the collection (saved_id)
-    # Shouldn't be able to share a collection you didn't create
+
     recipient_username = request.form.get('search_username')
 
     recipient_user = User.query.filter_by(username=recipient_username).first()
@@ -261,7 +260,7 @@ def share_collection_route():
     
         return redirect(url_for('profile', error='already_shared'))
 
-    return redirect(url_for('profile'))  # Redirect to a relevant page after saving
+    return redirect(url_for('profile', success='shared_successfully'))
 
 @app.route('/view_card/<int:saved_id>', methods=['GET'])
 def view_card(saved_id):
