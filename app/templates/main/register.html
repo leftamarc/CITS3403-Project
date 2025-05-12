@@ -5,26 +5,23 @@
     <div class="row justify-content-center">
         <div class="col-md-6">
             <h1 class="basic-title mt-5 ml-2">Create an account</h1>
-            <div class="bottom-box p-4 mt-4" style="text-align: left; height: 500px">
+            
+            <!-- Custom box wrapper -->
+            <div class="rounded p-4 mt-4" style="background-color: #171a21;">
                 {% with messages = get_flashed_messages(with_categories=true) %}
                     {% if messages %}
-                       {% for category, message in messages %}
-                        <div class="alert alert-{{ category }}" role="alert">
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}" role="alert">
                                 {{ message }}
                             </div>
                         {% endfor %}
                     {% endif %}
                 {% endwith %}
-                       
+
                 <form action="{{ url_for('register') }}" method="post">
                     <div class="form-group">
                         <label class="bottom-box-text" for="username" style="font-weight: bold;">Username</label>
                         <input type="text" class="form-control dark-input" id="username" name="username" required autocomplete="off">
-                    </div>
-
-                    <div class="form-group">
-                        <label class="bottom-box-text" for="steam_id" style="font-weight: bold;">Steam ID</label>
-                        <input type="text" class="form-control dark-input" id="steam_id" name="steam_id" required autocomplete="off">
                     </div>
 
                     <div class="form-group">
@@ -37,7 +34,7 @@
                         <input type="password" class="form-control dark-input" id="confirm_password" name="confirm_password" required autocomplete="off">
                     </div>
 
-                    <button type="submit" class="button mt-3 mb-3">
+                    <button type="submit" class="btn btn-primary mt-3 mb-3">
                         Register
                     </button>
                     <p class="bottom-box-text">
@@ -45,7 +42,9 @@
                     </p>
                 </form>
             </div>
+            <!-- End of custom box wrapper -->
         </div>
     </div>
-    
+</div>
+
 {% endblock %}
