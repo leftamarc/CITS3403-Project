@@ -134,6 +134,9 @@ def generate():
     
     steam_id = request.form.get('steamid')
     
+    if not steam_id.isdigit() or len(steam_id) != 17:
+        flash("Invalid Steam ID. Please enter a 17-digit numerical Steam ID.", "danger")
+        return render_template('main/get.html')
 
     try:
         FetchPlayerData(steam_id) 
