@@ -158,7 +158,7 @@ document.getElementById('search_username').addEventListener('input', function ()
                         resultsContainer.style.display = 'none';
                         
                         // Optionally, populate the input field with the selected username
-                        document.getElementById('userSearch').value = user.username;
+                        document.getElementById('search_username').value = user.username;
                     };
 
                     resultsContainer.appendChild(userElement);
@@ -188,3 +188,21 @@ function showShared() {
     document.getElementById('toggleSaved').classList.add('btn-secondary');
     document.getElementById('toggleSaved').classList.remove('btn-primary');
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+    // Check if the URL contains the "share=true" query parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('share') === 'true') {
+        openModal(); // Open the share modal
+    }
+});
+
+window.addEventListener('DOMContentLoaded', () => {
+    const alert = document.getElementById('autoDismissAlert');
+    if (alert) {
+      setTimeout(() => {
+        const bsAlert = bootstrap.Alert.getOrCreateInstance(alert);
+        bsAlert.close();
+      }, 3000); // 3000ms = 3 seconds
+    }
+  });

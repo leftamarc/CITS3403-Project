@@ -118,6 +118,7 @@ def profile():
         shared_collections.saved_id,  # Explicitly include saved_id
         saved_collections.title,
         saved_collections.date_created,
+        saved_collections.steam_id,
         User.username,
         Steam_User.image  # Include the image from steam_user
     ).join(
@@ -241,12 +242,25 @@ def share_collection_route():
     # To Do? Check if the creator id matches the creator id for the collection (saved_id)
     # Shouldn't be able to share a collection you didn't create
     recipient_username = request.form.get('search_username')
+
     recipient_user = User.query.filter_by(username=recipient_username).first()
+    if not recipient_user:
+        return redirect(url_for('profile', error='invalid_username'))
     recipient_id = recipient_user.id
     saved_id = request.form.get('saved_id')
+    
+    if creator_id == recipient_id:
+        print("self share")
+        return redirect(url_for('profile', error="self_share"))
 
     response = share_a_collection(recipient_id, saved_id)
-    flash(response['message'], 'success' if response['status'] == 'success' else 'danger')
+    # Check the status of the response
+    if response == 'error':
+        return redirect(url_for('profile', error='error'))
+    elif response == 'already_shared':
+    
+        return redirect(url_for('profile', error='already_shared'))
+
     return redirect(url_for('profile'))  # Redirect to a relevant page after saving
 
 @app.route('/view_card/<int:saved_id>', methods=['GET'])

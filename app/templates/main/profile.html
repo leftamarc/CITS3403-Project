@@ -1,6 +1,34 @@
 {% extends "header.html" %}
 
 {% block content %}
+
+{% if request.args.get('error')%}
+
+    <div class="d-flex justify-content-center mt-4">
+        <div class="col-md-6 text-center">
+            <div id="autoDismissAlert" class="alert alert-danger alert-dismissible fade show" role="alert">
+            {% if request.args.get('error') == 'invalid_username' %}
+                User does not exist!
+                </div>
+            
+            {% elif request.args.get('error') == 'self_share' %}
+                You cannot share your SteamWrapped with yourself!
+                </div>
+            {% elif request.args.get('error') == 'already_shared' %}
+                You have already shared this SteamWrapped with that user!
+                </div>
+            {% else %}
+                Error sharing your SteamWrapped. Please try again.
+                </div>
+                
+            {% endif %}
+        </div>
+    </div>
+
+{% endif %}
+
+
+
 <div class="container mt-5">
     <h1 class="tab-title display-4 mb-5"></h1>
 </div>
@@ -32,6 +60,13 @@
                     </a>
                     <small class="text-muted">Created on: {{ collection.date_created.strftime('%Y-%m-%d') }} | For Steam ID: {{ collection.steam_id }}</small>
                 </div>
+
+                <!-- Right Section: Share Icon -->
+                <a href="{{ url_for('view_card', saved_id=collection.saved_id, share='true') }}" 
+                class="text-white d-flex align-items-center justify-content-center" 
+                style="font-size: 1.5rem; width: 35px; height: 35px;">
+                    <i class="bi bi-share"></i>
+                </a>
             </div>
             {% endfor %}
         {% else %}
@@ -49,7 +84,7 @@
                 <p class="text-center">View Wrappeds shared by your friends below</p>
             </div>
 
-            {% for saved_id, title, date_created, username, image in shared_collections %}
+            {% for saved_id, title, date_created,steam_id, username, image in shared_collections %}
             <div class="d-flex align-items-center p-4 mb-3" style="background-color: #171a21; border-radius: 5px;">
                 <!-- Left Section: Image -->
                 <img src="{{ image }}" alt="Steam User Avatar" class="mr-3" style="width: 50px; height: 50px; border-radius: 10px;">
@@ -59,7 +94,7 @@
                     <a href="{{ url_for('view_shared', saved_id=saved_id) }}" class="text-white" style="text-decoration: none;">
                         <p class="mb-0 font-weight-bold" style="font-size: 1.25rem;">{{ title }}</p>
                     </a>
-                    <small class="text-muted">Created on: {{ date_created.strftime('%Y-%m-%d') }} | Shared by {{ username }}</small>
+                    <small class="text-muted">Created on: {{ date_created.strftime('%Y-%m-%d') }} | For Steam ID: {{ steam_id }} | Shared by {{ username }}</small>
                 </div>
             </div>
             {% endfor %}
@@ -99,6 +134,7 @@
     <div class="loading-spinner"></div>
     <p>Loading...</p>
 </div>
+
 
 {% endblock %}
 
