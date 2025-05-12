@@ -362,3 +362,251 @@ def rarest_achievement(steam_id):
                 ),
             )
     return (False, None)
+
+def preference_for_game_age(steam_id):
+    """
+    Determines whether the user prefers older or more modern games based on playtime using regression with default Python libraries.
+    """
+    # Query to get release years and playtime for the user's games
+    result = (
+        db.session.query(
+            func.strftime('%Y', func.datetime(Game.release_date, 'unixepoch')).label("release_year"),
+            func.sum(User_Game.playtime_total).label("total_playtime"),
+        )
+        .join(User_Game, Game.app_id == User_Game.app_id)
+        .filter(
+            User_Game.steam_id == steam_id,  # Filter by the user's Steam ID
+            Game.release_date != 0,  # Exclude games with no release date
+            User_Game.playtime_total > 0,  # Exclude games with no playtime
+        )
+        .group_by(func.strftime('%Y', func.datetime(Game.release_date, 'unixepoch')))
+        .all()
+    )
+
+    # Ensure we have enough data points for regression
+    if len(result) < 2:
+        return (False, None)
+
+    # Prepare data for regression
+    release_years = [int(row.release_year) for row in result]
+    playtimes = [row.total_playtime for row in result]
+
+    # Calculate means
+    x_mean = sum(release_years) / len(release_years)
+    y_mean = sum(playtimes) / len(playtimes)
+
+    # Calculate the slope of the regression line
+    numerator = sum((x - x_mean) * (y - y_mean) for x, y in zip(release_years, playtimes))
+    denominator = sum((x - x_mean) ** 2 for x in release_years)
+
+    if denominator == 0:
+        return (False, None)  # Avoid division by zero
+
+    slope = numerator / denominator
+
+    # Interpret the slope
+    if slope > 0:
+        preference = "modern games"
+    elif slope < 0:
+        preference = "older games"
+    else:
+        preference = "no clear preference"
+
+    # Render the result
+    return (
+        True,
+        render_template(
+            "insights/preference_for_game_age.html",
+            slope=round(slope, 2),
+            preference=preference,
+        ),
+    )
+
+def taste_breaker(steam_id):
+    """
+    Finds a game where the user has an unusually high number of hours in a genre they typically don't play much.
+    """
+    from math import sqrt
+
+    MIN_PLAYTIME = 10  # Minimum playtime in hours to consider a game
+
+    # Query to get total playtime for each genre and each game in the user's library
+    genre_playtime = (
+        db.session.query(
+            Genre.name.label("genre_name"),
+            func.sum(User_Game.playtime_total).label("total_genre_playtime"),
+            func.count(Game.app_id).label("total_games_in_genre"),
+        )
+        .join(Game_Genre, Game.app_id == Game_Genre.app_id)
+        .join(Genre, Game_Genre.genre_id == Genre.genre_id)
+        .join(User_Game, Game.app_id == User_Game.app_id)
+        .filter(
+            User_Game.steam_id == steam_id,  # Filter by the user's Steam ID
+            User_Game.playtime_total >= MIN_PLAYTIME,  # Exclude games with less than 10 hours of playtime
+        )
+        .group_by(Genre.name)
+        .all()
+    )
+
+    # Create a dictionary to store average playtime per genre
+    genre_avg_playtime = {
+        row.genre_name: row.total_genre_playtime / row.total_games_in_genre
+        for row in genre_playtime
+    }
+
+    # Query to get playtime for each game and its genre
+    game_playtime = (
+        db.session.query(
+            Game.name.label("game_name"),
+            Genre.name.label("genre_name"),
+            func.sum(User_Game.playtime_total).label("game_playtime"),
+        )
+        .join(Game_Genre, Game.app_id == Game_Genre.app_id)
+        .join(Genre, Game_Genre.genre_id == Genre.genre_id)
+        .join(User_Game, Game.app_id == User_Game.app_id)
+        .filter(
+            User_Game.steam_id == steam_id,  # Filter by the user's Steam ID
+            User_Game.playtime_total >= MIN_PLAYTIME,  # Exclude games with less than 10 hours of playtime
+        )
+        .group_by(Game.name, Genre.name)
+        .all()
+    )
+
+    # Detect the game with the highest deviation from the genre average
+    outlier_game = None
+    max_deviation = -float("inf")
+
+    for row in game_playtime:
+        genre_name = row.genre_name
+        game_name = row.game_name
+        game_playtime = row.game_playtime
+
+        # Calculate deviation from the genre average
+        if genre_name in genre_avg_playtime:
+            avg_playtime = genre_avg_playtime[genre_name]
+            deviation = game_playtime - avg_playtime
+
+            # Check if this game has the highest deviation
+            if deviation > max_deviation:
+                max_deviation = deviation
+                outlier_game = {
+                    "game_name": game_name,
+                    "genre_name": genre_name,
+                    "game_playtime": game_playtime,
+                    "avg_playtime": avg_playtime,
+                    "deviation": deviation,
+                }
+
+    # If no outlier is found, return failure
+    if not outlier_game:
+        return (False, None)
+
+    # Render the result
+    return (
+        True,
+        render_template(
+            "insights/taste_breaker.html",
+            game_name=outlier_game["game_name"],
+            genre_name=outlier_game["genre_name"],
+            game_playtime=round(outlier_game["game_playtime"], 2),
+            avg_playtime=round(outlier_game["avg_playtime"], 2),
+            deviation=round(outlier_game["deviation"], 2),
+        ),
+    )
+
+def favorite_publisher(steam_id):
+    """
+    Finds the user's favorite publisher by calculating the percentage increase in hours played
+    for games published by that publisher compared to games published by other studios.
+    Only considers publishers where the user has played at least 2 games with at least 10 hours of playtime each.
+    """
+    MIN_PLAYTIME = 10  # Minimum playtime in hours to consider a game
+    MIN_GAMES = 2  # Minimum number of games played from a publisher
+
+    # Query to get total playtime and game count for each publisher
+    publisher_playtime = (
+        db.session.query(
+            Publisher.name.label("publisher_name"),
+            func.sum(User_Game.playtime_total).label("total_publisher_playtime"),
+            func.count(Game.app_id).label("total_publisher_games"),
+        )
+        .join(Publisher_Game, Game.app_id == Publisher_Game.app_id)
+        .join(Publisher, Publisher_Game.publisher == Publisher.name)
+        .join(User_Game, Game.app_id == User_Game.app_id)
+        .filter(
+            User_Game.steam_id == steam_id,  # Filter by the user's Steam ID
+            User_Game.playtime_total >= MIN_PLAYTIME,  # Exclude games with less than 10 hours of playtime
+        )
+        .group_by(Publisher.name)
+        .having(func.count(Game.app_id) >= MIN_GAMES)  # Only include publishers with at least 2 games
+        .all()
+    )
+
+    # Calculate the user's total playtime and game count for all games
+    total_playtime = (
+        db.session.query(func.sum(User_Game.playtime_total))
+        .filter(
+            User_Game.steam_id == steam_id,
+            User_Game.playtime_total >= MIN_PLAYTIME,
+        )
+        .scalar()
+    )
+
+    total_games = (
+        db.session.query(func.count(User_Game.app_id))
+        .filter(
+            User_Game.steam_id == steam_id,
+            User_Game.playtime_total >= MIN_PLAYTIME,
+        )
+        .scalar()
+    )
+
+    if not total_playtime or not total_games:
+        return (False, None)
+
+    # Find the publisher with the highest percentage increase in playtime
+    favorite_publisher = None
+    max_percentage_increase = -float("inf")
+
+    for row in publisher_playtime:
+        # Calculate average playtime for games published by the publisher
+        publisher_avg_playtime = row.total_publisher_playtime / row.total_publisher_games
+
+        # Calculate average playtime for games not published by the publisher
+        non_publisher_avg_playtime = (
+            (total_playtime - row.total_publisher_playtime)
+            / (total_games - row.total_publisher_games)
+            if total_games > row.total_publisher_games
+            else 0
+        )
+
+        # Calculate percentage increase
+        if non_publisher_avg_playtime > 0:
+            percentage_increase = ((publisher_avg_playtime - non_publisher_avg_playtime) / non_publisher_avg_playtime) * 100
+        else:
+            percentage_increase = 0
+
+        # Update favorite publisher if this one has the highest percentage increase
+        if percentage_increase > max_percentage_increase:
+            max_percentage_increase = percentage_increase
+            favorite_publisher = {
+                "publisher_name": row.publisher_name,
+                "percentage_increase": percentage_increase,
+            }
+
+    # If no favorite publisher is found, return failure
+    if not favorite_publisher:
+        return (False, None)
+
+    # Render the result
+    return (
+        True,
+        render_template(
+            "insights/favorite_publisher.html",
+            publisher_name=favorite_publisher["publisher_name"],
+            percentage_increase=round(favorite_publisher["percentage_increase"], 2),
+        ),
+    )
+
+
+

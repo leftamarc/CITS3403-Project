@@ -142,7 +142,7 @@ def generate():
         FetchPlayerData(steam_id) 
     except PrivateAccount:
         flash("The steam account associated with the provided steam ID is set to private. Please make it public to generate insights.", "danger")
-        return render_template('main/get.html') 
+        return render_template('main/get.html')
     
 
 
@@ -157,7 +157,10 @@ def generate():
         achievement_completion_rate(steam_id),
         backlog_size(steam_id),
         highest_achievements_to_hours(steam_id),
-        rarest_achievement(steam_id)
+        rarest_achievement(steam_id),
+        preference_for_game_age(steam_id),
+        taste_breaker(steam_id),
+        favorite_publisher(steam_id)
     ]
 
     # Remove insights that failed

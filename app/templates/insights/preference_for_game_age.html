@@ -1,0 +1,20 @@
+<h5 class="card-title" style="color:white">Your Preference for Game Age</h5>
+<p class="card-text">
+    A regression analysis revealed that you have a preference for the <strong>{{ preference }}</strong> in your library.
+
+    {% if slope > 1 %}
+        You strongly favor modern games. What’s next, crying because the graphics in older games aren’t shiny enough? Baby.
+    {% elif 1 > slope > 0.5 %}
+        You clearly prefer modern games. Guess you’re not a fan of pixel art or retro vibes, huh?
+    {% elif 0.5 > slope > 0 %}
+        You slightly lean toward modern games. Don’t worry, we won’t call you a full-on baby... yet.
+    {% elif slope < -1 %}
+        You strongly favor older games. Ah, a true connoisseur of the classics. Or should we say... boomer?
+    {% elif -1 <= slope < -0.5 %}
+        You seem to enjoy older games. Nostalgia hitting hard, or are you just avoiding the new stuff?
+    {% elif -0.5 <= slope < 0 %}
+        You slightly prefer older games, but your playtime is fairly balanced across your library.
+    {% else %}
+        You have no clear preference for game age. A true neutral—how diplomatic of you.
+    {% endif %}
+</p>
