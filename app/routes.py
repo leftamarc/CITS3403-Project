@@ -164,12 +164,19 @@ def generate():
         preference_for_game_age(steam_id),
         taste_breaker(steam_id),
         favorite_publisher(steam_id),
-        genre_regression_stop_playing(steam_id),
+        least_fav_genre(steam_id),
         genre_synergy(steam_id),
-        metacritic_vs_playtime(steam_id),
-        genre_metacritic_influence(steam_id),
-        predict_playtime(steam_id)
+        metacritic_vs_playtime(steam_id), 
+        genre_metacritic_influence(steam_id), 
+        never_achieve(steam_id),
+        they_got_stuck_at_the_tutorial(steam_id),
+        most_skilled_genre(steam_id)
+        
     ]
+
+   
+
+
 
    
     # Remove insights that failed

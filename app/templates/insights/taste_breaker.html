@@ -1,8 +1,14 @@
 <h5 class="card-title" style="color:white">Your Taste Breaker</h5>
     <p class="card-text">
-        You have an unusually high number of hours in <strong>{{ game_name }}</strong>, a <strong>{{ genre_name }}</strong> game.
-        <br>
-        You’ve played it for <strong>{{ game_playtime }}</strong> hours, while your average playtime for this genre is only <strong>{{ avg_playtime }}</strong> hours.
-        <br>
-        That’s a deviation of <strong>{{ deviation }}</strong> hours—clearly, this game is breaking your usual taste!
-</p>
+        You’ve spent an unusually high amount of time playing <strong>{{ game_name }}</strong>.
+        You’ve played it for <strong>{{ total_playtime }}</strong> hours, which is far more than expected for games in its genre.
+    {% if anomaly_score <= -1.0 %}
+        This is an extreme outlier in your library, making it one of the most unique games you’ve played.
+    {% elif anomaly_score <= -0.75 %}
+        This is a strong outlier in your library, meaning it’s highly unusual compared to your other games.
+    {% elif anomaly_score <= -0.5 %}
+        This is a moderate outlier in your library, standing out more than most of your other games.
+    {% else %}
+        This game is only slightly unusual compared to your other games in this genre.
+    {% endif %}
+    </p>
