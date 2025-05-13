@@ -1,40 +1,6 @@
 {% extends "header.html" %}
 
 {% block content %}
-<!--
-{% if request.args.get('error')%}
-
-    <div class="d-flex justify-content-center mt-4">
-        <div class="col-md-6 text-center">
-            <div id="autoDismissAlert" class="alert alert-danger alert-dismissible fade show" role="alert">
-            {% if request.args.get('error') == 'invalid_username' %}
-                User does not exist!
-                </div>
-            
-            {% elif request.args.get('error') == 'self_share' %}
-                You cannot share your SteamWrapped with yourself!
-                </div>
-            {% elif request.args.get('error') == 'already_shared' %}
-                You have already shared this SteamWrapped with that user!
-                </div>
-            {% else %}
-                Error sharing your SteamWrapped. Please try again.
-                </div>
-                
-            {% endif %}
-        </div>
-    </div>
-
-{% elif request.args.get('success') %}
-    <div class="d-flex justify-content-center mt-4">
-        <div class="col-md-6 text-center">
-            <div id="autoDismissAlert" class="alert alert-success alert-dismissible fade show" role="alert">
-                Your SteamWrapped has been shared successfully!
-            </div>
-        </div>
-    </div>
-{% endif %} 
--->
 
 <!-- Flashed messages displayed above the button -->
 {% with messages = get_flashed_messages(with_categories=true) %}
