@@ -90,42 +90,7 @@ function showLoadingPage() {
     document.getElementById('loading-overlay').style.display = 'flex'; // Show loading overlay
 }
 
-function openModal() {
-    const modal = document.getElementById('shareModal');
-    const resultsContainer = document.getElementById('searchResults');
-
-    modal.style.display = 'flex'; // Show the modal
-    resultsContainer.style.display = 'none'; // Hide the search results container
-    resultsContainer.innerHTML = ''; // Clear any previous results
-}
-
-function openNameModal() {
-    const modal = document.getElementById('nameModal');
-
-    modal.style.display = 'flex'; // Show the modal
-}
-
-function closeModal() {
-    const modals = ['nameModal', 'shareModal'];
-    modals.forEach(id => {
-        const modal = document.getElementById(id);
-        if (modal) {
-            modal.style.display = 'none';
-        }
-    });
-}
-
-window.onclick = function(event) {
-    const modals = ['nameModal', 'shareModal'];
-    modals.forEach(id => {
-        const modal = document.getElementById(id);
-        if (modal && event.target === modal) {
-            modal.style.display = 'none';
-        }
-    });
-};
-
-
+/* SEARCH FOR USERS WHEN SHARING (VIEW)*/
 
 document.getElementById('search_username').addEventListener('input', function () {
     const query = this.value.trim();
@@ -170,6 +135,7 @@ document.getElementById('search_username').addEventListener('input', function ()
         .catch(error => console.error('Error fetching search results:', error));
 });
 
+/* TOGGLE BETWEEN SAVED AND SHARED COLLECTIONS */
 
 function showSaved() {
     document.getElementById('savedCollectionsBox').style.display = 'block';
@@ -189,6 +155,8 @@ function showShared() {
     document.getElementById('toggleSaved').classList.remove('btn-primary');
 }
 
+/* SHARE MODAL ON PAGE LOAD AFTER CLICKING SHARE IN PROFILE */
+
 document.addEventListener("DOMContentLoaded", () => {
     // Check if the URL contains the "share=true" query parameter
     const urlParams = new URLSearchParams(window.location.search);
@@ -196,6 +164,8 @@ document.addEventListener("DOMContentLoaded", () => {
         openModal(); // Open the share modal
     }
 });
+
+/* FLASH MESSAGES - AUTO DISMISS */
 
 window.addEventListener('DOMContentLoaded', () => {
     const alert = document.getElementById('autoDismissAlert');
@@ -207,22 +177,34 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-function openModal() {
-    document.getElementById('shareModal').style.display = 'block';
+/* MODALS */
+
+function openModal(modalId) {
+    const modal = document.getElementById(modalId); // Select the modal by its ID
+    if (modal) {
+        modal.style.display = 'flex'; // Show the modal
+        if (modalId === 'share_modal') {
+            const resultsContainer = document.getElementById('searchResults');
+            resultsContainer.style.display = 'none'; // Hide the search results container
+            resultsContainer.innerHTML = ''; // Clear any previous results
+        }
+    } else {
+        console.error("Modal not found");
+    }
 }
 
 function closeModal() {
-    document.getElementById('shareModal').style.display = 'none';
+    const modals = document.querySelectorAll('.modal'); // Select all elements with the class 'modal'
+    modals.forEach(modal => {
+        modal.style.display = 'none'; // Hide each modal
+    });
 }
 
-function openDeleteModal() {
-    document.getElementById('deleteModal').style.display = 'block';
-}
-
-function closeDeleteModal() {
-    document.getElementById('deleteModal').style.display = 'none';
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-    positionAnimatedElements();
-});
+window.onclick = function(event) {
+    const modals = document.querySelectorAll('.modal'); // Select all elements with the 'modal' class
+    modals.forEach(modal => {
+        if (modal && event.target === modal) { // Check if the clicked target is the modal itself
+            modal.style.display = 'none'; // Hide the modal
+        }
+    });
+};

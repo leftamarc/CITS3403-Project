@@ -29,37 +29,33 @@
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
             <span class="sr-only">Next</span>
         </a>
-
-        <!-- Save Cards Form -->
-        <div style="text-align: center;"> 
-            
-            <button type="submit" class="button mt-3 mb-3" onclick="openNameModal();">Save</button>
-        
+        <!-- Save Cards Button -->
+        <div class="text-center"> 
+            <button type="submit" class="button mt-3 mb-3" onclick="openModal('name_modal');">Save</button>
         </div>
-
     </div>
 </div>
 
-<!-- Rename Modal -->
-<div id="nameModal" class="modal" tabindex="-1" role="dialog" style="display: none;">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="mb-3"> 
-                <!--<h5 class="basic-title">Name this SteamWrapped!</h5>-->
-                <button type="button" class="close" onclick="closeModal()" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+<!-- Name Modal -->
+<div id="name_modal" class="modal" tabindex="-1" role="dialog" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content bg-dark text-white p-4 rounded">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="mb-0 text">Name your SteamWrapped</h5>
             </div>
             <form action="{{ url_for('save_collection_route') }}" method="POST">
-                <input type="text" class="form-control dark-input" id="title" name="title" placeholder="Name this Wrapped!" required>
-                <div style="text-align: right;"> 
-                    <button type="submit" class="button mt-2 mb-1">
-                        Save
-                    </button>
+                <div class="mb-3">
+                    <input type="text" class="form-control bg-secondary text-white border-0" id="title" name="title" required>
+                </div>
+                <div class="text-end">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('name_modal')">Cancel</button>
+
                 </div>
             </form>
         </div>
     </div>
 </div>
+
 
 {% endblock %}

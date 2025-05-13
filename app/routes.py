@@ -260,8 +260,8 @@ def share_collection_route():
     return redirect(url_for('profile'))
 
 @login_required
-@app.route('/view_card/<int:saved_id>', methods=['GET'])
-def view_card(saved_id):
+@app.route('/view_saved/<int:saved_id>', methods=['GET'])
+def view_saved(saved_id):
     if 'user_id' not in session:
         flash("Please log in to view this card.", "warning")
         return redirect(url_for('login'))
@@ -275,13 +275,18 @@ def view_card(saved_id):
     # Fetch all cards associated with this collection
     cards = saved_cards.query.filter_by(saved_id=saved_id).all()
 
+    # Check if the 'share' query parameter is present in the URL
+    share_modal = request.args.get('share') == 'true'
+
     # Render the card in a similar design to wrapped.html
     return render_template(
-        'main/view_card.html',
+        'main/view_saved.html',
         collection=collection,
         cards=cards,
         current_time=collection.date_created.strftime('%Y-%m-%d %H:%M:%S'),
+        share_modal=share_modal,  # Pass the share_modal flag
     )
+
 
 @login_required
 @app.route('/view_shared/<int:saved_id>', methods=['GET'])

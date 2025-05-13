@@ -46,14 +46,14 @@
 
                 <!-- Middle Section: Card Synopsis -->
                 <div class="flex-grow-1">
-                    <a href="{{ url_for('view_card', saved_id=collection.saved_id) }}" class="text-white" style="text-decoration: none;">
+                    <a href="{{ url_for('view_saved', saved_id=collection.saved_id) }}" class="text-white" style="text-decoration: none;">
                         <p class="mb-0 font-weight-bold header-title" style="font-size: 1.25rem;">{{ collection.title }}</p>
                     </a>
                     <small class="text-muted">Created on: {{ collection.date_created.strftime('%Y-%m-%d') }} | For Steam ID: {{ collection.steam_id }}</small>
                 </div>
 
                 <!-- Right Section: Share Icon -->
-                <a href="{{ url_for('view_card', saved_id=collection.saved_id, share='true') }}" 
+                <a href="{{ url_for('view_saved', saved_id=collection.saved_id, share='true') }}" 
                 class="text-white d-flex align-items-center justify-content-center" 
                 style="font-size: 1.5rem; width: 35px; height: 35px;">
                     <i class="bi bi-share"></i>
@@ -93,37 +93,6 @@
             <p class="text-center text-muted">No one has shared any Wrappeds with you yet.</p>
         {% endif %}
     </div>
-</div>
-
-<!-- Share Modal -->
-<div id="shareModal" class="modal" tabindex="-1" role="dialog" style="display: none;">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="basic-title">Share your SteamWrappeds</h5>
-                <button type="button" class="close" onclick="closeModal()" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form action="{{ url_for('share_collection_route') }}" method="POST">
-                <div class="mt-3 mb-3">
-                    <p>Share this SteamWrapped with other users!</p>
-                    <input type="text" class="form-control" id="search_username" name="search_username" placeholder="Enter username" autocomplete="off">
-                    <div id="searchResults" class="mt-2"></div> <!-- Container for search results -->
-                </div>
-                <div style="text-align: right;"> 
-                    <button type="submit" class="button mt-3 mb-3">
-                        Share
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<div id="loading-overlay" style="display:none;">
-    <div class="loading-spinner"></div>
-    <p>Loading...</p>
 </div>
 
 

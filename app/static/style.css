@@ -431,6 +431,30 @@ ul#elements li {
     font-size: 16px;
 }
 
+
+#searchResults {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    padding: 10px;
+}
+
+.search-result-item {
+    padding: 5px;
+    border-bottom: 1px solid #ddd;
+}
+
+.search-result-item:last-child {
+    border-bottom: none;
+}
+
+.search-result-item:hover {
+    background-color: #f0f0f0;
+}
+
+
 .modal {
     position: fixed;
     top: 0; 
@@ -456,27 +480,4 @@ ul#elements li {
     overflow: hidden;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
     padding: 1rem;
-}
-
-
-#searchResults {
-    max-height: 200px;
-    overflow-y: auto;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #fff;
-    padding: 10px;
-}
-
-.search-result-item {
-    padding: 5px;
-    border-bottom: 1px solid #ddd;
-}
-
-.search-result-item:last-child {
-    border-bottom: none;
-}
-
-.search-result-item:hover {
-    background-color: #f0f0f0;
 }
