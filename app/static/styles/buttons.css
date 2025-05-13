@@ -1,0 +1,27 @@
+/* Blue Button - i.e. log in, save, etc */
+.btn-blue {
+    color: #fff;
+    background: #2D73FF;
+}
+.btn-blue:hover {
+    color: #fff;
+    filter: brightness(0.9);
+    transition: filter 0.2s ease;
+}
+.btn-blue:focus {
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.5);
+}
+
+/* Blue Button - i.e. generate, register etc */
+.btn-green {
+    color: #fff;
+    background: #799905;
+}
+.btn-green:hover {
+    color: #fff;
+    filter: brightness(0.9);
+    transition: filter 0.2s ease;
+}
+.btn-green:focus {
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.5);
+}

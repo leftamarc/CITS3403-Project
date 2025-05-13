@@ -302,7 +302,7 @@ a.link.light-style:hover {
     position: relative;
     width: 5vw;
     height: 5vw;
-    background-image: url('./proto-logo.PNG');
+    background-image: url('./logo.PNG');
     background-size: contain;
     background-repeat: no-repeat;
     opacity: 0;
@@ -435,35 +435,20 @@ ul#elements li {
     padding: 1rem;
 }
 
-/* BUTTONS STYLES */
-.btn-blue {
-    color: #fff;
-    background: #2D73FF;
+.steam-wrapped {
+    font-family: 'Press Start 2P', cursive;
+  }
 
-}
-.btn-blue:hover {
-    color: #fff;
-    filter: brightness(0.9);
-    transition: filter 0.2s ease;
-
-
-}
-.btn-blue:focus {
-    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.5);
+.large-title-white{
+    font-family: "Motiva Sans", "Twemoji", "Noto Sans", Helvetica, sans-serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #ffffff;
 }
 
-.btn-green {
-    color: #fff;
-    background: #799905;
-
-}
-.btn-green:hover {
-    color: #fff;
-    filter: brightness(0.9);
-    transition: filter 0.2s ease;
-
-
-}
-.btn-green:focus {
-    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.5);
+.large-text-white{
+    font-family: "Motiva Sans", "Twemoji", "Noto Sans", Helvetica, sans-serif;
+    font-size: 1.5rem;
+    color: #ffffff;
+    font-style: italic;
 }

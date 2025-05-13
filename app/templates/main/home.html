@@ -1,38 +1,58 @@
 {% extends "header.html" %}
-{% block content %}
 
-<div class="container">
-    <div class="row mt-5">
-        <div class="col-md-6 d-flex flex-column align-items-start">
-            {% if session.get('user_id') %}
-            <h1 class="tab-title display-4 mb-5"> Hello {{ username }}</h1>  
-            {% else %}
-            <h1 class="tab-title display-4 mb-5">Welcome to SteamWrapped!</h1>  
-            {% endif %}
-            <div>
-                <section>
-                    <h2 class="h4">What kind of player are you?</h2>
-                    <p>Generate your own Wrappeds and discover what your recent player data says about you</p>
-                </section>
-                <section>
-                    <h2 class="h4">Sharing is caring</h2>
-                    <p>See how you compare to your friends, as well as other users, by sharing your Wrappeds</p>
-                </section>
-                <section>
-                    <h2 class="h4">All in one place</h2>
-                    <p>Keep and save your own Wrappeds as well as the ones shared with you by others. </p>
-                </section>
-            </div>
+{% block content %}
+<div class="container bg-dark text-white rounded p-4 " style="background-color: rgba(27, 40, 56, 0.7) !important;">
+    <div class="row justify-content-center mt-4">
+        <div class="col-md-6 d-flex flex-column align-items-center">
+            <h1 class="large-title-white display-4 mb-5">
+                {% if session.get('user_id') %}
+                    Hello  <br> <span class = " tab-title steam-wrapped" style="font-size: 2rem;"> {{ username }} </span>
+                {% else %}
+                    Welcome to <span class = " tab-title steam-wrapped">SteamWrapped</span>
+                {% endif %}
+            </h1>
         </div>
-        {% include "elements/tutorial.html" %}
     </div>
 
+    <div class="row justify-content-center">
+        <div class="col-md-8 d-flex flex-column align-items-center">
+
+            <section>
+                <h2 class="large-text-white text-center mb-4"> SteamWrapped is an insights generating website utilising the Steam API to create "Wrappeds" personalised to your player data on Steam.
+                    <br> <br> 
+                    <span class = " tab-title steam-wrapped" style="font-size: 1.5rem;"> "What kind of player am I?"  </span>
+                    <br> <br> 
+                    We can answer that question. 
+                </h2>
+            </section>
+        </div>
+    </div>
+</div>
+
+    {% include "elements/gen_footer.html" if session.get('user_id') else "elements/log_in_footer.html" %}
+
+    <!--
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-8 d-flex flex-column align-items-center">
+            <section>
+                <h2 class="large-text-white">Gamer to gamer</h2>
+                <p>This app is made by gamers, for gamers. 
+                <br> We have keep the gamer rhetoric in you SteamWrappeds, generate one and you'll see what we mean.</p>
+
+                <h2 class="large-text-white">Sharing is caring</h2>
+                <p>See how you compare to your friends, as well as other users, by sharing your Wrappeds</p>
+
+                <h2 class="large-text-white">All in one place</h2>
+                <p>Keep and save your own Wrappeds as well as the ones shared with you by others.</p>
+            </section>
+        </div>
+    </div>
+    -->
+
 {% endblock %}
 
-{% block bottom_content %}
-    {% if session.get('user_id') %}
-        {% include "elements/gen_footer.html" %}
-    {% else %}
-        {% include "elements/log_in_footer.html" %}
-    {% endif %}
-{% endblock %}
+    
+
+
+
+
