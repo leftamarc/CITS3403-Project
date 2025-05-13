@@ -29,7 +29,7 @@
 
     <!-- Toggle Buttons -->
     <div class="d-flex justify-content-center mt-4">
-        <button id="toggleSaved" class="btn btn-primary mx-2" onclick="showSaved()">Saved Wrappeds</button>
+        <button id="toggleSaved" class="btn btn-blue mx-2" onclick="showSaved()">Saved Wrappeds</button>
         <button id="toggleShared" class="btn btn-secondary mx-2" onclick="showShared()">Shared with You</button>
     </div>
 
@@ -63,7 +63,7 @@
         {% else %}
             <p class="text-center text-muted">You have no saved Wrappeds yet.</p>
             <form class="text-center" action="{{ url_for('get') }}" method="get">
-                <button type="submit" class="button generate mb-3">Generate</button>
+                <button type="submit" class="btn btn-green mb-3">Generate</button>
             </form>
         {% endif %}
     </div>

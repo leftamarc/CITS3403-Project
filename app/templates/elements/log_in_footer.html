@@ -6,12 +6,12 @@
             {% if session.get('user_id') %}
                 <p class="bottom-box-text">You are logged in as <strong>{{ session.get('username') }}</strong>.</p>
                 <form action="{{ url_for('logout') }}" method="post">
-                    <button type="submit" class="button mb-3">Log Out</button>
+                    <button type="submit" class="btn btn-danger">Log Out</button>
                 </form>
             {% else %}
                 <p class="bottom-box-text">To get, view and share your Steam Wrappeds, please log in</p>
                 <form action="{{ url_for('login') }}" method="get">
-                    <button type="submit" class="button mb-3">Log In</button>
+                    <button type="submit" class="btn btn-blue mb-3">Log In</button>
                 </form>
                 <p class="bottom-box-text">
                     Or <a href="{{ url_for('register') }}" class="link light-style"> <strong>create an account</strong></a> to get started

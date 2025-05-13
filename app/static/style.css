@@ -79,26 +79,6 @@ body {
     color: #1a9fff;
 }
 
-button.header {
-    /* Styles the login button in the header */
-    margin-left: 2rem;
-    margin-top: 0.9rem;
-    padding: 0.75rem 2rem;
-    font-size: 16px;
-    background: linear-gradient(to right, #06BFFF 0%, #2D73FF 100%);
-    color: white;
-    border: none;
-    border-radius: 2px;
-    cursor: pointer;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-}
-
-.button.login.header:hover {
-    /* Adds hover effect to the login button */
-    filter: brightness(1.1);
-    transition: filter 0.2s ease;
-}
-
 /* Animation */
 @keyframes gradientMove {
     /* Animates gradient background */
@@ -214,23 +194,7 @@ a.link:hover::after {
     color: #c7d5e0;
 }
 
-.button {
-    /* Styles general buttons */
-    padding: 0.75rem 2rem;
-    font-size: 16px;
-    background: linear-gradient(to right, #06BFFF 0%, #2D73FF 100%);
-    color: white;
-    border: none;
-    border-radius: 2px;
-    cursor: pointer;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-}
 
-.button:hover {
-    /* Adds hover effect to buttons */
-    filter: brightness(1.1);
-    transition: filter 0.2s ease;
-}
 
 a.link.light-style {
     color: #c7d5e0;
@@ -245,16 +209,7 @@ a.link.light-style:hover {
     cursor: pointer;
 }
 
-.button.generate {
-    padding: 0.75rem 2rem;
-    font-size: 16px;
-    background: linear-gradient(to right, #799905 0%, #536904 100%);
-    color: white;
-    border: none;
-    border-radius: 2px;
-    cursor: pointer;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-}
+
 
 .tab-title.generate {
     font-size: 2.5rem;
@@ -453,8 +408,6 @@ ul#elements li {
 .search-result-item:hover {
     background-color: #f0f0f0;
 }
-
-
 .modal {
     position: fixed;
     top: 0; 
@@ -480,4 +433,37 @@ ul#elements li {
     overflow: hidden;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
     padding: 1rem;
+}
+
+/* BUTTONS STYLES */
+.btn-blue {
+    color: #fff;
+    background: #2D73FF;
+
+}
+.btn-blue:hover {
+    color: #fff;
+    filter: brightness(0.9);
+    transition: filter 0.2s ease;
+
+
+}
+.btn-blue:focus {
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.5);
+}
+
+.btn-green {
+    color: #fff;
+    background: #799905;
+
+}
+.btn-green:hover {
+    color: #fff;
+    filter: brightness(0.9);
+    transition: filter 0.2s ease;
+
+
+}
+.btn-green:focus {
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.5);
 }
