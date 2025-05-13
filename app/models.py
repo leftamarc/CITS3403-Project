@@ -1,6 +1,6 @@
 from app import db
 from datetime import datetime
-from app.security import hash_password, check_password
+from app.security import hash_password, check_password, check_password_hash
 from flask_login import UserMixin
 
 #using werkzeug security atm can change later if needed (just to hash passwords in database)
@@ -378,6 +378,9 @@ class User(db.Model, UserMixin):
     
     def set_password(self, password):
         self.password_hash = hash_password(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
 
 
 

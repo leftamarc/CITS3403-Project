@@ -23,7 +23,7 @@ migrate = Migrate(app, db)
 
 # Initialise flask-login
 login_manager = LoginManager()
-login_manager.login_view = 'login'  # Set default login view
+login_manager.login_view = '/login'  # Set default login view
 login_manager.init_app(app)
 
 

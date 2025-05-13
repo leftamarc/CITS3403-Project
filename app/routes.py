@@ -18,13 +18,11 @@ import json
 def home():
     return render_template('main/home.html', username=session.get('username'))
 
+
 @app.route('/get')
+@login_required
 def get():
-    if 'user_id' not in session:
-        flash("Please log in to access SteamWrapped's features.", "warning")
-        return redirect(url_for('login'))
-    # Uncomment later
-    
+
     steam_user = Steam_User.query.filter_by(id=User.id).first()
     return render_template('main/get.html',steam_id=steam_user.steam_id if steam_user else None)
 
@@ -32,10 +30,6 @@ def get():
 @app.route('/login', methods=['GET', 'POST'])
 @limiter.limit("10 per minute", error_message="Too many logins, please try again in a minute.")
 def login():
-    if 'user_id' in session:
-        flash('You are already logged in.', 'info')
-        return redirect(url_for('home'))
-
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -98,7 +92,7 @@ def register():
 
     return render_template('main/register.html')
 
-
+@login_required
 @app.route('/profile', methods=['GET', 'POST'])
 def profile():
     if 'user_id' not in session:
@@ -139,13 +133,14 @@ def profile():
         shared_collections=user_shared_collections
     )
 
-
+@login_required
 @app.route('/logout', methods = ['POST'])
 def logout():
     session.clear()
     flash("You have been logged out.", "info")
     return redirect(url_for('profile'))
 
+@login_required
 @app.route('/generate', methods=['POST'])
 def generate():
 
@@ -211,6 +206,7 @@ def generate():
     # Render the template with the selected insights
     return render_template('main/wrapped.html', cards=selected_insights, steam_id=steam_id, current_time=current_time)
 
+@login_required
 @app.route('/search_users', methods=['GET'])
 def search_users():
     query = request.args.get('query', '').strip()
@@ -224,7 +220,7 @@ def search_users():
     return jsonify(results)
 
 
-
+@login_required
 @app.route('/save_cards', methods=['POST'])
 def save_collection_route():
     id = session.get('user_id')
@@ -236,6 +232,7 @@ def save_collection_route():
     flash(response['message'], 'success' if response['status'] == 'success' else 'danger')
     return redirect(url_for('profile'))  # Redirect to a relevant page after saving
 
+@login_required
 @app.route('/share_cards', methods=['POST'])
 def share_collection_route():
     creator_id = session.get('user_id')
@@ -262,6 +259,7 @@ def share_collection_route():
 
     return redirect(url_for('profile', success='shared_successfully'))
 
+@login_required
 @app.route('/view_card/<int:saved_id>', methods=['GET'])
 def view_card(saved_id):
     if 'user_id' not in session:
@@ -285,6 +283,7 @@ def view_card(saved_id):
         current_time=collection.date_created.strftime('%Y-%m-%d %H:%M:%S'),
     )
 
+@login_required
 @app.route('/view_shared/<int:saved_id>', methods=['GET'])
 def view_shared(saved_id):
     if 'user_id' not in session:
