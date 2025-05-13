@@ -39,4 +39,4 @@ def save_a_collection(id, steam_id, cards, title):
 
     db.session.commit()  # Commit all cards after the loop
 
-    return {'status': 'success', 'message': 'Cards saved successfully.'}
+    return {'status': 'success', 'message': 'SteamWrapped saved successfully!'}

@@ -1,7 +1,7 @@
 {% extends "header.html" %}
 
 {% block content %}
-
+<!--
 {% if request.args.get('error')%}
 
     <div class="d-flex justify-content-center mt-4">
@@ -33,8 +33,23 @@
             </div>
         </div>
     </div>
-{% endif %}
+{% endif %} 
+-->
 
+<!-- Flashed messages displayed above the button -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="d-flex justify-content-center mt-4">
+        <div class="col-md-6 text-center">
+            {% for category, message in messages %}
+            <div id="autoDismissAlert" class="alert alert-{{ category }} p-2 alert-dismissible fade show" role="alert" style="border-radius: 5px;">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+{% endwith %}
 
 
 

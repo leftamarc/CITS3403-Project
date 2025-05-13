@@ -1,22 +1,45 @@
 {% extends "header.html" %}
 
 {% block content %}
-<div class="container">
-    <!-- Back Button -->
-    <button onclick="window.history.back();" class="btn btn-outline-light position-absolute" style="top: 120px; left: 20px;">
-        <i class="bi bi-arrow-left"></i> Back
-    </button>
 
-    <h1 class="tab-title display-4 mb-5 mt-5 text-center">{{ collection.title }}</h1>
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mt-5 mb-3">
+        <!-- Back Button -->
+        <button onclick="window.history.back();" class="btn btn-outline-light ml-2">
+            <i class="bi bi-arrow-left"></i> Back
+        </button>
+    
+        <!-- Title -->
+        <h1 class="tab-title display-4 mb-0 text-center flex-grow-1">{{ collection.title }}</h1>
+    
+        <!-- Share and Delete Icons -->
+        <div class="d-flex">
+            <button class="btn btn-outline-light mr-2" 
+                style="font-size: 1.5rem;" 
+                title="Share" 
+                onclick="openModal();">
+                <i class="bi bi-share"></i>
+            </button>
+        
+            <button class="btn btn-outline-danger ml-2 mr-2" 
+                style="font-size: 1.5rem;" 
+                title="Delete" 
+                onclick="openDeleteModal();">
+                <i class="bi bi-trash"></i>
+            </button>
+        </div>
+    </div>
+    
+
+
+    
     <div id="userWrapped" class="carousel slide" data-interval="false">
         <div class="carousel-inner">
             {% for card in cards %}
             <div class="carousel-item {% if loop.first %}active{% endif %}">
                 <div class="card text-center flex-column justify-content-center position-relative" 
                      style="background-color: #171a21; height: 30rem; padding: 10rem;">
-
                     {{ card.card|safe }}
-                    
                 </div>
             </div>
             {% endfor %}
@@ -31,20 +54,12 @@
         </a>
     </div>
 
-    <div class="d-flex justify-content-center gap-3 mt-3">
-        <!-- Share Icon -->
-        <a href="#" 
-           class="text-white" 
-           style="font-size: 1.5rem;" 
-           onclick="openModal();">
-            <i class="bi bi-share"></i>
-        </a>
-    </div>
+
 </div>
 
 <!-- Share Modal -->
 <div id="shareModal" class="modal" tabindex="-1" role="dialog" style="display: none;">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 600px; margin: auto;">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="basic-title">Share your SteamWrapped</h5>
@@ -57,7 +72,9 @@
                     <p>Share this SteamWrapped with other users!</p>
                     <input type="text" class="form-control" id="search_username" name="search_username" placeholder="Enter username" autocomplete="off">
                     <input type="hidden" name="saved_id" value="{{ collection.saved_id }}"> <!-- Hidden field -->
-                    <div id="searchResults" class="mt-2"></div> <!-- Container for search results -->
+                    <div id="searchResults" class="mt-2" style="background: white; padding: 0; display: none;">
+                        <!-- Container for search results -->
+                    </div><!-- Container for search results -->
                 </div>
                 <div style="text-align: right;"> 
                     <button type="submit" class="button mt-3 mb-3">
@@ -65,13 +82,38 @@
                     </button>
                 </div>
             </form>
+        </div>
     </div>
 </div>
 
+<!-- Delete Confirmation Modal -->
+<div id="deleteModal" class="modal" tabindex="-1" role="dialog" style="display: none;">
+<div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 600px; margin: auto;">
+    <div class="modal-content bg-dark text-white">
+        <div class="modal-header">
+            <h5 class="modal-title">Confirm Deletion</h5>
+            <button type="button" class="close text-white" onclick="closeDeleteModal()" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <p>Are you sure you want to delete this collection? This action cannot be undone.</p>
+        </div>
+        <div class="modal-footer">
+            <form action="{{ url_for('delete_wrapped_route') }}" method="POST">
+                <input type="hidden" name="saved_id" value="{{ collection.saved_id }}">
+                <button type="submit" class="btn btn-danger">Yes, Delete</button>
+                <button type="button" class="btn btn-secondary" onclick="closeDeleteModal()">Cancel</button>
+            </form>
+        </div>
+    </div>
+</div>
+</div>
+
 <script>
-    document.addEventListener("DOMContentLoaded", () => {
-        positionAnimatedElements();
-    });
+document.addEventListener("DOMContentLoaded", () => {
+    positionAnimatedElements();
+});
 </script>
 
 {% endblock %}

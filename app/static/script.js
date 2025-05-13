@@ -206,3 +206,23 @@ window.addEventListener('DOMContentLoaded', () => {
       }, 3000); // 3000ms = 3 seconds
     }
   });
+
+function openModal() {
+    document.getElementById('shareModal').style.display = 'block';
+}
+
+function closeModal() {
+    document.getElementById('shareModal').style.display = 'none';
+}
+
+function openDeleteModal() {
+    document.getElementById('deleteModal').style.display = 'block';
+}
+
+function closeDeleteModal() {
+    document.getElementById('deleteModal').style.display = 'none';
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    positionAnimatedElements();
+});

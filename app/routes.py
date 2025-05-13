@@ -4,6 +4,7 @@ from app.utils.insights import *
 from app.utils.fetch_player_data import *
 from app.utils.save_a_collection import *
 from app.utils.share_a_collection import *
+from app.utils.delete_wrapped_data import *
 from app.utils.api import PrivateAccount
 import random
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -246,18 +247,17 @@ def share_collection_route():
     saved_id = request.form.get('saved_id')
     
     if creator_id == recipient_id:
-        print("self share")
-        return redirect(url_for('profile', error="self_share"))
+        flash("You cannot share your collection with yourself.", "warning")
+        return redirect(url_for('profile'))
 
     response = share_a_collection(recipient_id, saved_id)
     # Check the status of the response
-    if response == 'error':
-        return redirect(url_for('profile', error='error'))
-    elif response == 'already_shared':
+    if response['status'] == 'error' or response == 'warning':
+        flash(response['message'], response['status'])
+        return redirect(url_for('profile'))
     
-        return redirect(url_for('profile', error='already_shared'))
-
-    return redirect(url_for('profile', success='shared_successfully'))
+    flash(response['message'], response['status'])
+    return redirect(url_for('profile'))
 
 @login_required
 @app.route('/view_card/<int:saved_id>', methods=['GET'])
@@ -306,3 +306,15 @@ def view_shared(saved_id):
         cards=cards,
         current_time=collection.date_created.strftime('%Y-%m-%d %H:%M:%S'),
     )
+
+@app.route('/delete_wrapped', methods=['POST'])
+@login_required
+def delete_wrapped_route():
+    user_id = session.get('user_id')
+    saved_id = request.form.get('saved_id')
+
+    # Call the function from utils.py to delete the collection and its associated data
+    if delete_wrapped_data(saved_id, user_id):
+        return redirect(url_for('profile'))
+    else:
+        return redirect(url_for('profile'))
