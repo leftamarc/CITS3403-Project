@@ -243,7 +243,9 @@ def share_collection_route():
 
     recipient_user = User.query.filter_by(username=recipient_username).first()
     if not recipient_user:
-        return redirect(url_for('main.profile', error='invalid_username'))
+        flash("Could not find a user with that username.", "danger")
+        return redirect(url_for('main.profile'))
+    
     recipient_id = recipient_user.id
     saved_id = request.form.get('saved_id')
     
