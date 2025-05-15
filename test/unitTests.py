@@ -14,7 +14,13 @@ class BasicTests(unittest.TestCase):
         db.create_all()
 
         return super().setUp()
-    
+
+    def tearDown(self):
+        db.session.remove()
+        db.drop_all()
+        self.app_context.pop()
+        return super().tearDown()   
+         
     def create_user(self, username, password):
         user = models.User(username=username)
         user.set_password(password)
@@ -57,9 +63,3 @@ class BasicTests(unittest.TestCase):
         self.assertFalse(security.is_strong_password('NoSpecialChar1'))
         self.assertFalse(security.is_strong_password('!@#$%^&*()'))
 
-
-    def tearDown(self):
-        db.session.remove()
-        db.drop_all()
-        self.app_context.pop()
-        return super().tearDown()
