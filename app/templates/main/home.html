@@ -18,36 +18,53 @@
         <div class="col-md-8 d-flex flex-column align-items-center">
 
             <section>
-                <h2 class="large-text-white text-center mb-4"> SteamWrapped is an insights generating website utilising the Steam API to create "Wrappeds" personalised to your player data on Steam.
+                <h2 class="large-text-white text-center mb-5"> SteamWrapped is an insights generating website utilising the Steam API to create "Wrappeds" personalised to your player data on Steam.
                     <br> <br> 
                     <span class = " tab-title steam-wrapped" style="font-size: 1.5rem;"> "What kind of player am I?"  </span>
                     <br> <br> 
                     We can answer that question. 
                 </h2>
+                <!-- Dropdown toggle button -->
+                <div class="text-center">
+                    <button class="btn" type="button" data-toggle="collapse" data-target="#moreInfo" aria-expanded="false" aria-controls="moreInfo">
+                        <span class = " tab-title steam-wrapped" style="font-size: 1.5rem;">"How?"<i class="bi bi-caret-down-fill"></i></span>
+                    </button>
+                </div>
+    
+                <!-- Collapsible content -->
+                <div class="collapse mt-3" id="moreInfo">
+                    <div class="text-white">
+                        <div class="row justify-content-center mt-2 mb-2" >
+                            <div class="col-md-12 d-flex flex-column align-items-center text-center">
+                                <section>
+                                    <h2 class = " tab-title steam-wrapped mt-5 mb-3" style="font-size: 1.8rem;">Insights galore</h2>
+                                    <p class="large-text-white mb-2" style=" font-style:normal"> We currently have 20 fun, unique and intuitive insights implemented, each personable to your player data at the instance of generation. As long as you continue to play, no SteamWrapped is the same. </p>
+                                    <p class="large-text-white " style=" font-style:normal"> More insights to come...!</p>
+
+                                    <h2 class = "tab-title steam-wrapped mt-5 mb-3" style="font-size: 1.8rem;">Gamer to gamer</h2>
+                                    <p class="large-text-white mb-2" >This app is made by gamers, for gamers. </p>
+                                    <p class="large-text-white " > We have kept the gamer rhetoric in you SteamWrappeds, generate one and you'll see what we mean. </p>
+
+                                    <h2 class = " tab-title steam-wrapped mt-5 mb-3" style="font-size: 1.8rem;">Multiple identities? <br> No problem!</h2>
+                                    <p class="large-text-white mb-2" > We do not require you to link a SteamID to your account, your account on SteamWrapped is simply to store your saved Wrappeds and the Wrappeds shared with you. </p>
+                                    <p class="large-text-white " > You can generate from as many different SteamIDs as you want, with no limit on how many you generate at one time. </p>
+
+                                    <h2 class = " tab-title steam-wrapped mt-5 mb-3" style="font-size: 1.8rem;">Sharing is caring</h2>
+                                    <p class="large-text-white mb-2" > Keep and save your own Wrappeds as well as Wrappeds shared with you by other users. </p>
+                                        <p class="large-text-white mb-2" > Simply save a Wrapped you have generated to share. </p>
+                                        <p class="large-text-white " > You can even add title's to your Wrappeds to easily differentiate between them.</p>
+                                    
+                                </section>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </section>
         </div>
     </div>
 </div>
 
-    {% include "elements/gen_footer.html" if session.get('user_id') else "elements/log_in_footer.html" %}
-
-    <!--
-    <div class="row justify-content-center mt-5">
-        <div class="col-md-8 d-flex flex-column align-items-center">
-            <section>
-                <h2 class="large-text-white">Gamer to gamer</h2>
-                <p>This app is made by gamers, for gamers. 
-                <br> We have keep the gamer rhetoric in you SteamWrappeds, generate one and you'll see what we mean.</p>
-
-                <h2 class="large-text-white">Sharing is caring</h2>
-                <p>See how you compare to your friends, as well as other users, by sharing your Wrappeds</p>
-
-                <h2 class="large-text-white">All in one place</h2>
-                <p>Keep and save your own Wrappeds as well as the ones shared with you by others.</p>
-            </section>
-        </div>
-    </div>
-    -->
+{% include "elements/gen_footer.html" if session.get('user_id') else "elements/log_in_footer.html" %}
 
 {% endblock %}
 

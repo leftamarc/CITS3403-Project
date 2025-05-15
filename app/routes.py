@@ -49,7 +49,7 @@ def login():
         session['user_id'] = user.id
         session['username'] = user.username
 
-        return redirect(url_for('profile'))  # Redirect after successful login
+        return redirect(url_for('home'))  # Redirect after successful login
 
     return render_template('main/login.html')  # Show login page if method is GET
 
