@@ -18,7 +18,7 @@
                     {% endif %}
                 {% endwith %}
 
-                <form action="{{ url_for('main.register') }}" method="post">
+                <form id="login-form" action="{{ url_for('main.register') }}" method="post">
                     <div class="form-group">
                         <label class="bottom-box-text" for="username" style="font-weight: bold;">Username</label>
                         <input type="text" class="form-control dark-input" id="username" name="username" required autocomplete="off">

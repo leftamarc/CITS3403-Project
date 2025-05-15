@@ -46,31 +46,36 @@ function positionAnimatedElements() {
 document.addEventListener("DOMContentLoaded", () => {
     let formSubmitted = false;
 
-    const form = document.querySelector("form");
+    const form = document.querySelector("#login-form");
     const pathname = window.location.pathname;
     const monitoredPages = ["/login", "/register"];
 
     if (form && monitoredPages.includes(pathname)) {
-        // Track submission via buttons only
+        // Use 'mousedown' to catch user intent early
         const submitButtons = form.querySelectorAll("button[type='submit'], input[type='submit']");
-
         submitButtons.forEach(button => {
-            button.addEventListener("click", () => {
+            button.addEventListener("mousedown", () => {
                 formSubmitted = true;
             });
         });
 
-        // Fallback: If form is submitted (e.g., via Enter key), mark as submitted
+        // Also mark as submitted if the form is submitted (e.g. via Enter key)
         form.addEventListener("submit", () => {
             formSubmitted = true;
         });
 
+        // Warn the user if they try to leave without submitting
         window.addEventListener("beforeunload", function (e) {
             if (!formSubmitted) {
-                e.preventDefault();            }
+                e.preventDefault();
+                e.returnValue = ""; 
+            }
         });
     }
 });
+
+
+
 
 function resetToLink() {
     const steamIDField = document.getElementById('steam_id');
