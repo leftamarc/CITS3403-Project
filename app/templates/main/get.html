@@ -11,7 +11,7 @@
             <p>Press "Generate" to view your SteamWrapped. <br><br>
               For big libraries this can take a while (up to 10 minutes or more) as the Steam Web API is quite slow.<br><br>
               Make sure you have your steam account set to public for all account details or we may miss some key account insights.</p>
-            <form action="{{ url_for('generate') }}" method="POST" onsubmit="showLoadingPage()">
+            <form action="{{ url_for('main.generate') }}" method="POST" onsubmit="showLoadingPage()">
                 <div class="form-group">
                     <label for="steamid" class="bottom-box-text" style="font-weight: bold;">Steam ID</label>
                     <input type="text" class="form-control dark-input" id="steamid" name="steamid" placeholder="Enter your Steam ID" required>
