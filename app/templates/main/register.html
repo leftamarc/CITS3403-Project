@@ -18,7 +18,7 @@
                     {% endif %}
                 {% endwith %}
 
-                <form action="{{ url_for('register') }}" method="post">
+                <form action="{{ url_for('main.register') }}" method="post">
                     <div class="form-group">
                         <label class="bottom-box-text" for="username" style="font-weight: bold;">Username</label>
                         <input type="text" class="form-control dark-input" id="username" name="username" required autocomplete="off">
@@ -38,7 +38,7 @@
                         Register
                     </button>
                     <p class="bottom-box-text">
-                        Already have an account? <a href="{{ url_for('login') }}" class="link light-style"> <strong>Log in</strong></a>
+                        Already have an account? <a href="{{ url_for('main.login') }}" class="link light-style"> <strong>Log in</strong></a>
                     </p>
                 </form>
             </div>

@@ -1,5 +1,5 @@
 from flask import render_template, request, redirect, url_for, flash, session, jsonify
-from app import app, db
+from app import db
 from app.utils.insights import *
 from app.utils.fetch_player_data import *
 from app.utils.save_a_collection import *
@@ -13,14 +13,15 @@ from flask_login import login_user, login_required
 from app.models import User, Steam_User, saved_collections, saved_cards, shared_collections
 from app.__init__ import limiter
 import json
+from app.blueprint import blueprint
 
-@app.route('/')
-@app.route('/home')
+@blueprint.route('/')
+@blueprint.route('/home')
 def home():
     return render_template('main/home.html', username=session.get('username'))
 
 
-@app.route('/get')
+@blueprint.route('/get')
 @login_required
 def get():
 
@@ -28,7 +29,7 @@ def get():
     return render_template('main/get.html',steam_id=steam_user.steam_id if steam_user else None)
 
 
-@app.route('/login', methods=['GET', 'POST'])
+@blueprint.route('/login', methods=['GET', 'POST'])
 @limiter.limit("10 per minute", error_message="Too many logins, please try again in a minute.")
 def login():
     if request.method == 'POST':
@@ -39,11 +40,11 @@ def login():
         user = User.query.filter_by(username=username).first()
         if not user:
             flash('Username does not exist.', 'danger')
-            return redirect(url_for('login'))  # Stay on the same page
+            return redirect(url_for('main.login'))  # Stay on the same page
 
         if not check_password_hash(user.password_hash, password):
             flash('Incorrect password.', 'danger')
-            return redirect(url_for('login'))  # Stay on the same page
+            return redirect(url_for('main.login'))  # Stay on the same page
 
         login_user(user, remember=(remember_me == 'on'))
         session['user_id'] = user.id
@@ -54,12 +55,12 @@ def login():
     return render_template('main/login.html')  # Show login page if method is GET
 
 
-@app.route('/register', methods=['GET', 'POST'])
+@blueprint.route('/register', methods=['GET', 'POST'])
 @limiter.limit("20 per hour", error_message="Too many registrations, please try again in a hour.")
 def register():
     if 'user_id' in session:
         flash('You are already logged in.', 'info')
-        return redirect(url_for('home'))
+        return redirect(url_for('main.home'))
      
     if request.method == 'POST':
         username = request.form['username']
@@ -69,16 +70,16 @@ def register():
         # Check if passwords match
         if password != confirm_password:
             flash('Passwords do not match.', 'danger')
-            return redirect(url_for('register'))
+            return redirect(url_for('main.register'))
         
         if not is_strong_password(password):
             flash('Password must be at least 8 characters long and include letters, numbers, and special characters.', 'danger')
-            return redirect(url_for('register'))
+            return redirect(url_for('main.register'))
         
         # Check if username already exists
         if User.query.filter_by(username=username).first():
             flash('Username already exists.', 'danger')
-            return redirect(url_for('register'))
+            return redirect(url_for('main.register'))
 
         # Create new user instance
         new_user = User(username=username)
@@ -89,15 +90,15 @@ def register():
         db.session.commit()
         
         flash('Account creation successful', 'success')
-        return redirect(url_for('login'))
+        return redirect(url_for('main.login'))
 
     return render_template('main/register.html')
 
 @login_required
-@app.route('/profile', methods=['GET', 'POST'])
+@blueprint.route('/profile', methods=['GET', 'POST'])
 def profile():
     if 'user_id' not in session:
-        return redirect(url_for('login'))
+        return redirect(url_for('main.login'))
     
     user_id = session['user_id']
     # Fetch saved collections for the logged-in user
@@ -135,14 +136,14 @@ def profile():
     )
 
 @login_required
-@app.route('/logout', methods = ['POST'])
+@blueprint.route('/logout', methods = ['POST'])
 def logout():
     session.clear()
     flash("You have been logged out.", "info")
-    return redirect(url_for('profile'))
+    return redirect(url_for('main.profile'))
 
 @login_required
-@app.route('/generate', methods=['POST'])
+@blueprint.route('/generate', methods=['POST'])
 def generate():
 
     # Get the Steam ID from the form
@@ -208,7 +209,7 @@ def generate():
     return render_template('main/wrapped.html', cards=selected_insights, steam_id=steam_id, current_time=current_time)
 
 @login_required
-@app.route('/search_users', methods=['GET'])
+@blueprint.route('/search_users', methods=['GET'])
 def search_users():
     query = request.args.get('query', '').strip()
     if not query:
@@ -222,7 +223,7 @@ def search_users():
 
 
 @login_required
-@app.route('/save_cards', methods=['POST'])
+@blueprint.route('/save_cards', methods=['POST'])
 def save_collection_route():
     id = session.get('user_id')
     steam_id = session['steam_id']
@@ -231,10 +232,10 @@ def save_collection_route():
 
     response = save_a_collection(id, steam_id, cards, title)
     flash(response['message'], 'success' if response['status'] == 'success' else 'danger')
-    return redirect(url_for('profile'))  # Redirect to a relevant page after saving
+    return redirect(url_for('main.profile'))  # Redirect to a relevant page after saving
 
 @login_required
-@app.route('/share_cards', methods=['POST'])
+@blueprint.route('/share_cards', methods=['POST'])
 def share_collection_route():
     creator_id = session.get('user_id')
 
@@ -242,35 +243,35 @@ def share_collection_route():
 
     recipient_user = User.query.filter_by(username=recipient_username).first()
     if not recipient_user:
-        return redirect(url_for('profile', error='invalid_username'))
+        return redirect(url_for('main.profile', error='invalid_username'))
     recipient_id = recipient_user.id
     saved_id = request.form.get('saved_id')
     
     if creator_id == recipient_id:
         flash("You cannot share your collection with yourself.", "warning")
-        return redirect(url_for('profile'))
+        return redirect(url_for('main.profile'))
 
     response = share_a_collection(recipient_id, saved_id)
     # Check the status of the response
     if response['status'] == 'error' or response == 'warning':
         flash(response['message'], response['status'])
-        return redirect(url_for('profile'))
+        return redirect(url_for('main.profile'))
     
     flash(response['message'], response['status'])
-    return redirect(url_for('profile'))
+    return redirect(url_for('main.profile'))
 
 @login_required
-@app.route('/view_saved/<int:saved_id>', methods=['GET'])
+@blueprint.route('/view_saved/<int:saved_id>', methods=['GET'])
 def view_saved(saved_id):
     if 'user_id' not in session:
         flash("Please log in to view this card.", "warning")
-        return redirect(url_for('login'))
+        return redirect(url_for('main.login'))
 
     # Fetch the saved collection by its ID and ensure it belongs to the logged-in user
     collection = saved_collections.query.filter_by(saved_id=saved_id, id=session['user_id']).first()
     if not collection:
         flash("Collection not found or you do not have permission to view it.", "danger")
-        return redirect(url_for('profile'))
+        return redirect(url_for('main.profile'))
 
     # Fetch all cards associated with this collection
     cards = saved_cards.query.filter_by(saved_id=saved_id).all()
@@ -289,17 +290,17 @@ def view_saved(saved_id):
 
 
 @login_required
-@app.route('/view_shared/<int:saved_id>', methods=['GET'])
+@blueprint.route('/view_shared/<int:saved_id>', methods=['GET'])
 def view_shared(saved_id):
     if 'user_id' not in session:
         flash("Please log in to view this card.", "warning")
-        return redirect(url_for('login'))
+        return redirect(url_for('main.login'))
 
     # Fetch the saved collection by its ID and ensure it belongs to the logged-in user
     collection = saved_collections.query.filter_by(saved_id=saved_id).first()
     if not collection:
         flash("Collection not found or you do not have permission to view it.", "danger")
-        return redirect(url_for('profile'))
+        return redirect(url_for('main.profile'))
 
     # Fetch all cards associated with this collection
     cards = saved_cards.query.filter_by(saved_id=saved_id).all()
@@ -312,7 +313,7 @@ def view_shared(saved_id):
         current_time=collection.date_created.strftime('%Y-%m-%d %H:%M:%S'),
     )
 
-@app.route('/delete_wrapped', methods=['POST'])
+@blueprint.route('/delete_wrapped', methods=['POST'])
 @login_required
 def delete_wrapped_route():
     user_id = session.get('user_id')
@@ -320,6 +321,6 @@ def delete_wrapped_route():
 
     # Call the function from utils.py to delete the collection and its associated data
     if delete_wrapped_data(saved_id, user_id):
-        return redirect(url_for('profile'))
+        return redirect(url_for('main.profile'))
     else:
-        return redirect(url_for('profile'))
+        return redirect(url_for('main.profile'))
