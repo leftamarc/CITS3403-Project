@@ -46,7 +46,7 @@
                 <!-- Middle Section: Wrapped Synopsis -->
                 <div class="flex-grow-1">
                     <a href="{{ url_for('main.view_saved', saved_id=collection.saved_id) }}" class="text-white" style="text-decoration: none;">
-                        <p class="mb-0 font-weight-bold header-title" style="font-size: 1.25rem;">{{ collection.title }}</p>
+                        <p class="mb-0 font-weight-bold header-title steam-wrapped" style="font-size: 1rem;">{{ collection.title }}</p>
                     </a>
                     <small class="text-muted">Created on: {{ collection.date_created.strftime('%Y-%m-%d') }} | For Steam ID: {{ collection.steam_id }}</small>
                 </div>
@@ -84,7 +84,7 @@
                 <!-- Middle Section: Wrapped Synopsis -->
                 <div class="flex-grow-1">
                     <a href="{{ url_for('main.view_shared', saved_id=saved_id) }}" class="text-white" style="text-decoration: none;">
-                        <p class="mb-0 font-weight-bold header-title" style="font-size: 1.25rem;">{{ title }}</p>
+                        <p class="mb-0 font-weight-bold header-title steam-wrapped" style="font-size: 1rem;">{{ title }}</p>
                     </a>
                     <small class="text-muted">Created on: {{ date_created.strftime('%Y-%m-%d') }} | For Steam ID: {{ steam_id }} | Shared by {{ username }}</small>
                 </div>
