@@ -1,11 +1,13 @@
 {% extends "header.html" %}
 {% block content %}
 
+
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-6">
             <h1 class="basic-title mt-5 ml-2">Log In</h1>
             <div class="rounded p-4 mt-4" style="background-color: #171a21; color: #fff;">
+                <!-- Handle log in related flask messages -->
                 {% with messages = get_flashed_messages(with_categories=true) %}
                     {% if messages %}
                         {% for category, message in messages %}
@@ -15,7 +17,8 @@
                         {% endfor %}
                     {% endif %}
                 {% endwith %}
-
+                
+                <!-- Log in Form -->
                 <form id = "login-form" action="{{ url_for('main.login') }}" method="post">
                     <div class="form-group">
                         <label class="bottom-box-text" for="username" style="font-weight: bold;">Username</label>
@@ -35,7 +38,8 @@
                     <button type="submit" class="btn btn-blue mt-3 mb-3">
                         Log In
                     </button>
-
+                    
+                    <!-- Create account option -->
                     <p class="bottom-box-text">
                         Don't have an account? <a href="{{ url_for('main.register') }}" class="link light-style"> <strong>Create an account</strong></a> to get started!
                     </p>

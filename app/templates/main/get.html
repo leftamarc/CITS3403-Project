@@ -4,20 +4,24 @@
 <div class="container">
   <div class="row mt-5">
     <div class="col-md-6 d-flex flex-column align-items-start">
+      <!-- Title -->
       <h1 class="large-title-white display-4 mb-5">
         Generate your <span class = " tab-title steam-wrapped">SteamWrapped</span>
       </h1>
         <div>
+            <!-- Instructions -->
             <p>Press "Generate" to view your SteamWrapped. <br><br>
               For big libraries this can take a while (up to 10 minutes or more) as the Steam Web API is quite slow.<br><br>
               Make sure you have your steam account set to public for all account details or we may miss some key account insights.</p>
-            <form action="{{ url_for('main.generate') }}" method="POST" onsubmit="showLoadingPage()">
+            
+            <!-- SteamId Form -->
+              <form action="{{ url_for('main.generate') }}" method="POST" onsubmit="showLoadingPage()">
                 <div class="form-group">
                     <label for="steamid" class="bottom-box-text" style="font-weight: bold;">Steam ID</label>
                     <input type="text" class="form-control dark-input" id="steamid" name="steamid" placeholder="Enter your Steam ID" required>
                 </div>
 
-                <!-- Flashed messages displayed above the button -->
+                <!-- Generation related flash messages displayed above the button -->
                 {% with messages = get_flashed_messages(with_categories=true) %}
                   {% if messages %}
                     <div class="mt-3">
@@ -34,10 +38,12 @@
             </form>
         </div>
     </div>
+
+    <!-- Steam ID instructions on the right-->
     {% include "elements/tutorial.html" %}
 </div>
 
-<!-- Loading Screen -->
+<!-- Loading Screen Overlay -->
 <div id="loading-overlay" style="display: none">
     <div style="text-align: center;">
         <div class="spinner-border text-light center" role="status" style="width: 3rem; height: 3rem;"></div>

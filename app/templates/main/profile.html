@@ -17,34 +17,33 @@
     {% endif %}
 {% endwith %}
 
-
-
-
 <div class="container mt-5">
     <h1 class="tab-title display-4 mb-5"></h1>
 </div>
 
 <div class="d-flex flex-column align-items-center mt-5">
-    <h1 class="tab-title display-4 text-center w-100"> {{ username }}</h1>  
+    <!-- Display username-->
+    <h1 class="tab-title display-4 text-center w-100 steam-wrapped" style="font-size: 1.3;"> {{ username }}</h1>  
 
-    <!-- Toggle Buttons -->
+    <!-- Toggle Buttons - Save Wrappeds vs Shared with you -->
     <div class="d-flex justify-content-center mt-4">
         <button id="toggleSaved" class="btn btn-blue mx-2" onclick="showSaved()">Saved Wrappeds</button>
         <button id="toggleShared" class="btn btn-secondary mx-2" onclick="showShared()">Shared with You</button>
     </div>
 
-    <!-- Scrollable Box for Saved Collections -->
+    <!-- Scrollable Box for Saved Wrappeds -->
     <div id="savedCollectionsBox" class="scroll-box mt-4 p-3 col-md-6" style="max-height: 300px; overflow-y: auto; width: 100%;">
         {% if saved_collections %}
             <div>
                 <p class="text-center">Select from your saved Wrappeds below to view and share with your friends</p>
             </div>
+            <!-- Recursively fetch saved wrappeds from database -->
             {% for collection, image in saved_collections %}
             <div class="d-flex align-items-center p-4 mb-3" style="background-color: #171a21; border-radius: 5px;">
-                <!-- Left Section: Image -->
+                <!-- Left Section: Image (your Steam avatar)-->
                 <img src="{{ image }}" alt="Steam User Avatar" class="mr-3" style="width: 50px; height: 50px; border-radius: 10px;">
 
-                <!-- Middle Section: Card Synopsis -->
+                <!-- Middle Section: Wrapped Synopsis -->
                 <div class="flex-grow-1">
                     <a href="{{ url_for('main.view_saved', saved_id=collection.saved_id) }}" class="text-white" style="text-decoration: none;">
                         <p class="mb-0 font-weight-bold header-title" style="font-size: 1.25rem;">{{ collection.title }}</p>
@@ -61,6 +60,7 @@
             </div>
             {% endfor %}
         {% else %}
+        <!-- Message if no Wrappeds yet, generate button option -->
             <p class="text-center text-muted">You have no saved Wrappeds yet.</p>
             <form class="text-center" action="{{ url_for('main.get') }}" method="get">
                 <button type="submit" class="btn btn-green mb-3">Generate</button>
@@ -68,19 +68,20 @@
         {% endif %}
     </div>
 
-    <!-- Scrollable Box for Shared Collections -->
+    <!-- Scrollable Box for Shared Wrappeds -->
     <div id="sharedCollectionsBox" class="scroll-box mt-4 p-3 col-md-6" style="max-height: 300px; overflow-y: auto; width: 100%; display: none;">
         {% if shared_collections %}
             <div>
                 <p class="text-center">View Wrappeds shared by your friends below</p>
             </div>
 
+            <!-- Recursively fetch shared wrappeds from database -->
             {% for saved_id, title, date_created,steam_id, username, image in shared_collections %}
             <div class="d-flex align-items-center p-4 mb-3" style="background-color: #171a21; border-radius: 5px;">
-                <!-- Left Section: Image -->
+                <!-- Left Section: Image (your Steam avatar)-->
                 <img src="{{ image }}" alt="Steam User Avatar" class="mr-3" style="width: 50px; height: 50px; border-radius: 10px;">
 
-                <!-- Middle Section: Card Synopsis -->
+                <!-- Middle Section: Wrapped Synopsis -->
                 <div class="flex-grow-1">
                     <a href="{{ url_for('main.view_shared', saved_id=saved_id) }}" class="text-white" style="text-decoration: none;">
                         <p class="mb-0 font-weight-bold header-title" style="font-size: 1.25rem;">{{ title }}</p>
@@ -90,6 +91,7 @@
             </div>
             {% endfor %}
         {% else %}
+        <!-- Message if no Wrappeds yet, generate button option -->
             <p class="text-center text-muted">No one has shared any Wrappeds with you yet.</p>
         {% endif %}
     </div>
@@ -98,6 +100,7 @@
 
 {% endblock %}
 
+<!-- Log out-->
 {% block bottom_content %}
-    {% include "elements/log_in_footer.html" %}
+    {% include "elements/login_footer.html" %}
 {% endblock %}
