@@ -1,15 +1,15 @@
 /* Blue Button - i.e. log in, save, etc */
 .btn-blue {
-    color: #fff;
-    background: #2D73FF;
+    color: #fff !important;
+    background: #2D73FF !important;
 }
 .btn-blue:hover {
-    color: #fff;
-    filter: brightness(0.9);
-    transition: filter 0.2s ease;
+    color: #fff !important;
+    filter: brightness(0.9) !important;
+    transition: filter 0.2s ease !important;
 }
 .btn-blue:focus {
-    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.5);
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.5) !important;
 }
 
 /* Blue Button - i.e. generate, register etc */
