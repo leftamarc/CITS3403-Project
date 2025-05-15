@@ -97,47 +97,60 @@ function showLoadingPage() {
 
 /* SEARCH FOR USERS WHEN SHARING (VIEW)*/
 
-document.getElementById('search_username').addEventListener('input', function () {
-    const query = this.value.trim();
+document.addEventListener('DOMContentLoaded', function () {
+    const inputField = document.getElementById('search_username');
     const resultsContainer = document.getElementById('searchResults');
 
-    if (query.length < 2) {
-        resultsContainer.innerHTML = ''; // Clear results
-        resultsContainer.style.display = 'none'; // Hide the container
-        return;
-    }
+    inputField.addEventListener('focus', () => {
+        resultsContainer.innerHTML = '';
+        resultsContainer.style.display = 'none';
+    });
 
-    fetch(`/search_users?query=${encodeURIComponent(query)}`)
-        .then(response => response.json())
-        .then(data => {
-            resultsContainer.innerHTML = ''; // Clear previous results
+    inputField.addEventListener('input', function () {
+        const query = this.value.trim();
 
-            if (data.length === 0) {
-                resultsContainer.innerHTML = '<p class="text-muted">No users found.</p>';
-            } else {
-                data.forEach(user => {
-                    const userElement = document.createElement('div');
-                    userElement.textContent = user.username;
-                    userElement.className = 'search-result-item';
-                    userElement.style.cursor = 'pointer';
+        if (query === '') {
+            resultsContainer.innerHTML = '';
+            resultsContainer.style.display = 'none';
+            return; 
+        }
 
-                    // Onclick handler for selecting a user
-                    userElement.onclick = () => {
-                        
-                        // Optionally, hide the search results after selection
-                        resultsContainer.style.display = 'none';
-                        
-                        // Optionally, populate the input field with the selected username
-                        document.getElementById('search_username').value = user.username;
-                    };
+        fetch(`/search_users?query=${encodeURIComponent(query)}`)
+            .then(response => response.json())
+            .then(data => {
+                resultsContainer.innerHTML = '';
 
-                    resultsContainer.appendChild(userElement);
-                });
-            }
+                if (data.length === 0) {
+                    resultsContainer.innerHTML = '<p class="text-muted m-2">No users found.</p>';
+                } else {
+                    data.forEach(user => {
+                        const userElement = document.createElement('div');
+                        userElement.textContent = user.username;
+                        userElement.className = 'search-result-item';
+                        userElement.style.cursor = 'pointer';
+                        userElement.style.padding = '6px 10px';
 
-            resultsContainer.style.display = 'block'; // Show the container
-        })
-        .catch(error => console.error('Error fetching search results:', error));
+                        userElement.onclick = () => {
+                            resultsContainer.style.display = 'none';
+                            inputField.value = user.username;
+                        };
+
+                        resultsContainer.appendChild(userElement);
+                    });
+                }
+
+                resultsContainer.style.display = 'block';
+            })
+            .catch(error => {
+                console.error('Error fetching search results:', error);
+                resultsContainer.style.display = 'none';
+            });
+    });
+
+    document.getElementById('share_modal').addEventListener('show.bs.modal', function () {
+        resultsContainer.innerHTML = '';
+        resultsContainer.style.display = 'none';
+    });
 });
 
 /* TOGGLE BETWEEN SAVED AND SHARED COLLECTIONS */
@@ -145,19 +158,19 @@ document.getElementById('search_username').addEventListener('input', function ()
 function showSaved() {
     document.getElementById('savedCollectionsBox').style.display = 'block';
     document.getElementById('sharedCollectionsBox').style.display = 'none';
-    document.getElementById('toggleSaved').classList.add('btn-primary');
+    document.getElementById('toggleSaved').classList.add('btn-blue');
     document.getElementById('toggleSaved').classList.remove('btn-secondary');
     document.getElementById('toggleShared').classList.add('btn-secondary');
-    document.getElementById('toggleShared').classList.remove('btn-primary');
+    document.getElementById('toggleShared').classList.remove('btn-blue');
 }
 
 function showShared() {
     document.getElementById('savedCollectionsBox').style.display = 'none';
     document.getElementById('sharedCollectionsBox').style.display = 'block';
-    document.getElementById('toggleShared').classList.add('btn-primary');
+    document.getElementById('toggleShared').classList.add('btn-blue');
     document.getElementById('toggleShared').classList.remove('btn-secondary');
     document.getElementById('toggleSaved').classList.add('btn-secondary');
-    document.getElementById('toggleSaved').classList.remove('btn-primary');
+    document.getElementById('toggleSaved').classList.remove('btn-blue');
 }
 
 /* SHARE MODAL ON PAGE LOAD AFTER CLICKING SHARE IN PROFILE */
