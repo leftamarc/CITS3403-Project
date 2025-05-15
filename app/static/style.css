@@ -252,6 +252,12 @@ a.link.light-style:hover {
     transition: filter 0.2s ease;
 }
 
+input.dark-input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 1000px #32353c inset !important;
+    -webkit-text-fill-color: #fff !important;
+    border: 1px solid #32353c !important;
+}
+
 /* Content wrapper */
 .content-wrapper {
     background-color: #1B2838; /* Content background color */
