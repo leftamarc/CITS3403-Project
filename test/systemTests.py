@@ -27,9 +27,9 @@ class SystemTests(unittest.TestCase):
         self.server_thread.daemon = True
         self.server_thread.start()
 
-        #options = webdriver.ChromeOptions()
-        #options.add_argument()
-        self.driver = webdriver.Chrome()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--headless')
+        self.driver = webdriver.Chrome(options=options)
         self.driver.get(localhost)
 
     def tearDown(self):

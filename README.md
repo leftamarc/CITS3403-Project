@@ -56,9 +56,13 @@ Now when you run the application from the python virtual environment your api ke
 
 After activating the virtual environment, simply use the command "flask run" to run the application.
 
-You may need to use "pip install" to install some of the dependencies for the application.
+You may use "pip install -r requirements.txt" to install the dependencies for the application.
 
 The full list of dependencies is found in requirements.txt
 
 
 ## Running tests
+
+To run automated system and unit tests, enter the command "python -m unittest test.<name of test file>"
+
+the tests can be located in the /test folder.

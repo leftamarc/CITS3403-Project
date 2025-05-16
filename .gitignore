@@ -2,3 +2,5 @@
 **/__pycache__/
 #ignore macos system files
 .DS_Store
+#ignore locat test database
+test.db
