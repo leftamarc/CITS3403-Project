@@ -168,7 +168,7 @@ document.addEventListener("DOMContentLoaded", () => {
 window.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
       $('.autoDismissAlert').alert('close');
-    }, 3000);
+    }, 5000);
   });
 
 /* MODALS */
