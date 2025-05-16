@@ -3,11 +3,12 @@
 {% block content %}
 <div class="container">
     <!-- Back Button -->
-    <button onclick="window.location.href='{{ url_for('main.profile') }}';" class="btn btn-outline-light position-absolute" style="top: 120px; left: 20px;">        
+    <button onclick="window.location.href='{{ url_for('main.profile')}}';" class="btn btn-outline-light position-absolute" style="top: 120px; left: 20px;">        
         <i class="bi bi-arrow-left"></i> Back
     </button>
 
     <h1 class="tab-title display-4 mb-5 mt-5 text-center">{{ collection.title }}</h1>
+    <!-- Wrapped Carousel -->
     <div id="userWrapped" class="carousel slide" data-interval="false">
         <div class="carousel-inner">
             {% for card in cards %}
