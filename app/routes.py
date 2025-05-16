@@ -115,20 +115,20 @@ def profile():
     ).all()
 
     user_shared_collections = db.session.query(
-        shared_collections.saved_id,  # Explicitly include saved_id
+        shared_collections.saved_id,
         saved_collections.title,
         saved_collections.date_created,
         saved_collections.steam_id,
-        User.username,
-        Steam_User.image  # Include the image from steam_user
+        User.username.label("creator_username"),  # Get the creator's username
+        Steam_User.image
     ).join(
         saved_collections, shared_collections.saved_id == saved_collections.saved_id
     ).join(
-        User, shared_collections.id == User.id
+        User, saved_collections.id == User.id  # Join with creator's user row
     ).join(
-        Steam_User, saved_collections.steam_id == Steam_User.steam_id  # Join with steam_user using steam_id
+        Steam_User, saved_collections.steam_id == Steam_User.steam_id
     ).filter(
-        shared_collections.id == user_id
+        shared_collections.id == user_id  # Only show shared collections for this user
     ).all()
 
     # Pass the username and saved collections to the template
