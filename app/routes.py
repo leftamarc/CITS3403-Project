@@ -7,7 +7,7 @@ from app.utils.share_a_collection import *
 from app.utils.delete_wrapped_data import *
 from app.utils.api import PrivateAccount
 import random
-from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import check_password_hash
 from app.security import *
 from app.models import User, Steam_User, saved_collections, saved_cards, shared_collections
 from app.__init__ import limiter

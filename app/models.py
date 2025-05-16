@@ -3,12 +3,6 @@ from datetime import datetime
 from app.security import hash_password, check_password, check_password_hash
 from flask_login import UserMixin
 
-#using werkzeug security atm can change later if needed (just to hash passwords in database)
-
-#TODO: Make some wrapper functions: Calling dbAchievementAdd(name, rate, app_id) is going to be more readable then SQL statements and a function 
-#      like getAchievement(name) that returns all the associated data in a python list will be easier to work with
-
-
 #*******************************************************************************//STEAM API DATA TABLES//************************************************************************
 
 #                                                    /*******************************//ENTITIES//*******************************/
@@ -412,13 +406,17 @@ class Api_Log(db.Model):
             return True
         return (current_time - api_log.last_called) >= duration
 
-# Saving Cards
+'''///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////'''
 
+# Stores which non-creator users (id) have access to a saved wrapped (saved_id)
 class shared_collections(db.Model):
     share_id = db.Column(db.Integer, primary_key=True, autoincrement=True)  # Auto-incrementing primary key
     saved_id = db.Column(db.Integer, db.ForeignKey('saved_collections.saved_id'), nullable=False)  # Foreign key, wrapped id 
     id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)  # Foreign key, recipient id
 
+'''///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////'''
+
+# Stores information about a saved wrapped (saved_id) - creator (id), wrapped name (title), steam id use to generate (steam_id) and the date created (date_created)
 class saved_collections(db.Model):
     saved_id = db.Column(db.Integer, primary_key=True)
     id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
@@ -426,6 +424,9 @@ class saved_collections(db.Model):
     steam_id = db.Column(db.Integer, db.ForeignKey('steam_user.steam_id'))
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
 
+'''///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////'''
+
+# Stores individual "card" data/html text (card) linked to a specific saved wrapped (saved_id)
 class saved_cards(db.Model):
     card_no = db.Column(db.Integer, primary_key=True, autoincrement=True)
     saved_id = db.Column(db.Integer, db.ForeignKey('saved_collections.saved_id'), nullable=False)
