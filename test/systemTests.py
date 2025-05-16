@@ -27,9 +27,9 @@ class SystemTests(unittest.TestCase):
         self.server_thread.daemon = True
         self.server_thread.start()
 
-        #options = webdriver.ChromeOptions()
-        #options.add_argument('--headless')
-        self.driver = webdriver.Chrome()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--headless')
+        self.driver = webdriver.Chrome(options=options)
         self.driver.get(localhost)
 
     def tearDown(self):
@@ -193,7 +193,7 @@ class SystemTests(unittest.TestCase):
         # Click "Get"
         get_header = WebDriverWait(self.driver, 10).until(
             expected_conditions.element_to_be_clickable(
-                (By.XPATH, "//*[contains(@class, 'clickable-text') and contains(text(), 'Get')]")
+                (By.CSS_SELECTOR, "a.nav-link[href$='/get']")
             )
         )
         get_header.click()
@@ -202,10 +202,10 @@ class SystemTests(unittest.TestCase):
         )
         self.assertIn('/get', self.driver.current_url)
 
-        # Click "SteamWrapped" (Home)
+        # Click "SteamWrapped" (Home) - logo/title link
         home_header = WebDriverWait(self.driver, 10).until(
             expected_conditions.element_to_be_clickable(
-                (By.XPATH, "//div[contains(@class, 'clickable-text') and contains(text(), 'SteamWrapped')]")
+                (By.CSS_SELECTOR, "a.text-decoration-none[href$='/home']")
             )
         )
         home_header.click()
@@ -215,11 +215,14 @@ class SystemTests(unittest.TestCase):
         self.assertIn('/home', self.driver.current_url)
 
         # Click Profile (username in uppercase)
+        username_upper = 'testuser'.upper()
         profile_header = WebDriverWait(self.driver, 10).until(
             expected_conditions.element_to_be_clickable(
-                (By.XPATH, "//span[contains(@class, 'clickable-text') and contains(text(), '{}')]".format('TESTUSER'))
+                (By.CSS_SELECTOR, f"a.nav-link[href$='/profile']")
             )
         )
+        # Optionally, check the text matches the username
+        assert profile_header.text.strip() == username_upper
         profile_header.click()
         WebDriverWait(self.driver, 10).until(
             expected_conditions.url_contains('/profile')
