@@ -1,5 +1,19 @@
 # CITS3403-Project
-a description of the purpose of the application, explaining its design and use.
+
+
+## SteamWrapped
+SteamWrapped is a Steam Web API based application designed to provide entertaining insights regarding Steam user data.
+
+The application allows users to input a Steam ID associated with a public steam profile and the application will make various calls 
+to the Steam Web API and Steam Storefront API to collect data such as profile info, user game data, global achievement data, game storefront
+metadata and more.
+
+The user is then shown a collection of specific insights that we're successfully drawn from the collected data, being able to save and share 
+these collections with other users.
+
+The insights are designed to both provide interesting facts about the users Steam data but also be entertaining, the flavour text presented 
+alongside the insights take a mocking tone using language relevant to online gaming culture.
+
 
 ## Group Members
 
@@ -38,4 +52,13 @@ export STEAM_API_KEY="your_api_key_here"
 Now when you run the application from the python virtual environment your api key will always be initialised.
 
 
-instructions for how to run the tests for the application.
+## Running the application
+
+After activating the virtual environment, simply use the command "flask run" to run the application.
+
+You may need to use "pip install" to install some of the dependencies for the application.
+
+The full list of dependencies is found in requirements.txt
+
+
+## Running tests
