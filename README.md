@@ -8,10 +8,10 @@ The application allows users to input a Steam ID associated with a public steam 
 to the Steam Web API and Steam Storefront API to collect data such as profile info, user game data, global achievement data, game storefront
 metadata and more.
 
-The user is then shown a collection of specific insights that we're successfully drawn from the collected data, being able to save and share 
+The user is then shown a collection of specific insights that were successfully drawn from the collected data, being able to save and share 
 these collections with other users.
 
-The insights are designed to both provide interesting facts about the users Steam data but also be entertaining, the flavour text presented 
+The insights are designed to both provide interesting facts about the users Steam data but also be entertaining. The flavour text presented 
 alongside the insights take a mocking tone using language relevant to online gaming culture.
 
 
@@ -63,6 +63,6 @@ The full list of dependencies is found in requirements.txt
 
 ## Running tests
 
-To run automated system and unit tests, enter the command "python -m unittest test.<name of test file>"
+To run automated system and unit tests, enter the command "python -m unittest test.<name of test file>".
 
-the tests can be located in the /test folder.
+The tests can be located in the /test folder.
