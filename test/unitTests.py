@@ -22,11 +22,17 @@ class BasicTests(unittest.TestCase):
         return super().tearDown()   
          
     def create_user(self, username, password):
+        if not username:
+            raise ValueError("Username cannot be empty.")
+        if not password:
+            raise ValueError("Password cannot be empty.")
+
         user = models.User(username=username)
         user.set_password(password)
         db.session.add(user)
         db.session.commit()
         return user
+
 
     def test_user_creation(self):
         user = self.create_user('testuser', 'testpassword1!')
@@ -62,4 +68,15 @@ class BasicTests(unittest.TestCase):
         self.assertFalse(security.is_strong_password('12345678'))
         self.assertFalse(security.is_strong_password('NoSpecialChar1'))
         self.assertFalse(security.is_strong_password('!@#$%^&*()'))
+
+    def test_duplicate_usernames(self):
+        self.create_user('dupeuser', 'password1!')
+        with self.assertRaises(Exception):  
+            self.create_user('dupeuser', 'password2!')
+    
+    def test_empty_username_or_password(self):
+        with self.assertRaises(ValueError):
+            self.create_user('', 'ValidPass1!')
+        with self.assertRaises(ValueError):
+            self.create_user('validuser', '')
 
