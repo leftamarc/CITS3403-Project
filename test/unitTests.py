@@ -80,3 +80,12 @@ class BasicTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.create_user('validuser', '')
 
+def test_login_case_insensitive_username(self):
+        self.create_user('caseuser', 'CasePass123!')
+
+        user_variants = ['CASEUSER', 'CaseUser', 'cAsEuSeR']
+        for variant in user_variants:
+            queried = models.User.query.filter_by(username=variant.lower()).first()
+            self.assertIsNotNone(queried)
+            self.assertTrue(queried.check_password('CasePass123!'))
+
