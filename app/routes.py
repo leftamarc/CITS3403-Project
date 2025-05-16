@@ -280,22 +280,34 @@ def view_saved(saved_id):
 @login_needed
 @blueprint.route('/view_shared/<int:saved_id>', methods=['GET'])
 def view_shared(saved_id):
-    # Fetch the saved collection by its ID and ensure it belongs to the logged-in user
-    collection = saved_collections.query.filter_by(saved_id=saved_id).first()
-    if not collection:
+    # Fetch the saved collection and join to get the creator's username
+    result = db.session.query(
+        saved_collections,
+        User.username.label("creator_username")
+    ).join(
+        User, saved_collections.id == User.id
+    ).filter(
+        saved_collections.saved_id == saved_id
+    ).first()
+
+    if not result:
         flash("Collection not found or you do not have permission to view it.", "danger")
         return redirect(url_for('main.profile'))
+
+    collection = result.saved_collections
+    creator_username = result.creator_username
 
     # Fetch all cards associated with this collection
     cards = saved_cards.query.filter_by(saved_id=saved_id).all()
 
-    # Render the card in a similar design to wrapped.html
     return render_template(
         'main/view_shared.html',
         collection=collection,
         cards=cards,
+        creator_username=creator_username,
         current_time=collection.date_created.strftime('%Y-%m-%d %H:%M:%S'),
     )
+
 
 
 @login_needed
