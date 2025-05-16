@@ -416,8 +416,8 @@ class Api_Log(db.Model):
 
 class shared_collections(db.Model):
     share_id = db.Column(db.Integer, primary_key=True, autoincrement=True)  # Auto-incrementing primary key
-    saved_id = db.Column(db.Integer, db.ForeignKey('saved_collections.saved_id'), nullable=False)  # Foreign key
-    id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)  # Foreign key
+    saved_id = db.Column(db.Integer, db.ForeignKey('saved_collections.saved_id'), nullable=False)  # Foreign key, wrapped id 
+    id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)  # Foreign key, recipient id
 
 class saved_collections(db.Model):
     saved_id = db.Column(db.Integer, primary_key=True)

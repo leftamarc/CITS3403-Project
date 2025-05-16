@@ -11,7 +11,6 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from app.security import *
 from app.models import User, Steam_User, saved_collections, saved_cards, shared_collections
 from app.__init__ import limiter
-import json
 from app.blueprint import blueprint
 
 
@@ -19,14 +18,6 @@ from app.blueprint import blueprint
 @blueprint.route('/home')
 def home():
     return render_template('main/home.html', username=session.get('username'))
-
-
-@blueprint.route('/get')
-@login_needed
-def get():
-
-    steam_user = Steam_User.query.filter_by(id=User.id).first()
-    return render_template('main/get.html',steam_id=steam_user.steam_id if steam_user else None)
 
 
 @blueprint.route('/login', methods=['GET', 'POST'])
@@ -99,6 +90,15 @@ def register():
 
     return render_template('main/register.html', form=form)
 
+
+@login_needed
+@blueprint.route('/logout', methods = ['POST'])
+def logout():
+    session.clear()
+    flash("You have been logged out.", "info")
+    return redirect(url_for('main.profile'))
+
+
 @login_needed
 @blueprint.route('/profile', methods=['GET', 'POST'])
 def profile():
@@ -139,12 +139,14 @@ def profile():
         shared_collections=user_shared_collections
     )
 
+
+@blueprint.route('/get')
 @login_needed
-@blueprint.route('/logout', methods = ['POST'])
-def logout():
-    session.clear()
-    flash("You have been logged out.", "info")
-    return redirect(url_for('main.profile'))
+def get():
+
+    steam_user = Steam_User.query.filter_by(id=User.id).first()
+    return render_template('main/get.html',steam_id=steam_user.steam_id if steam_user else None)
+
 
 @login_needed
 @blueprint.route('/generate', methods=['POST'])
@@ -208,19 +210,6 @@ def generate():
     # Render the template with the selected insights
     return render_template('main/wrapped.html', cards=selected_insights, steam_id=steam_id, current_time=current_time)
 
-@login_needed
-@blueprint.route('/search_users', methods=['GET'])
-def search_users():
-    query = request.args.get('query', '').strip()
-    if not query:
-        return jsonify([])  # Return an empty list if no query is provided
-
-    # Search for users in the database (adjust based on your ORM)
-    users = User.query.filter(User.username.ilike(f"%{query}%")).all()
-    results = [{'id': user.id, 'username': user.username} for user in users]
-
-    return jsonify(results)
-
 
 @login_needed
 @blueprint.route('/save_cards', methods=['POST'])
@@ -233,6 +222,7 @@ def save_collection_route():
     response = save_a_collection(id, steam_id, cards, title)
     flash(response['message'], 'success' if response['status'] == 'success' else 'danger')
     return redirect(url_for('main.profile'))  # Redirect to a relevant page after saving
+
 
 @login_needed
 @blueprint.route('/share_cards', methods=['POST'])
@@ -306,6 +296,21 @@ def view_shared(saved_id):
         cards=cards,
         current_time=collection.date_created.strftime('%Y-%m-%d %H:%M:%S'),
     )
+
+
+@login_needed
+@blueprint.route('/search_users', methods=['GET'])
+def search_users():
+    query = request.args.get('query', '').strip()
+    if not query:
+        return jsonify([])  # Return an empty list if no query is provided
+
+    # Search for users in the database (adjust based on your ORM)
+    users = User.query.filter(User.username.ilike(f"%{query}%")).all()
+    results = [{'id': user.id, 'username': user.username} for user in users]
+
+    return jsonify(results)
+
 
 @blueprint.route('/delete_wrapped', methods=['POST'])
 @login_needed

@@ -1,12 +1,4 @@
-document.querySelector('form').addEventListener('submit', function(event) {
-    var password = document.getElementById('password').value;
-    var confirm = document.getElementById('confirm_password').value;
-    if (password !== confirm) {
-        event.preventDefault();
-        alert('Passwords do not match!');
-    }
-});
-
+/* Animated Background Script */
 document.addEventListener("DOMContentLoaded", () => {
     positionAnimatedElements();
 });
@@ -43,6 +35,18 @@ function positionAnimatedElements() {
     });
 };
 
+/* Log In Scripts */
+/* Password Match Check on Register */
+document.querySelector('form').addEventListener('submit', function(event) {
+    var password = document.getElementById('password').value;
+    var confirm = document.getElementById('confirm_password').value;
+    if (password !== confirm) {
+        event.preventDefault();
+        alert('Passwords do not match!');
+    }
+});
+
+/* Leaving Site Alert if leaving log in or create account, to acknowledge form data will not be saved if reloaded page */
 document.addEventListener("DOMContentLoaded", () => {
     let formSubmitted = false;
 
@@ -50,6 +54,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const pathname = window.location.pathname;
     const monitoredPages = ["/login", "/register"];
 
+    /* Disables the "Leaving Site" Alert when clicking register or log in */
     if (form && monitoredPages.includes(pathname)) {
         // Use 'mousedown' to catch user intent early
         const submitButtons = form.querySelectorAll("button[type='submit'], input[type='submit']");
@@ -74,29 +79,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-
-
-
-function resetToLink() {
-    const steamIDField = document.getElementById('steam_id');
-    const button = document.getElementById('editToggleButton');
-
-    // Enable the field and clear the value
-    steamIDField.disabled = false;
-    steamIDField.placeholder = 'Enter your Steam ID';
-
-    // Change button to submit
-    button.innerText = 'Link';
-    button.setAttribute('type', 'submit');
-    button.removeAttribute('onclick');  // Remove the onclick handler so it behaves like a submit button
-}
-
-function showLoadingPage() {
-    document.getElementById('loading-overlay').style.display = 'flex'; // Show loading overlay
-}
-
-/* SEARCH FOR USERS WHEN SHARING (VIEW)*/
-
+/* SEARCH FOR USERS WHEN SHARING (VIEW) */
 document.addEventListener('DOMContentLoaded', function () {
     const inputField = document.getElementById('search_username');
     const resultsContainer = document.getElementById('searchResults');
@@ -154,7 +137,6 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 /* TOGGLE BETWEEN SAVED AND SHARED COLLECTIONS */
-
 function showSaved() {
     document.getElementById('savedCollectionsBox').style.display = 'block';
     document.getElementById('sharedCollectionsBox').style.display = 'none';
@@ -174,7 +156,6 @@ function showShared() {
 }
 
 /* SHARE MODAL ON PAGE LOAD AFTER CLICKING SHARE IN PROFILE */
-
 document.addEventListener("DOMContentLoaded", () => {
     // Check if the URL contains the "share=true" query parameter
     const urlParams = new URLSearchParams(window.location.search);
@@ -184,19 +165,13 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 /* FLASH MESSAGES - AUTO DISMISS */
-
 window.addEventListener('DOMContentLoaded', () => {
-    const alert = document.getElementById('autoDismissAlert');
-    if (alert) {
-      setTimeout(() => {
-        const bsAlert = bootstrap.Alert.getOrCreateInstance(alert);
-        bsAlert.close();
-      }, 3000); // 3000ms = 3 seconds
-    }
+    setTimeout(() => {
+      $('.autoDismissAlert').alert('close');
+    }, 3000);
   });
 
 /* MODALS */
-
 function openModal(modalId) {
     const modal = document.getElementById(modalId); // Select the modal by its ID
     if (modal) {
