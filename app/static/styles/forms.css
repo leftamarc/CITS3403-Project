@@ -1,0 +1,27 @@
+/* Login Page */
+.basic-title {
+    font-size: 26px;
+    font-weight: 700;
+    color: #ffffff
+}
+.dark-input[type="text"], .dark-input[type="password"], .dark-input[type="text"]:focus, .dark-input[type="password"]:focus {
+    border-radius: 2px;
+    color: #fff;
+    padding: 10px;
+    background-color: #32353c;
+    outline: none;
+    font-size: 15px;
+    border: 1px solid #32353c;
+    box-shadow: none;
+}
+
+.dark-input[type="text"]:hover, .dark-input[type="password"]:hover {
+    filter: brightness(1.1);
+    transition: filter 0.2s ease;
+}
+
+input.dark-input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 1000px #32353c inset !important;
+    -webkit-text-fill-color: #fff !important;
+    border: 1px solid #32353c !important;
+}

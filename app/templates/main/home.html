@@ -5,11 +5,11 @@
 <div class="container bg-dark text-white rounded p-4 " style="background-color: rgba(27, 40, 56, 0.7) !important;">
     <div class="row justify-content-center mt-4">
         <div class="col-md-6 d-flex flex-column align-items-center">
-            <h1 class="large-title-white display-4 mb-5">
+            <h1 class="large-title-white display-4 mb-4">
                 {% if session.get('user_id') %}
-                    Hello  <br> <span class = " tab-title steam-wrapped" style="font-size: 2rem;"> {{ username }} </span>
+                    Hello  <br> <span class = " animated-title" style="font-size: 2rem;"> {{ username }} </span>
                 {% else %}
-                    Welcome to <span class = " tab-title steam-wrapped">SteamWrapped</span>
+                    Welcome to <span class = " animated-title">SteamWrapped</span>
                 {% endif %}
             </h1>
         </div>
@@ -21,7 +21,7 @@
             <section>
                 <h2 class="large-text-white text-center mb-5"> SteamWrapped is an insights generating website utilising the Steam API to create "Wrappeds" personalised to your player data on Steam.
                     <br> <br> 
-                    <span class = " tab-title steam-wrapped" style="font-size: 1.5rem;"> "What kind of player am I?"  </span>
+                    <span class = "animated-title mt-5" style="font-size: 1.5rem;"> "What kind of player am I?"  </span>
                     <br> <br> 
                     We can answer that question. 
                 </h2>
@@ -29,7 +29,7 @@
                 <!-- Dropdown Button -->
                 <div class="text-center">
                     <button class="btn" type="button" data-toggle="collapse" data-target="#moreInfo" aria-expanded="false" aria-controls="moreInfo">
-                        <span class = " tab-title steam-wrapped" style="font-size: 1.5rem;">"How?"<i class="bi bi-caret-down-fill"></i></span>
+                        <span class = "animated-title" style="font-size: 1.5rem;">"How?"<i class="bi bi-caret-down-fill"></i></span>
                     </button>
                 </div>
     
@@ -39,19 +39,19 @@
                         <div class="row justify-content-center mt-2 mb-2" >
                             <div class="col-md-12 d-flex flex-column align-items-center text-center">
                                 <section>
-                                    <h2 class = " tab-title steam-wrapped mt-5 mb-5" style="font-size: 1.8rem;">Insights galore</h2>
-                                    <p class="large-text-white mb-2" style=" font-style:normal"> We currently have 20 fun, unique and intuitive insights implemented, each personable to your player data at the instance of generation. 8 insights are randomly chosen to be included in a single SteamWrapped. </p>
-                                    <p class="large-text-white " style=" font-style:normal"> As long as you continue to play, no SteamWrapped is the same. More insights to come...!</p>
+                                    <h2 class = "animated-title mt-5 mb-5" style="font-size: 1.8rem;">Insights galore</h2>
+                                    <p class="large-text-white mb-2"> We currently have 20 fun, unique and intuitive insights implemented, each personable to your player data at the instance of generation. 8 insights are randomly chosen to be included in a single SteamWrapped. </p>
+                                    <p class="large-text-white " > As long as you continue to play, no SteamWrapped is the same. More insights to come...!</p>
 
-                                    <h2 class = "tab-title steam-wrapped mt-5 mb-5" style="font-size: 1.8rem;">Gamer to gamer</h2>
+                                    <h2 class = " animated-title mt-5 mb-5" style="font-size: 1.8rem;">Gamer to gamer</h2>
                                     <p class="large-text-white mb-2" >This app is made by gamers, for gamers. </p>
                                     <p class="large-text-white " > We have kept the gamer rhetoric in you SteamWrappeds, generate one and you'll see what we mean. </p>
 
-                                    <h2 class = " tab-title steam-wrapped mt-5 mb-5" style="font-size: 1.8rem;">Multiple identities? <br> No problem!</h2>
+                                    <h2 class = "animated-title mt-5 mb-5" style="font-size: 1.8rem;">Multiple identities? <br> No problem!</h2>
                                     <p class="large-text-white mb-2" > We do not require you to link a SteamID to your account, your account on SteamWrapped is simply to store your saved Wrappeds and the Wrappeds shared with you. </p>
                                     <p class="large-text-white " > You can generate from as many different SteamIDs as you want, with no limit on how many you generate at one time. </p>
 
-                                    <h2 class = " tab-title steam-wrapped mt-5 mb-5" style="font-size: 1.8rem;">Sharing is caring</h2>
+                                    <h2 class = "animated-title mt-5 mb-5" style="font-size: 1.8rem;">Sharing is caring</h2>
                                     <p class="large-text-white mb-2" > Keep and save your own Wrappeds as well as Wrappeds shared with you by other users. </p>
                                         <p class="large-text-white mb-2" > Simply save a Wrapped you have generated to share. </p>
                                         <p class="large-text-white " > You can even add title's to your Wrappeds to easily differentiate between them.</p>

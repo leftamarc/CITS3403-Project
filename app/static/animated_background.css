@@ -1,0 +1,65 @@
+/* Background Animation Container */
+.animated-background {
+    /* Styles the animated background container */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: calc(100vh - 100px);
+    overflow: hidden;
+    z-index: -1;
+    pointer-events: none;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+/* Individual Logo */
+.animated-logo {
+    /* Styles individual animated logos */
+    position: relative;
+    width: 5vw;
+    height: 5vw;
+    background-image: url('./images/logo.PNG');
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 0;
+    animation: animateLogo 20s infinite;
+    transition: opacity 0.1s ease; /* Smooth transition for opacity */
+}
+
+ul#elements li {
+    /* Styles individual animated elements */
+    list-style: none;
+    position: absolute;
+    transition: transform 1s ease, opacity 0.5s ease;
+    opacity: 0.0;
+    left: calc(5vw + 90vw * var(--randomX));
+    top: calc(5vh + 90vh * var(--randomY));
+    font-size: calc(1rem * var(--randomSize));
+    animation: animateElement 20s infinite ease-in-out;
+}
+
+/* Keyframes for the single animation */
+@keyframes animateElement {
+    /* Animates the movement and opacity of elements */
+    0% {
+        transform: scale(1) translateY(0) translateX(0);
+        opacity: 0.25;
+    }
+    25% {
+        transform: rotate(-10deg) scale(0.4) translateY(10px) translateX(10px);
+        opacity: 0.1;
+    }
+    50% {
+        transform: rotate(-10deg) scale(0.4) translateY(10px) translateX(10px);
+        opacity: 0;
+    }
+    75% {
+        transform: rotate(20deg) scale(0.5) translateY(15px) translateX(15px);
+        opacity: 0.1;
+    }
+    100% {
+        transform: scale(1) translateY(0) translateX(0);
+        opacity: 0.25;
+    }
+}

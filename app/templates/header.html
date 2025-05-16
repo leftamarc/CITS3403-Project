@@ -16,8 +16,15 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
     <!-- Custom Styles -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link rel="stylesheet" href="static/styles/buttons.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/buttons.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/text.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/header.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/links.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/elements.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/forms.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='animated_background.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/search.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/modals.css') }}">
 
 
     <!-- Google Fonts -->
@@ -30,10 +37,10 @@
     <!-- Navigation Bar -->
     <ul class="header-tabs"> 
         <div>
-            <img src="{{ url_for('static', filename='logo.png') }}" alt="SteamWrapped Logo" width="70" />
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="SteamWrapped Logo" width="70" />
         </div>
 
-        <div class="header-title steam-wrapped clickable-text {% if request.endpoint == 'main.home' %}active-tab{% endif %}" 
+        <div style="font-size: 1.5rem;" class="hover-animated-title animated-title clickable-text {% if request.endpoint == 'main.home' %}active-tab{% endif %}" 
              onclick="window.location.href='{{ url_for('main.home') }}'">
             SteamWrapped
         </div>

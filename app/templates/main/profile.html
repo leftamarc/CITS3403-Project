@@ -17,13 +17,9 @@
     {% endif %}
 {% endwith %}
 
-<div class="container mt-5">
-    <h1 class="tab-title display-4 mb-5"></h1>
-</div>
-
-<div class="d-flex flex-column align-items-center mt-5">
+<div class="d-flex flex-column align-items-center mt-5 bg-dark text-white rounded p-4 " style="background-color: rgba(27, 40, 56, 0.7) !important;">
     <!-- Display username-->
-    <h1 class="tab-title display-4 text-center w-100 steam-wrapped" style="font-size: 1.3;"> {{ username }}</h1>  
+    <h1 class="display-4 text-center w-100 animated-title" style="font-size: 1.3;"> {{ username }}</h1>  
 
     <!-- Toggle Buttons - Save Wrappeds vs Shared with you -->
     <div class="d-flex justify-content-center mt-4">
@@ -46,7 +42,7 @@
                 <!-- Middle Section: Wrapped Synopsis -->
                 <div class="flex-grow-1">
                     <a href="{{ url_for('main.view_saved', saved_id=collection.saved_id) }}" class="text-white" style="text-decoration: none;">
-                        <p class="mb-0 font-weight-bold header-title steam-wrapped" style="font-size: 1rem;">{{ collection.title }}</p>
+                        <p class="mb-0 font-weight-bold hover-animated-title animated-title" style="font-size: 1rem;">{{ collection.title }}</p>
                     </a>
                     <small class="text-muted">Created on: {{ collection.date_created.strftime('%Y-%m-%d') }} | For Steam ID: {{ collection.steam_id }}</small>
                 </div>
@@ -84,7 +80,7 @@
                 <!-- Middle Section: Wrapped Synopsis -->
                 <div class="flex-grow-1">
                     <a href="{{ url_for('main.view_shared', saved_id=saved_id) }}" class="text-white" style="text-decoration: none;">
-                        <p class="mb-0 font-weight-bold header-title steam-wrapped" style="font-size: 1rem;">{{ title }}</p>
+                        <p class="mb-0 font-weight-bold hover-animated-title animated-title" style="font-size: 1rem;">{{ title }}</p>
                     </a>
                     <small class="text-muted">Created on: {{ date_created.strftime('%Y-%m-%d') }} | For Steam ID: {{ steam_id }} | Shared by {{ username }}</small>
                 </div>

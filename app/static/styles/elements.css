@@ -1,0 +1,69 @@
+/* Right Half Column Box - currently tutoiral in get */
+.half-col-box {
+    /* Styles the right half column box */
+    background: linear-gradient(45deg, #B3DFFF 0%, #c7d5e0 100%);
+    border-radius: 4px;
+    width: 100%;
+}
+.half-col-head {
+    /* Styles the header inside the half column box */
+    font-size: 1.5rem;
+    color: #1B2838;
+    font-weight: 700;
+    text-align: center;
+}
+.half-col-text {
+    /* Styles the text inside the half column box */
+    font-size: 1rem;
+    color: #1B2838;
+    text-align: left;
+}
+
+/* Bottom Box - for log in, generate footer boxes */
+.bottom-box {
+    background-color: #171a21;
+    border-radius: 4px;
+    text-align: center;
+    padding: 1rem;
+}
+.bottom-box-title.login {
+    /* Styles the title in the bottom box */
+    font-weight: 700;
+    font-size: 2rem;
+    background: linear-gradient(to right, #06BFFF 0%, #2D73FF 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.bottom-box-text {
+    /* Styles the text in the bottom box */
+    font-size: 1rem;
+    color: #c7d5e0;
+}
+
+/* Scrollbox Element */
+
+/* Custom Scrollbar for scroll-box */
+.scroll-box::-webkit-scrollbar {
+    /* Styles the scrollbar width */
+    width: 10px;
+}
+
+.scroll-box::-webkit-scrollbar-track {
+    /* Styles the scrollbar track */
+    background: #171a21;
+    border-radius: 5px;
+}
+
+.scroll-box::-webkit-scrollbar-thumb {
+    /* Styles the scrollbar thumb */
+    background: #1a9fff;
+    border-radius: 5px;
+    border: 2px solid #171a21;
+}
+
+.scroll-box::-webkit-scrollbar-thumb:hover {
+    /* Adds hover effect to the scrollbar thumb */
+    background: #06BFFF;
+}
+

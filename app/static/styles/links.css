@@ -1,0 +1,42 @@
+/* Links */
+a.link.no-style {
+    /* Styles links with no underline */
+    text-decoration: none;
+    color: inherit;
+    font-weight: 700;
+    transition: color 0.2s ease;
+    position: relative;
+}
+
+a.link::after {
+    /* Adds underline effect to links */
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    width: 100%;
+    background-color: #1a9fff;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s ease;
+}
+
+a.link:hover::after {
+    /* Animates underline on hover */
+    transform: scaleX(1);
+    transform-origin: left;
+}
+
+a.link.light-style {
+    color: #c7d5e0;
+    text-decoration: none;
+    position: relative;
+    display: inline-block;
+    font-weight: bold;
+}
+
+a.link.light-style:hover {
+    color: #ffffff;
+    cursor: pointer;
+}

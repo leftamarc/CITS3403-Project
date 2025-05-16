@@ -1,0 +1,60 @@
+/* Some specific header text styling may appear in header.css */
+/* Some specific elements text styling (i.e. footers and half col box) may appear in elements_and_modals.css */
+/* Some specific links text styling (i.e. external links to steam) may appear in links.css */
+/* Some specific forms text styling (e.g. login fields, etc) may appear in forms.css */
+
+/* Uniform */
+body {
+    /* Styles the page background and font */
+    background-color: #1B2838;
+    font-family: "Motiva Sans", "Twemoji", "Noto Sans", Helvetica, sans-serif;
+}
+p {
+    font-size: 1rem;
+    color: #fff
+}
+
+/* On Hover, Animated Title - Header and Profile for Saved and Shared Wrapped Names*/
+.hover-animated-title {
+    cursor: pointer;
+    margin-right: 2rem;
+    font-size: 25px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+.hover-animated-title:hover {
+    /* Adds hover effect to the title */
+    color: transparent;
+    background: linear-gradient(90deg, #06BFFF, #2D73FF, #06BFFF, #c7d5e0);
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    animation: gradientMove 4s linear infinite;
+}
+
+/* Get, Home, Profile, View Saved, View Shared, Wrapped and Header */
+.animated-title {
+    font-family: 'Press Start 2P', 'Motiva Sans', 'Twemoji', 'Noto Sans', Helvetica, sans-serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: transparent;
+    background: linear-gradient(90deg, #06BFFF, #2D73FF, #06BFFF, #c7d5e0);
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    animation: gradientMove 5s linear infinite;
+  }
+
+/* Home and Get pages */
+.large-title-white{
+    font-family: "Motiva Sans", "Twemoji", "Noto Sans", Helvetica, sans-serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+/* Home page */
+.large-text-white{
+    font-family: "Motiva Sans", "Twemoji", "Noto Sans", Helvetica, sans-serif;
+    font-size: 1.3rem;
+    color: #ffffff;
+    font-style: italic;
+}
