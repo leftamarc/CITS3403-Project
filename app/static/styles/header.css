@@ -1,61 +1,47 @@
-/* Non-Title Header Tabs - currently Get and Profile */
-.header-tabs {
-    gap: 1.5rem;
-    height: 100px;
-    display: flex;
-    padding: 1rem 2rem;
+.navbar {
     background-color: #171a21;
-    font-size: 16px;
-    font-weight: 700;
-    color: #c7d5e0;
-    align-items: center;
-    list-style-type: none;
-    justify-content: center;
 }
-.header-tabs li {
-    /* Styles individual header tabs */
-    cursor: pointer;
-    position: relative;
+
+.navbar-nav {
+    gap: 2rem;
+}
+
+.nav-link {
     text-transform: uppercase;
+    font-weight: 700;
+    color: #c7d5e0 !important;
+    position: relative;
 }
-.header-tabs li:hover {
-    /* Adds hover effect to header tabs */
-    color: #ffffff;
-    transition: color 0.2s ease;
+
+.nav-link:hover {
+    color: #ffffff !important;
 }
-.header-tabs li::after {
-    /* Adds underline effect to header tabs */
+
+.nav-link::after {
+    content: '';
+    position: absolute;
     left: 0;
     bottom: 0;
     height: 2px;
     width: 100%;
-    content: "";
-    position: absolute;
+    background-color: #1a9fff;
     transform: scaleX(0);
     transform-origin: right;
-    background-color: #1a9fff;
     transition: transform 0.3s ease;
 }
-.header-tabs li:hover::after {
-    /* Animates underline on hover */
+
+.nav-link:hover::after {
     transform: scaleX(1);
     transform-origin: left;
 }
-.active-tab {
-    /* Highlights the active tab */
-    color: #1a9fff;
+
+.nav-item.active .nav-link {
+    color: #1a9fff !important;
 }
 
-/* Animation */
-@keyframes gradientMove {
-    /* Animates gradient background */
-    0% {
-        background-position: 0% 50%;
-    }
-    50% {
-        background-position: 100% 50%;
-    }
-    100% {
-        background-position: 0% 50%;
+@media (max-width: 768px) {
+    .navbar-nav {
+        flex-direction: column !important;
+        align-items: center;
     }
 }

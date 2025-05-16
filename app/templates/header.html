@@ -34,36 +34,41 @@
 
 <body class="d-flex flex-column min-vh-100" style="overflow-x: hidden;">
 
-    <!-- Navigation Bar -->
-    <ul class="header-tabs"> 
-        <div>
-            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="SteamWrapped Logo" width="70" />
+    <nav class="navbar navbar-expand-md">
+        <div class="container d-flex justify-content-center align-items-center py-3">
+    
+            <div class="d-flex align-items-center">
+                
+                <!-- Logo + Title -->
+                <a class="d-flex align-items-center text-decoration-none mr-4" href="{{ url_for('main.home') }}">
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" width="50" alt="Logo">
+                    <span class=" hover-animated-title animated-title ml-2" style="font-size: 1.5rem;">SteamWrapped</span>
+                </a>
+    
+                <!-- Nav Links -->
+                <ul class="navbar-nav d-flex flex-row align-items-center mb-0">
+                    <li class="nav-item {% if request.endpoint == 'main.get' %}active{% endif %}">
+                        <a class="nav-link" href="{{ url_for('main.get') }}">Get</a>
+                    </li>
+
+                    {% if session.get('user_id') %}
+                    <li class="nav-item {% if request.endpoint == 'main.profile' %}active{% endif %}">
+                        <a class="nav-link" href="{{ url_for('main.profile') }}">{{ session.get('username')|upper }}</a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <form action="{{ url_for('main.login') }}" method="get" class="form-inline">
+                            <button class="btn btn-blue" type="submit">Log In</button>
+                        </form>
+                    </li>
+                    {% endif %}
+                </ul>
+
+    
+            </div>
         </div>
-
-        <div style="font-size: 1.5rem;" class="hover-animated-title animated-title clickable-text {% if request.endpoint == 'main.home' %}active-tab{% endif %}" 
-             onclick="window.location.href='{{ url_for('main.home') }}'">
-            SteamWrapped
-        </div>
-
-        <li>
-            <span class="clickable-text {% if request.endpoint == 'main.get' %}active-tab{% endif %}" 
-                  onclick="window.location.href='{{ url_for('main.get') }}'">Get</span>
-        </li>
-
-        {% if session.get('user_id') %}
-        <li>
-            <span class="clickable-text {% if request.endpoint == 'main.profile' %}active-tab{% endif %}" 
-                  onclick="window.location.href='{{ url_for('main.profile') }}'">
-                {{ session.get('username')|upper }}
-            </span>
-        </li>
-        {% else %}
-        <form action="{{ url_for('main.login') }}" method="get">
-            <button type="submit" class="btn btn-blue mb-3 mt-3 ml-4">Log In</button>
-        </form>
-        {% endif %}
-    </ul>
-
+    </nav>
+        
     <!-- Main Content -->
     <main class="flex-grow-1">
         {% block content %}{% endblock %}
