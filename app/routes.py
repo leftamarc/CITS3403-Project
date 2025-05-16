@@ -25,7 +25,7 @@ def home():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        username = form.username.data
+        username = form.username.data.lower().strip()
         password = form.password.data
         remember_me = form.remember.data
         print(f"Remember Me checked? {remember_me}")
@@ -59,7 +59,7 @@ def register():
     form = RegisterForm()
      
     if form.validate_on_submit():
-        username = form.username.data
+        username = form.username.data.lower().strip()
         password = form.password.data
         confirm_password = form.confirm_password.data
         
@@ -73,7 +73,7 @@ def register():
             return redirect(url_for('main.register'))
         
         # Check if username already exists
-        if User.query.filter_by(username=username).first():
+        if User.query.filter(User.username == username).first():
             flash('Username already exists.', 'danger')
             return redirect(url_for('main.register'))
 
